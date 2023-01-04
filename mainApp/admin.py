@@ -32,7 +32,7 @@ class EmployeeAdmin(admin.ModelAdmin):
     search_fields = ['name', 'last_name', 'mail', 'status']
 
 class ApplicationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'days_available_to_work', 'can_travel', 'can_work_nights', 'can_background_check', 'position_to_apply', 'experience', 'english_level', 'studies', 'military_service', 'file', 'employee']
+    list_display = ['employee','id', 'days_available_to_work', 'can_travel', 'can_work_nights', 'can_background_check', 'position_to_apply', 'experience', 'english_level', 'studies', 'military_service', 'file']
     list_filter = ['days_available_to_work', 'can_travel', 'can_work_nights', 'can_background_check', 'position_to_apply', 'experience', 'english_level', 'studies', 'military_service']
     search_fields = ['employee__name', 'employee__last_name']
 

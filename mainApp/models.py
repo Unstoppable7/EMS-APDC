@@ -112,6 +112,7 @@ class Application(models.Model):
         ('Other', 'Other'),
     ]
     EXPERIENCE_CHOICES = [
+        ('None', 'None'),
         ('Manager', 'Manager'),
         ('Housekeeping', 'Housekeeping'),
         ('Houseman', 'Houseman'),
@@ -147,7 +148,7 @@ class Application(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.employee.name
 
 class Emergency_contact(models.Model):
     name = models.CharField(max_length=50)
