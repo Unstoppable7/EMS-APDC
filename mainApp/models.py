@@ -1,5 +1,8 @@
 from django.db import models
+from django.contrib import admin
 import datetime
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
 
 def current_time():
     return datetime.datetime.now()
@@ -81,13 +84,64 @@ class Employee(models.Model):
         return self.name
 
     @property
+    @admin.display(
+        ordering='last_name',
+        description='Full name',
+    )
     def full_name(self):
         return f'{self.name} {self.last_name}'
-    
-    def save(self, *args, **kwargs):
-        self.updated_at = datetime.datetime.now()
-        super(Employee, self).save(*args, **kwargs)
 
+    class Meta:
+        verbose_name = 'Company Employee'
+
+class EmployeeInterview(Employee): 
+    class Meta:
+        proxy = True
+        verbose_name = 'Interview'
+        
+class EmployeeByCoordinator(Employee): 
+    class Meta:
+        proxy = True
+        verbose_name = 'Employee'
+
+class Employee_head(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee')
+    head = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='head')
+
+@receiver(post_save, sender=Employee)
+def create_employee_head(sender, instance, created, **kwargs):
+    if created:
+        try:
+            location = instance.job.department.location
+            
+            head = Employee.objects.select_related("job__department__location").filter(job__department__location__id=location.id, job__name="Coordinator").values()
+            
+            Employee_head.objects.create(employee=instance, head=head)
+        except:
+            pass
+
+@receiver(pre_save, sender=Employee)
+def update_employee_head(sender, instance, **kwargs):
+    
+    location = instance.job.department.location
+    head = Employee.objects.select_related("job__department__location").filter(job__department__location__id=location.id, job__name="Coordinator").first()
+
+    relation, created = Employee_head.objects.get_or_create(employee=instance, defaults={'employee': instance, 'head': head})
+
+    if not created:
+        relation.head = head
+        relation.save()
+    
+    # try:
+    #     relation = Employee_head.objects.get(employee=instance)
+    #     location = instance.job.department.location
+    #     head = Employee.objects.select_related("job__department__location").filter(job__department__location__id=location.id, job__name="Coordinator").first()
+    #     relation.head = head
+    #     relation.save()
+    # except:
+    #     print("NO SE PUDO ACTUALIZAR EL HEAD DEL EMPLEADO")
+    #     pass
+    
 class Application(models.Model):
     DAYS_AVAILABLE_TO_WORK_CHOICES = [
         ('Mon-Fri', 'Monday to Friday'),
@@ -186,7 +240,7 @@ class MedicalForm(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.employee.name
 
 class PaymentMethod(models.Model):
     name = models.CharField(max_length=100)

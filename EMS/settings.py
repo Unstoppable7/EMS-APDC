@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 
+import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -52,6 +54,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'EMS.urls'
+
+#os.path.join(BASE_DIR, "templates"), 
 
 TEMPLATES = [
     {
@@ -129,3 +133,18 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+JAZZMIN_SETTINGS = {
+    "site_brand": "Administration Panel",
+    # "custom_links": {
+    #     "mainapp": [{
+    #         "name": "Make Messages", 
+    #         #"url": "/admin/mainApp/employee/?status__exact=Interview", 
+    #         "url": "admin/home",
+    #         "icon": "fas fa-comments",
+    #         "permissions": []
+    #     }]
+    # },
+    #"hide_models": ["mainApp.employee"]
+}
