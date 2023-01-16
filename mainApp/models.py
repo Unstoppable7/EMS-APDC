@@ -108,29 +108,37 @@ class Employee_head(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee')
     head = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='head')
 
-@receiver(post_save, sender=Employee)
-def create_employee_head(sender, instance, created, **kwargs):
-    if created:
-        try:
-            location = instance.job.department.location
-            
-            head = Employee.objects.select_related("job__department__location").filter(job__department__location__id=location.id, job__name="Coordinator").values()
-            
-            Employee_head.objects.create(employee=instance, head=head)
-        except:
-            pass
+    def __str__(self):
+        return self.employee
+
+# @receiver(post_save, sender=Employee)
+# def create_employee_head(sender, instance, created, **kwargs):
+#     if created:
+#         try:
+#             location = instance.job.department.location
+#             head = Employee.objects.select_related("job__department__location").filter(job__department__location__id=location.id, job__name="Coordinator").values()
+#             Employee_head.objects.create(employee=instance, head=head)
+#         except:
+#             pass
 
 @receiver(pre_save, sender=Employee)
-def update_employee_head(sender, instance, **kwargs):
+def pre_save_employee_head(sender, instance, **kwargs):
     
-    location = instance.job.department.location
-    head = Employee.objects.select_related("job__department__location").filter(job__department__location__id=location.id, job__name="Coordinator").first()
+    job_department_location = instance.job.department.location
 
-    relation, created = Employee_head.objects.get_or_create(employee=instance, defaults={'employee': instance, 'head': head})
+    try:
+        print("ENTRA EN TRY DE pre_save_employee_head")
 
-    if not created:
-        relation.head = head
-        relation.save()
+        head = Employee.objects.select_related("job__department__location").filter(job__department__location__id=job_department_location.id, job__name="Coordinator").first()
+
+        relation, created = Employee_head.objects.get_or_create(employee=instance, defaults={'employee': instance, 'head': head})
+
+        if not created:
+            relation.head = head
+            relation.save()
+    except:
+        print("ENTRA EN EXCEPT DE pre_save_employee_head")
+        pass
       
 class Application(models.Model):
     DAYS_AVAILABLE_TO_WORK_CHOICES = [

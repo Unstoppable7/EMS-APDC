@@ -18,12 +18,39 @@ def create_employee_application(request):
         #     return HttpResponse("HttpResponse")
 
         if employee_form.is_valid() and application_form.is_valid() and medicalForm_form.is_valid() and emergency_contact_form.is_valid():
-            #return HttpResponse("HttpResponse")
-            employee_form.save()
-            application_form.save()
-            medicalForm_form.save()
-            emergency_contact_form.save()
+
+            employee = employee_form.save()
+            application = application_form.save(commit=False)
+            application.employee = employee
+            application.save()
+            medical = medicalForm_form.save(commit=False)
+            medical.employee = employee
+            medical.save()
+            emergency_contact = emergency_contact_form.save(commit=False)
+            emergency_contact.employee = employee
+            emergency_contact.save()
+            print("\n\n")
+            print(employee)
+            print("\n\n")
+            print(application)
+            print("\n\n")
+            print(medical)
+            print("\n\n")
+            print(emergency_contact)
+            print("\n\n")
+
+            # print(application_form)
+            # print(medicalForm_form)
+            # print(emergency_contact_form)
+
+            return HttpResponse("HttpResponse")
+            # employee_form.save()
+            # application_form.save()
+            # medicalForm_form.save()
+            # emergency_contact_form.save()
             #return redirect('employee_detail', pk=employee.pk)
+        else:
+            print('NO VALID')
 
         # if document_form.is_valid():
             
@@ -39,6 +66,7 @@ def create_employee_application(request):
         medicalForm_form = MedicalFormForm()
         emergency_contact_form = EmergencyContactForm()
         #document_form = DocumentForm()
+
 
     return render(request, 'employee_form.html', {'employee_form': employee_form, 'application_form': application_form, 'emergency_contact_form': emergency_contact_form, 'medicalForm_form': medicalForm_form,})
 
