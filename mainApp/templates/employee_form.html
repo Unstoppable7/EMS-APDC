@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <form action="" class="employee-form" method="post">
+    {% crispy employee_form %}
+    {% crispy application_form %}
+    {% crispy medicalForm_form %}
+    {% crispy emergency_contact_form %}
+  </form>
+{% endblock %}

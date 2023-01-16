@@ -131,17 +131,7 @@ def update_employee_head(sender, instance, **kwargs):
     if not created:
         relation.head = head
         relation.save()
-    
-    # try:
-    #     relation = Employee_head.objects.get(employee=instance)
-    #     location = instance.job.department.location
-    #     head = Employee.objects.select_related("job__department__location").filter(job__department__location__id=location.id, job__name="Coordinator").first()
-    #     relation.head = head
-    #     relation.save()
-    # except:
-    #     print("NO SE PUDO ACTUALIZAR EL HEAD DEL EMPLEADO")
-    #     pass
-    
+      
 class Application(models.Model):
     DAYS_AVAILABLE_TO_WORK_CHOICES = [
         ('Mon-Fri', 'Monday to Friday'),
@@ -189,6 +179,11 @@ class Application(models.Model):
         ('Advanced', 'Advanced'),
         ('Fluent', 'Fluent')
     ]
+    STUDIES_LEVEL_CHOICES = [
+        ('None', 'None'),
+        ('High school', 'High school'),
+        ('University', 'University'),
+    ]
     days_available_to_work = models.CharField(max_length=8, choices=DAYS_AVAILABLE_TO_WORK_CHOICES)
     can_travel = models.BooleanField()
     can_work_nights = models.BooleanField()
@@ -196,7 +191,8 @@ class Application(models.Model):
     position_to_apply = models.CharField(max_length=17, choices=POSITION_TO_APPLY_CHOICES)
     experience = models.CharField(max_length=15, choices=EXPERIENCE_CHOICES)
     english_level = models.CharField(max_length=12, choices=ENGLISH_LEVEL_CHOICES)
-    studies = models.BooleanField()
+    studies = models.CharField(max_length=12, choices=STUDIES_LEVEL_CHOICES)
+    specialty_of_studies = models.CharField(max_length=50)
     military_service = models.BooleanField()
     file = models.FileField(upload_to='applications/')
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
@@ -235,8 +231,8 @@ class MedicalForm(models.Model):
     weight = models.DecimalField(max_digits=5, decimal_places=2)
     allergic_to = models.CharField(max_length=50, blank=True)
     diseases_suffered = models.CharField(max_length=50, blank=True)
-    received_workers_compensation = models.BooleanField(default=False)
-    received_surgery_for_fracture = models.BooleanField(default=False)
+    received_workers_compensation = models.CharField(max_length=100)
+    received_surgery_for_fracture = models.CharField(max_length=100)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
 
     def __str__(self):
