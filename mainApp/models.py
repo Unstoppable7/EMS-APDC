@@ -202,7 +202,6 @@ class Application(models.Model):
     studies = models.CharField(max_length=12, choices=STUDIES_LEVEL_CHOICES)
     specialty_of_studies = models.CharField(max_length=50)
     military_service = models.BooleanField()
-    file = models.FileField(upload_to='applications/')
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -219,15 +218,15 @@ class Emergency_contact(models.Model):
 
 class Document(models.Model):
     TYPE_CHOICES = [
+        ('Application', 'Application'),
         ('Passport', 'Passport'),
         ('Driver license', 'Driver license'),
         ('ID card', 'ID card'),
         ('Social security card', 'Social security card'),
-        ('Work permit', 'Work permit')
+        ('Work permit', 'Work permit'),
     ]
     type = models.CharField(max_length=20, choices=TYPE_CHOICES)
-    number = models.CharField(max_length=20)
-    date_of_expiration = models.DateField()
+    date_of_expiration = models.DateField(blank=True)
     file = models.FileField(upload_to='employee_documents/')
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
 

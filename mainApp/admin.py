@@ -8,7 +8,7 @@ from django.utils.html import format_html
 
 class ApplicationInline(admin.StackedInline): 
    model= Application 
-   fields = ['days_available_to_work', 'can_travel', 'can_work_nights', 'can_background_check', 'position_to_apply', 'experience', 'english_level', 'studies', 'military_service', 'file']
+   fields = ['days_available_to_work', 'can_travel', 'can_work_nights', 'can_background_check', 'position_to_apply', 'experience', 'english_level', 'studies', 'military_service']
    extra = 1
 
 class MedicalFormInline(admin.StackedInline): 
@@ -24,7 +24,7 @@ class Emergency_contactInline(admin.StackedInline):
 
 class DocumentInline(admin.StackedInline): 
    model= Document 
-   fields = ['type', 'number', 'date_of_expiration', 'file']
+   fields = ['type', 'date_of_expiration', 'file']
    extra = 1
 
 #END tabular inline models

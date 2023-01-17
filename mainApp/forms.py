@@ -88,4 +88,4 @@ class EmergencyContactForm(forms.ModelForm):
 class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
-        fields = ['type', 'number', 'date_of_expiration', 'file']  
+        fields = ['type','date_of_expiration', 'file']  
