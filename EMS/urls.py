@@ -20,4 +20,5 @@ from mainApp.views import create_employee_application
 urlpatterns = [
     path('admin', admin.site.urls),
     path('',create_employee_application,name='create_employee_application'),
+    
 ]
