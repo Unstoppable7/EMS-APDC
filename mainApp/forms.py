@@ -1,7 +1,7 @@
 from django import forms
 from .models import Employee,Application,Emergency_contact,Document,MedicalForm
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Layout, Field, Submit
 
 class EmployeeForm(forms.ModelForm):
 
@@ -14,8 +14,9 @@ class EmployeeForm(forms.ModelForm):
         model = Employee
         fields = ['name','last_name','phone_number','date_of_birth','mail','address','city','zip_code',]
         labels = {
-            'name':'Write your name as it appears on your ID',
-            'last_name':'Write your last name as it appears on your ID',
+            'name':'Name',
+            'last_name':'Last name',
+            'mail':'email'
         }
 
 class ApplicationForm(forms.ModelForm):
@@ -25,9 +26,9 @@ class ApplicationForm(forms.ModelForm):
         self.helper.form_tag = False
     
     DESIRED_JOB_CHOICES = [
-        ('full', 'Full Time'),
-        ('part', 'Part Time'),
-        ('sea', 'Seasonal'),
+        ('Full Time', 'Full Time'),
+        ('Part Time', 'Part Time'),
+        ('Seasonal', 'Seasonal'),
     ]
 
     class Meta:
@@ -44,13 +45,14 @@ class ApplicationForm(forms.ModelForm):
             'military_service':'Have you ever been a member of the united states armed services?'
             }
     ##Manejar en el HTML
-    # service_branch = forms.CharField(required=False)
-    # start_period_service = forms.DateField(required=False)
-    # end_period_service = forms.DateField(required=False)
-    # duties_training_service = forms.CharField(label='Describe your duties and any special training',required=False)
+    service_branch = forms.CharField(required=False)
+    start_period_service = forms.DateField(required=False,label='Start Period')
+    end_period_service = forms.DateField(required=False,label='End Period')
+    duties_training_service = forms.CharField(label='Describe your duties and any special training',required=False)
 
     worked_for_this_company_before = forms.CharField(label='Have you worked for this company before?. If the answer is yes, indicate the start date and end date')
     has_been_convicted_of_a_felony = forms.CharField(label='Have you ever been convicted of a felony?. If the answer is yes, explain')
+    test_controlled_substances = forms.CharField(label='If Hired, Are You Willing To Test For Controlled Substances?')
     desired_job = forms.ChoiceField(choices=DESIRED_JOB_CHOICES)
     desired_payment = forms.CharField()
 
@@ -84,6 +86,7 @@ class EmergencyContactForm(forms.ModelForm):
     class Meta:
         model = Emergency_contact
         fields = ['name', 'phone_number', 'relationship']
+        labels = {'name': 'name'}
 
 class DocumentForm(forms.ModelForm):
     class Meta:
