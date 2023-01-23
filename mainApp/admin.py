@@ -256,6 +256,8 @@ admin.site.register(Employee_head)
 admin.site.register(Job)
 admin.site.register(Department)
 admin.site.register(Location)
+admin.site.register(Document)
+
 
 
 # admin.site.register(State, StateAdmin)

@@ -142,9 +142,9 @@ def pre_save_employee_head(sender, instance, **kwargs):
       
 class Application(models.Model):
     DAYS_AVAILABLE_TO_WORK_CHOICES = [
-        ('Mon-Fri', 'Monday to Friday'),
-        ('Mon-Sat', 'Monday to Saturday'),
-        ('Mon-Sun', 'Monday to Sunday')
+        ('Monday to Friday', 'Monday to Friday'),
+        ('Monday to Saturday', 'Monday to Saturday'),
+        ('Monday to Sunday', 'Monday to Sunday')
     ]
     POSITION_TO_APPLY_CHOICES = [
         ('Manager', 'Manager'),
@@ -163,23 +163,6 @@ class Application(models.Model):
         ('All the positions', 'All the positions'),
         ('Other', 'Other'),
     ]
-    EXPERIENCE_CHOICES = [
-        ('None', 'None'),
-        ('Manager', 'Manager'),
-        ('Housekeeping', 'Housekeeping'),
-        ('Houseman', 'Houseman'),
-        ('Community Areas', 'Community Areas'),
-        ('Supervisor', 'Supervisor'),
-        ('Inspector', 'Inspector'),
-        ('Cook', 'Cook'),
-        ('Precook', 'Precook'),
-        ('Bartender', 'Bartender'),
-        ('Steward', 'Steward'),
-        ('Front desk', 'Front desk'),
-        ('Guess services', 'Guess services'),
-        ('Maintenance', 'Maintenance'),
-        ('Other', 'Other'),
-    ]
     ENGLISH_LEVEL_CHOICES = [
         ('None', 'None'),
         ('Basic', 'Basic'),
@@ -192,15 +175,15 @@ class Application(models.Model):
         ('High school', 'High school'),
         ('University', 'University'),
     ]
-    days_available_to_work = models.CharField(max_length=8, choices=DAYS_AVAILABLE_TO_WORK_CHOICES)
+    days_available_to_work = models.CharField(max_length=20, choices=DAYS_AVAILABLE_TO_WORK_CHOICES)
     can_travel = models.BooleanField()
     can_work_nights = models.BooleanField()
     can_background_check = models.BooleanField()
     position_to_apply = models.CharField(max_length=17, choices=POSITION_TO_APPLY_CHOICES)
-    experience = models.CharField(max_length=15, choices=EXPERIENCE_CHOICES)
+    experience = models.CharField(max_length=500)
     english_level = models.CharField(max_length=12, choices=ENGLISH_LEVEL_CHOICES)
     studies = models.CharField(max_length=12, choices=STUDIES_LEVEL_CHOICES)
-    specialty_of_studies = models.CharField(max_length=50)
+    specialty_of_studies = models.CharField(max_length=50, blank=True)
     military_service = models.BooleanField()
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
 
@@ -219,6 +202,7 @@ class Emergency_contact(models.Model):
 class Document(models.Model):
     TYPE_CHOICES = [
         ('Application', 'Application'),
+        ('Form', 'Form'),
         ('Passport', 'Passport'),
         ('Driver license', 'Driver license'),
         ('ID card', 'ID card'),
@@ -226,18 +210,18 @@ class Document(models.Model):
         ('Work permit', 'Work permit'),
     ]
     type = models.CharField(max_length=20, choices=TYPE_CHOICES)
-    date_of_expiration = models.DateField(blank=True)
+    date_of_expiration = models.DateField(blank=True, null=True,)
     file = models.FileField(upload_to='employee_documents/')
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.type
 
 class MedicalForm(models.Model):
     height = models.DecimalField(max_digits=5, decimal_places=2)
     weight = models.DecimalField(max_digits=5, decimal_places=2)
-    allergic_to = models.CharField(max_length=50, blank=True)
-    diseases_suffered = models.CharField(max_length=50, blank=True)
+    allergic_to = models.CharField(max_length=100)
+    diseases_suffered = models.CharField(max_length=100)
     received_workers_compensation = models.CharField(max_length=100)
     received_surgery_for_fracture = models.CharField(max_length=100)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)

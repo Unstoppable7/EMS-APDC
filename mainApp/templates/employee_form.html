@@ -2,10 +2,56 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <form action="" class="employee-form" method="post">
-    {% crispy employee_form %}
-    {% crispy application_form %}
-    {% crispy medicalForm_form %}
-    {% crispy emergency_contact_form %}
-  </form>
+
+
+
+<div class="card">
+  <h1 class="display-3 text-center">Application</h1>
+  
+    <form action="{% url 'create_employee_application' %}" enctype="multipart/form-data" class="employee-form" method="POST">
+      <div class="card">
+        <h5 class="card-header">
+            Personal Information
+            <br>
+            <small>Add all your personal data.</small>
+        </h5>
+        <div class="card-body">
+          {% crispy employee_form %}
+        </div>
+      </div>
+      
+      <div class="card">
+        <h5 class="card-header">
+          Employment Eligibility
+          <br>
+          <small>Information related to the job you want and your experience in previous jobs.</small>
+        </h5>
+        <div class="card-body">
+          {% crispy application_form %}
+        </div>
+      </div>
+
+      <div class="card">
+        <h5 class="card-header">
+          Medical Form
+          <br>
+          <small>Information related to your medical condition.</small>
+        </h5>
+        <div class="card-body">
+          {% crispy medicalForm_form %}
+        </div>
+      </div>
+
+      <div class="card">
+        <h5 class="card-header">
+          Emergency Contact
+          <br>
+          <small>Information of a relative or friend to contact in case of emergency.</small>
+        </h5>
+        <div class="card-body">
+          {% crispy emergency_contact_form %}
+        </div>
+      </div>
+    </form>
+</div>
 {% endblock %}

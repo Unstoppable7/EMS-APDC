@@ -1,31 +1,33 @@
 from django.shortcuts import render
-from .forms import EmployeeForm, ApplicationForm, MedicalFormForm, DocumentForm,EmergencyContactForm
+from .forms import EmployeeForm, ApplicationForm, MedicalFormForm,EmergencyContactForm
+from .models import Document
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.http import FileResponse
 from django.template.loader import render_to_string
-from io import BytesIO
-from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
-from reportlab.lib.units import inch
 from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import Paragraph, Frame, Spacer, TableStyle
-
-from django.template.loader import get_template
-from xhtml2pdf import pisa
+from reportlab.platypus import Paragraph, Spacer, TableStyle
+from io import BytesIO
 
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table
 from reportlab.lib import colors
 from reportlab.lib.styles import ParagraphStyle
-    
+from django.core.files.base import ContentFile
+
+from django.conf import settings    
+
 def form_to_pdf(employeeForm, applicationForm, medicalForm, emergency_contactForm):
 
     employee = employeeForm.save(commit=False)
 
+    buffer = BytesIO()
+
     # Create a PDF document
-    pdf_file = SimpleDocTemplate("form.pdf", pagesize=letter)
+    #pdf_file = SimpleDocTemplate("form.pdf", pagesize=letter)
+    pdf_file = SimpleDocTemplate(buffer, pagesize=letter)
     
     styles = getSampleStyleSheet()
 
@@ -67,9 +69,9 @@ def form_to_pdf(employeeForm, applicationForm, medicalForm, emergency_contactFor
     applicationTitle = Paragraph("APPLICATION", title_style)
     
     personal_information = Paragraph("PERSONAL INFORMATION", section_style)
-    name_label = Paragraph(employeeForm['name'].label, label_style)
+    name_label = Paragraph('Name', label_style)
     name_field = Paragraph(employeeForm.cleaned_data['name'], field_style)
-    las_name_label = Paragraph(employeeForm['last_name'].label, label_style)
+    las_name_label = Paragraph('Last name', label_style)
     las_name_field = Paragraph(employeeForm.cleaned_data['last_name'], field_style)
     data1rows1 = [[name_label,name_field,las_name_label,las_name_field]]
     table1rows1 = Table(data1rows1, colWidths=[55,150,90,None])
@@ -85,8 +87,8 @@ def form_to_pdf(employeeForm, applicationForm, medicalForm, emergency_contactFor
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
 ]))
 
-    city_label = Paragraph(employeeForm['city'].label, label_style)
-    city_field = Paragraph(str(employeeForm.cleaned_data['city']), field_style)
+    city_label = Paragraph(employeeForm['city_name'].label, label_style)
+    city_field = Paragraph(str(employeeForm.cleaned_data['city_name']).capitalize(), field_style)
 
     state_label = Paragraph('State:', label_style)
     state_field = Paragraph(str(employee.city.state), field_style)
@@ -208,8 +210,8 @@ def form_to_pdf(employeeForm, applicationForm, medicalForm, emergency_contactFor
 
     section_experience = Paragraph("EXPERIENCE/SKILLS", section_style)
 
-    experience_label = Paragraph(applicationForm['experience'].label, label_style)
-    experience_field = Paragraph(applicationForm.cleaned_data['experience'], field_style)
+    experience_label = Paragraph(applicationForm['experience_jobs'].label, label_style)
+    experience_field = Paragraph(','.join(applicationForm.cleaned_data['experience_jobs']), field_style)
     data14rows1 = [[experience_label, experience_field]]
     table14rows1 = Table(data14rows1, colWidths=[None])
     table14rows1.setStyle(TableStyle([
@@ -261,7 +263,7 @@ def form_to_pdf(employeeForm, applicationForm, medicalForm, emergency_contactFor
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
 ]))
 
-    service_branch_label = Paragraph(applicationForm['service_branch'].label, label_style)
+    service_branch_label = Paragraph('Service Branch', label_style)
     service_branch_field = Paragraph(applicationForm.cleaned_data['service_branch'], field_style)
     data19rows1 = [[service_branch_label, service_branch_field]]
     table19rows1 = Table(data19rows1, colWidths=[100,None])
@@ -270,8 +272,8 @@ def form_to_pdf(employeeForm, applicationForm, medicalForm, emergency_contactFor
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
 ]))
 
-    start_period_service_label = Paragraph(applicationForm['start_period_service'].label, label_style)
-    end_period_service_label = Paragraph(applicationForm['end_period_service'].label, label_style)
+    start_period_service_label = Paragraph('Start Period', label_style)
+    end_period_service_label = Paragraph('End Period', label_style)
     try:
         start_period_service_field = Paragraph(applicationForm.cleaned_data['start_period_service'].strftime("%m/%d/%Y"), field_style)
         end_period_service_field = Paragraph(applicationForm.cleaned_data['end_period_service'].strftime("%m/%d/%Y"), field_style)
@@ -461,11 +463,19 @@ def form_to_pdf(employeeForm, applicationForm, medicalForm, emergency_contactFor
     elements.append(table30rows1)
 
     pdf_file.build(elements) 
-    return pdf_file
 
-    pdf_file.build([form_style])
+    buffer.seek(0)
+    pdf = buffer.getvalue()
+    pdf_content = ContentFile(pdf)
+    pdf_content.name = employee.full_name + '.pdf'
 
-    return pdf_file
+    return pdf_content
+
+def handle_uploaded_file(f):
+    path = settings.MEDIA_ROOT + '/employee_documents/' + f.name +'.pdf'
+    with open(path, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 # Create your views here.
 def create_employee_application(request):
@@ -476,25 +486,35 @@ def create_employee_application(request):
         emergency_contact_form = EmergencyContactForm(request.POST)
 
         if employee_form.is_valid() and application_form.is_valid() and medicalForm_form.is_valid() and emergency_contact_form.is_valid():
-
-            form_to_pdf(employee_form ,application_form,medicalForm_form, emergency_contact_form)            
+            
+            pdfFile = form_to_pdf(employee_form ,application_form,medicalForm_form, emergency_contact_form)            
             
             employee = employee_form.save(commit=False)
+            employee.save()
+
             application = application_form.save(commit=False)
             application.employee = employee
-            # application.save()
+            application.save()
+
             medical = medicalForm_form.save(commit=False)
             medical.employee = employee
-            # medical.save()
+            medical.save()
+
             emergency_contact = emergency_contact_form.save(commit=False)
             emergency_contact.employee = employee
+            emergency_contact.save()
+            #handle_uploaded_file(pdfFile)
+            documentObj = Document(type='Form', file=pdfFile, employee=employee)
 
-            response = FileResponse(open('form.pdf', 'rb'), content_type='application/pdf')
-            response['Content-Disposition'] = 'inline; filename=form.pdf'
-            return response
+            documentObj.save()
+
+            # response = FileResponse(pdfFile, content_type='application/pdf')
+            # response['Content-Disposition'] = 'inline; filename=form.pdf'
+            
+            # return response
 
             #return redirect('employee_detail', pk=employee.pk)
-            return HttpResponse("HttpResponse")
+            return HttpResponse("Application completed successfully")
         else:
             print('NO VALID')
     else:

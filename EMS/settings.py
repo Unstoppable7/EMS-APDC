@@ -153,3 +153,8 @@ JAZZMIN_SETTINGS = {
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 CRISPY_FAIL_SILENTLY = not DEBUG
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'EMS')
+MEDIA_URL = '/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
