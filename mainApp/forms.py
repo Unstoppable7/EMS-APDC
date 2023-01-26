@@ -120,7 +120,33 @@ class MedicalFormForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
-#TODO
+
+    diseases_suffered = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        choices=[('Epilepsy', 'Epilepsy'),
+        ('Diabetes', 'Diabetes'),
+        ('Heart disease', 'Heart disease'),
+        ('Hyperinsulinism', 'Hyperinsulinism'),
+        ('Thrombopheblitis', 'Thrombopheblitis'),
+        ('Total deafness', 'Total deafness'),
+        ('Hemophilia', 'Hemophilia'),
+        ('Polio', 'Polio'),
+        ('Herniated vertebral disc', 'Herniated vertebral disc'),
+        ('Multiple sclerosis', 'Multiple sclerosis'),
+        ('Inflammation of the bones', 'Inflammation of the bones'),
+        ('Inflammation of the joint cartilage', 'Inflammation of the joint cartilage'),
+        ('Amputation of, feet, leg, arm, hand..', 'Amputation of, feet, leg, arm, hand..'),
+        ('Total or partial loss of vision', 'Total or partial loss of vision'),
+        ('One spinal disc removed','One spinal disc removed'),
+        ('Any back or neck injury','Any back or neck injury'),
+        ('Knee ligament fracture','Knee ligament fracture'),
+        ('Parkinson''s disease','Parkinson''s disease'),
+        ('Cerebral palsy','Cerebral palsy'),
+        ('Muscular dystrophy','Muscular dystrophy'),
+        ('Other','Other'),
+        ('None','None')]
+    )
+
     class Meta:
         model = MedicalForm
         fields = ['height', 'weight', 'allergic_to', 'diseases_suffered', 'received_workers_compensation', 'received_surgery_for_fracture']
@@ -128,12 +154,15 @@ class MedicalFormForm(forms.ModelForm):
             'height':'Enter your height in feet',
             'weight':'Enter your weight in pounds',
             'allergic_to':'Mention any allergies you have',
-            'diseases_suffered':'Mention all the diseases you suffer from',
+            'diseases_suffered':'Select the diseases you suffer from',
             'received_workers_compensation':'Have you ever received workers compensation due to an injury at work? If the answer is yes, describe why?',
             'received_surgery_for_fracture':'Have you received surgery for a fracture? If the answer is yes, describe all the details'
         }
     
     physical_disability_evaluation = forms.CharField(label='Have you received any kind of physical disability evaluation or assigned by any insurance company or state/or federal agency? If the answer is yes, describe why, when and where')
+    widgets = {
+            'diseases_suffered': forms.CheckboxSelectMultiple
+        }
 
 class EmergencyContactForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

@@ -351,7 +351,8 @@ def form_to_pdf(employeeForm, applicationForm, medicalForm, emergency_contactFor
 ]))
 
     diseases_suffered_label = Paragraph(medicalForm['diseases_suffered'].label, label_style)
-    diseases_suffered_field = Paragraph(medicalForm.cleaned_data['diseases_suffered'], field_style)
+    diseases_suffered_field = Paragraph(','.join(medicalForm.cleaned_data['diseases_suffered']), field_style)
+
     data27rows1 = [[diseases_suffered_label, diseases_suffered_field]]
     table27rows1 = Table(data27rows1, colWidths=[None])
     table27rows1.setStyle(TableStyle([

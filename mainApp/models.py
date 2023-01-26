@@ -23,7 +23,7 @@ class City(models.Model):
         return self.name
 
 class Location(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, verbose_name='location')
     address = models.CharField(max_length=200,blank=True)
     phone_number = models.CharField(max_length=20,blank=True)
     zip_code = models.CharField(max_length=10,blank=True)
@@ -51,7 +51,7 @@ class Job(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.name + ' - ' + self.department.location.name
 
 class Employee(models.Model): 
     TYPES_CHOICES = [
@@ -102,24 +102,17 @@ class EmployeeInterview(Employee):
 class EmployeeByCoordinator(Employee): 
     class Meta:
         proxy = True
-        verbose_name = 'Employee'
+        verbose_name = 'Employee By Coordinator Deprecated'
 
 class Employee_head(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee')
     head = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='head')
 
     def __str__(self):
-        return self.employee
-
-# @receiver(post_save, sender=Employee)
-# def create_employee_head(sender, instance, created, **kwargs):
-#     if created:
-#         try:
-#             location = instance.job.department.location
-#             head = Employee.objects.select_related("job__department__location").filter(job__department__location__id=location.id, job__name="Coordinator").values()
-#             Employee_head.objects.create(employee=instance, head=head)
-#         except:
-#             pass
+        return f'{self.employee.full_name} - {self.head.full_name}'
+    
+    class Meta:
+        verbose_name = 'Coordinator Employee'
 
 @receiver(pre_save, sender=Employee)
 def pre_save_employee_head(sender, instance, **kwargs):
@@ -266,3 +259,13 @@ class JobHistory(models.Model):
 
     def __str__(self):
         return self.name
+
+# @receiver(post_save, sender=Employee)
+# def create_employee_head(sender, instance, created, **kwargs):
+#     if created:
+#         try:
+#             location = instance.job.department.location
+#             head = Employee.objects.select_related("job__department__location").filter(job__department__location__id=location.id, job__name="Coordinator").values()
+#             Employee_head.objects.create(employee=instance, head=head)
+#         except:
+#             pass

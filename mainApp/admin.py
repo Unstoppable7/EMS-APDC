@@ -4,6 +4,9 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.html import format_html
 
+from django.shortcuts import redirect
+from django.urls import path
+
 #Tabular inline models
 
 class ApplicationInline(admin.StackedInline): 
@@ -36,20 +39,28 @@ class EmployeeAdmin(admin.ModelAdmin):
     inlines=[ApplicationInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
     list_display = ['id', 'status', 'type', 'full_name', 'phone_number', 'date_of_birth',
-    'job','get_location','get_head','date_created', 'updated_at']
-    list_filter = ['type', 'status', 'date_created', 'updated_at']
-    search_fields = ['name', 'last_name', 'status']
+    'get_job_name','get_location','get_head','date_created', 'updated_at']
+    list_filter = ['type', 'status','job','job__department__location__name', 'date_created', 'updated_at']
+    search_fields = ['name', 'last_name', 'status','job__department__location__name']
 
-    #TODO buscar como puedo poner en list_display este join o este tipo de variables
+    #Propiedad que me dice que campos tendran el link que lleva a editar
+    list_display_links = ('status',)
+    
+    #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
+    #list_editable = ('status',)
+
+    @admin.display(ordering='job__department__location__name')
     def get_location(self, obj):
         return obj.job.department.location
     get_location.short_description = 'location'
 
-    def get_head(self, obj):
+    @admin.display(ordering='job__name')
+    def get_job_name(self, obj):
+        return obj.job.name
+    get_job_name.short_description = 'Job'
 
-        # location = obj.job.department.location
-        # employee = Employee.objects.select_related("job__department__location").filter(job__department__location__id=location.id, job__name="Coordinator").values()
-        # print(employee)
+    #@admin.display(ordering='head__full_name')
+    def get_head(self, obj):
 
         try:
             employeeHead = Employee_head.objects.get(employee=obj)
@@ -131,6 +142,121 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
     'address','city','zip_code', 'job') 
     inlines=[ApplicationInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
+    list_display = ['id', 'status', 'type', 'full_name', 'phone_number', 'date_of_birth',
+    'get_job_name','get_location','date_created', 'updated_at']
+    list_filter = ['type', 'status','job','job__department__location__name', 'date_created', 'updated_at']
+    search_fields = ['name', 'last_name', 'status','job__department__location__name']
+
+    #Propiedad que me dice que campos tendran el link que lleva a editar
+    #list_display_links = ('status',)
+    
+    #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
+    #list_editable = ('status',)
+
+    def get_head(self, obj):
+
+        try:
+            employeeHead = Employee_head.objects.get(employee=obj)
+        except:
+            return '-'
+
+        return employeeHead.head
+
+    def get_queryset(self, request):
+        
+        head = None
+
+        try:
+            head = Employee.objects.get(mail=request.user.email)
+        except:
+            pass
+        ##TODO tratar para cuando head sea NONE
+        qs = super().get_queryset(request)
+        return qs.filter(job__department__location=head.job.department.location)
+
+    @admin.display(ordering='job__department__location__name')
+    def get_location(self, obj):
+        return obj.job.department.location
+    get_location.short_description = 'location'
+
+    @admin.display(ordering='job__name')
+    def get_job_name(self, obj):
+        return obj.job.name
+    get_job_name.short_description = 'Job'
+
+@admin.register(Employee_head) 
+class EmployeeHead(admin.ModelAdmin):
+
+    #inlines=[ApplicationInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
+
+    list_display = ['get_employee_status','get_employee_type','get_employee_name','get_employee_phone_number','get_employee_date_of_birth','get_employee_address','get_employee_job','get_employee_location','get_employee_date_created','get_employee_updated_at',]
+    
+    list_filter = ['employee__type', 'employee__status','employee__job','employee__job__department__location__name', 'employee__date_created', 'employee__updated_at']
+    search_fields = ['employee__name', 'employee__last_name', 'employee__status','employee__job__department__location__name']
+
+    def get_queryset(self, request):
+        #cambiar a filtrar por email
+        qs = super().get_queryset(request)
+        return qs.filter(head__name=request.user.first_name)
+
+    @admin.display(ordering='employee__address')
+    def get_employee_address(self, obj):
+        return obj.employee.address
+    get_employee_address.short_description = 'Address'
+
+
+    @admin.display(ordering='employee__updated_at')
+    def get_employee_updated_at(self, obj):
+        return obj.employee.updated_at
+    get_employee_updated_at.short_description = 'Update at'
+
+    @admin.display(ordering='employee__date_created')
+    def get_employee_date_created(self, obj):
+        return obj.employee.date_created
+    get_employee_date_created.short_description = 'Date created'
+
+    @admin.display(ordering='employee__job__department__location__name')
+    def get_employee_location(self, obj):
+        return obj.employee.job.department.location
+    get_employee_location.short_description = 'Location'
+
+    @admin.display(ordering='employee__job')
+    def get_employee_job(self, obj):
+        return obj.employee.job.name
+    get_employee_job.short_description = 'Job'
+
+    @admin.display(ordering='employee__date_of_birth')
+    def get_employee_date_of_birth(self, obj):
+        return obj.employee.date_of_birth
+    get_employee_date_of_birth.short_description = 'Date of Birth'
+
+    @admin.display(ordering='employee__full_name')
+    def get_employee_name(self, obj):
+        return obj.employee.full_name
+    get_employee_name.short_description = 'Full name'
+
+    @admin.display(ordering='employee__status')
+    def get_employee_status(self, obj):
+        return obj.employee.status
+    get_employee_status.short_description = 'Status'
+
+    @admin.display(ordering='employee__type')
+    def get_employee_type(self, obj):
+        return obj.employee.type
+    get_employee_type.short_description = 'Type'
+
+    @admin.display(ordering='employee__phone_number')
+    def get_employee_phone_number(self, obj):
+        return obj.employee.phone_number
+    get_employee_phone_number.short_description = 'Phone Number'
+
+    # def change_view(self, request, object_id, form_url='', extra_context=None):
+    #     employee_head = self.get_object(request, object_id)
+    #     url = reverse('admin:%s_%s_change' % (employee_head.employee._meta.app_label, employee_head.employee._meta.model_name), args=[employee_head.employee.id])
+        
+    #     return redirect(url)
+
+
 # def view_application(self, obj):
 #     url = (
 #         reverse("admin:mainApp_application_changelist")
@@ -142,121 +268,10 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
 # view_application.short_description = "Application"
 
 
-
-# class StateAdmin(admin.ModelAdmin):
-#     list_display = ['id', 'name']
-#     list_filter = ['name']
-#     search_fields = ['name']
-
-# class CityAdmin(admin.ModelAdmin):
-#     list_display = ['id', 'name', 'state']
-#     list_filter = ['name', 'state']
-#     search_fields = ['name']
-
-# class LocationAdmin(admin.ModelAdmin):
-#     list_display = ['id', 'name', 'address', 'phone_number', 'zip_code', 'city']
-#     list_filter = ['name', 'address', 'phone_number', 'zip_code', 'city']
-#     search_fields = ['name']
-
-# class DepartmentAdmin(admin.ModelAdmin):
-#     list_display = ['id', 'name', 'location']
-#     list_filter = ['name', 'location']
-#     search_fields = ['name']
-
-# class JobAdmin(admin.ModelAdmin):
-#     list_display = ['id', 'name', 'department']
-#     list_filter = ['name', 'department']
-#     search_fields = ['name']
-
-# class EmployeeAdmin(admin.ModelAdmin):
-#     list_display = ['id', 'name', 'last_name', 'mail', 'type', 'status', 'date_created', 'updated_at']
-#     list_filter = ['type', 'status', 'date_created', 'updated_at']
-#     search_fields = ['name', 'last_name', 'mail', 'status']
-
-# class ApplicationAdmin(admin.ModelAdmin):
-#     list_display = ['employee','id', 'days_available_to_work', 'can_travel', 'can_work_nights', 'can_background_check', 'position_to_apply', 'experience', 'english_level', 'studies', 'military_service', 'file']
-#     list_filter = ['days_available_to_work', 'can_travel', 'can_work_nights', 'can_background_check', 'position_to_apply', 'experience', 'english_level', 'studies', 'military_service']
-#     search_fields = ['employee__name', 'employee__last_name']
-
-# class EmergencyContactAdmin(admin.ModelAdmin):
-#     list_display = ['id', 'name', 'phone_number', 'relationship', 'employee']
-#     list_filter = ['relationship']
-#     search_fields = ['employee__name', 'employee__last_name']
-
-# class DocumentAdmin(admin.ModelAdmin):
-#     list_display = ['id', 'type', 'number', 'date_of_expiration', 'file', 'employee']
-#     list_filter = ['type', 'date_of_expiration']
-#     search_fields = ['employee__name', 'employee__last_name']
-
-# class MedicalFormAdmin(admin.ModelAdmin):
-#     list_display = ['height', 'weight', 'allergic_to', 'diseases_suffered', 'received_workers_compensation', 'received_surgery_for_fracture']
-#     search_fields = ['name']
-
-# class TransactionAdmin(admin.ModelAdmin):
-#     list_display = ['Reference', 'Start_date', 'End_date', 'Regular_hours', 'Regular_rate', 'Overtime_hours', 'Overtime_rate', 'Total_hours', 'Subtotal', 'Extra', 'Total_gross', 'Status', 'Payment_date', 'Withdrawn_date']
-#     search_fields = ['name']
-
-# class JobHistoryAdmin(admin.ModelAdmin):
-#     list_display = ['start_date', 'end_date']
-#     search_fields = ['name']
-
-# @admin.register(Application) 
-# class ApplicationAdmin(admin.ModelAdmin): 
-#     # fields=('experience','english_level', 'can_travel', 'can_work_nights', 'studies', 'days_available_to_work', 'can_background_check', 
-#     # 'military_service',) 
-#     # inlines=[EmployeeInline]
-
-#     list_display = ['get_employee_name', 'get_employee_phone_number','get_employee_address',
-#     'get_employee_city', 'get_employee_zip_code',  'get_medical_form']
-#     #list_editable = ['get_employee_phone_number']
-#     #list_filter = ['type', 'status', 'date_created', 'updated_at']
-#     #search_fields = ['name', 'last_name', 'status']
-
-#     def get_employee_name(self, obj):
-        
-#         return obj.employee.full_name
-    
-#     def get_medical_form(self, obj):
-#         medicalForm = MedicalForm.objects.filter(employee = obj.employee)
-#         print(medicalForm)
-#         if not medicalForm.exists():
-#             print("NONE")
-#         return obj.employee.full_name
-#     get_medical_form.short_description = 'name'
-
-#     def get_employee_phone_number(self, obj):
-#         return obj.employee.phone_number
-#     get_employee_phone_number.short_description = 'phone number'
-
-#     def get_employee_address(self, obj):
-#         return obj.employee.address
-#     get_employee_address.short_description = 'address'
-
-#     def get_employee_city(self, obj):
-#         return obj.employee.city
-#     get_employee_city.short_description = 'city'
-
-#     def get_employee_zip_code(self, obj):
-#         return obj.employee.zip_code
-#     get_employee_zip_code.short_description = 'zip code'
-
-#     def get_employee_phone_number(self, obj):
-#         return obj.employee.phone_number
-#     get_employee_phone_number.short_description = 'phone number'
-
-#     def get_employee_phone_number(self, obj):
-#         return obj.employee.phone_number
-#     get_employee_phone_number.short_description = 'phone number'
-
-#     def get_employee_phone_number(self, obj):
-#         return obj.employee.phone_number
-#     get_employee_phone_number.short_description = 'phone number'
-
-admin.site.register(Employee_head)
 admin.site.register(Job)
 admin.site.register(Department)
 admin.site.register(Location)
-admin.site.register(Document)
+#admin.site.register(Document)
 
 
 
