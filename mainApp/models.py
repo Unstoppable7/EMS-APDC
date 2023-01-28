@@ -4,6 +4,8 @@ import datetime
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
+from django.db.models import Q
+
 def current_time():
     return datetime.datetime.now()
 
@@ -76,7 +78,7 @@ class Employee(models.Model):
     zip_code = models.CharField(max_length=10)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="Interview")
     city = models.ForeignKey(City, on_delete=models.CASCADE)
-    job = models.ForeignKey(Job, default= get_default_none_job, on_delete=models.CASCADE)
+    #job = models.ForeignKey(Job, default= get_default_none_job, on_delete=models.CASCADE)
     date_created = models.DateTimeField(default=current_time)
     updated_at = models.DateTimeField(default=current_time)
     
@@ -105,33 +107,160 @@ class EmployeeByCoordinator(Employee):
         verbose_name = 'Employee By Coordinator Deprecated'
 
 class Employee_head(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee')
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employeeWithHead')
     head = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='head')
 
     def __str__(self):
         return f'{self.employee.full_name} - {self.head.full_name}'
     
-    class Meta:
-        verbose_name = 'Coordinator Employee'
+    # class Meta:
+    #     verbose_name = 'Coordinator Employee'
 
-@receiver(pre_save, sender=Employee)
-def pre_save_employee_head(sender, instance, **kwargs):
-    
-    job_department_location = instance.job.department.location
+    def __eq__(self, other):
+        return self.employee == other.employee and self.head == other.head
 
-    try:
-        print("ENTRA EN TRY DE pre_save_employee_head")
+class Employee_job(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee')
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='job')
 
-        head = Employee.objects.select_related("job__department__location").filter(job__department__location__id=job_department_location.id, job__name="Coordinator").first()
+    #Sobrescribimos el metodo save
+    def save(self, *args, **kwargs):
 
-        relation, created = Employee_head.objects.get_or_create(employee=instance, defaults={'employee': instance, 'head': head})
+        #Buscamos en el objeto antes de ser editado si tiene un trabajo de coordinator
+        employee_job_coordinator_old = Employee_job.objects.filter(pk=self.pk).filter(job__name="Coordinator")
+        
+        #Variable que usaremos para definir si antes de ejecutar este save tenia un trabajo de coordinator
+        was_coordinator = False
 
-        if not created:
-            relation.head = head
-            relation.save()
-    except:
-        print("ENTRA EN EXCEPT DE pre_save_employee_head")
-        pass
+        #Si el objeto antes de ser editado si tiene un trabajo de coordinator y el trabajo que se le esta asignando es diferente a coordinator, hacemos true nuestra bandera
+        if employee_job_coordinator_old.exists() and self.job.name != 'Coordinator':
+            was_coordinator = True
+
+        #Metodo padre que guarda el objeto en la db
+        super().save(*args, **kwargs)  # Call the "real" save() method.
+
+        #Si el cambio del objeto fue que su trabajo ahora sea coordinator o si venia de ser coordinator y ahora no lo es
+        if self.job.name == 'Coordinator' or was_coordinator:
+            
+            #Eliminamos todos las referencias de este objeto como coordinator
+            Employee_head.objects.filter(head=self.employee).delete()
+
+            #Lista donde guardaremos las nuevas referencias de este objeto como coordinator
+            employee_heads_to_create = []
+
+            #Recorremos todos los trabajos que sean de coordinator de este empleado
+            for employee_job_employee in Employee_job.objects.filter(employee=self.employee).filter(job__name="Coordinator"):
+                
+                #Guardamos la locacion de cada trabajo
+                location = employee_job_employee.job.department.location
+
+                #Recorremos cada empleado que tiene un trabajo con esa locacion exceptuando los trabajos de coordinator
+                for employee_job_employee in Employee_job.objects.filter(job__department__location=location).exclude(job__name='Coordinator'):
+                    
+                    #Agregamos la referencia del empleado con el coordinator a la lista
+                    employee_heads_to_create.append(Employee_head(employee=employee_job_employee.employee, head=self.employee))
+            try:
+                #Intentamos crear en la db todos los objetos de la lista
+                Employee_head.objects.bulk_create(employee_heads_to_create)
+            except:
+                pass
+
+        #Eliminamos todas las referencias de este objeto como empleado de un coordinator
+        Employee_head.objects.filter(employee=self.employee).delete()
+        
+        #Lista donde guardaremos las nuevas referencias
+        employee_heads_to_create = []
+
+        #Recorremos cada trabajo de este empleado exceptuando los trabajos de coordinador
+        for employee_job_employee in Employee_job.objects.filter(employee=self.employee).exclude(job__name='Coordinator'):
+            
+            #Guardamos la locacion de cada trabajo
+            location = employee_job_employee.job.department.location
+
+            #Recorremos todos los coordinadores que tienen esa locacion
+            for employee_job_coordinator in Employee_job.objects.filter(job__department__location=location).filter(job__name='Coordinator'):
+                
+                #Evitamos duplicados, si no ha sido agregado la referencia a la lista procedemos
+                if not Employee_head(employee=self.employee, head=employee_job_coordinator.employee) in employee_heads_to_create:
+
+                    #Agregamos la referencia del empleado con el coordinator a la lista
+                    employee_heads_to_create.append(Employee_head(employee=self.employee, head=employee_job_coordinator.employee))
+        try:
+            #Intentamos crear en la db todos los objetos de la lista
+            Employee_head.objects.bulk_create(employee_heads_to_create)
+        except:
+            pass
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        
+        if self.job.name == 'Coordinator':
+
+            Employee_head.objects.filter(head=self.employee).delete()
+
+            employee_heads_to_create = []
+            
+            for employee_job_employee in Employee_job.objects.filter(employee=self.employee).filter(job__name="Coordinator"):
+
+                location = employee_job_employee.job.department.location
+
+                for employee_job_employee in Employee_job.objects.filter(job__department__location=location).exclude(job__name='Coordinator'):
+                
+                    employee_heads_to_create.append(Employee_head(employee=employee_job_employee.employee, head=self.employee))
+            try:
+                Employee_head.objects.bulk_create(employee_heads_to_create)
+            except:
+                pass
+
+        Employee_head.objects.filter(employee=self.employee).delete()
+
+        employee_heads_to_create = []
+
+        for employee_job_employee in Employee_job.objects.filter(employee=self.employee).exclude(job__name='Coordinator'):
+            
+            location = employee_job_employee.job.department.location
+
+            for employee_job_coordinator in Employee_job.objects.filter(job__department__location=location).filter(job__name='Coordinator'):
+                
+                if not Employee_head(employee=self.employee, head=employee_job_coordinator.employee) in employee_heads_to_create:
+
+                    employee_heads_to_create.append(Employee_head(employee=self.employee, head=employee_job_coordinator.employee))
+        try:
+            Employee_head.objects.bulk_create(employee_heads_to_create)
+        except:
+            pass
+
+    def __str__(self):
+        #return f'{self.employee.full_name} - {self.job}'
+        return 'Esto es el __str__ de Employee_job'
+
+#TODO por employee_job
+# @receiver(pre_save, sender=Employee_job)
+# def pre_save_employee_job(sender, instance, **kwargs):
+#     print('\n\n')
+#     print(instance.employee)
+#     print('\n\n')
+
+    # #jobs = Employee_job.objects.filter(employee=instance)
+    # jobs = Employee_job.objects.get_or_create(employee=instance, defaults={'employee': instance, 'head': head})
+    # print('\n\n')
+    # print(jobs)
+    # print('\n\n')
+
+    # job_department_location = instance.job.department.location
+
+    # try:
+
+    #     head = Employee.objects.select_related("job__department__location").filter(job__department__location__id=job_department_location.id, job__name="Coordinator").first()
+
+    #     relation, created = Employee_head.objects.get_or_create(employee=instance, defaults={'employee': instance, 'head': head})
+
+    #     if not created:
+    #         relation.head = head
+    #         relation.save()
+    # except:
+    #     print("ENTRA EN EXCEPT DE pre_save_employee_head")
+    #     pass
       
 class Application(models.Model):
     DAYS_AVAILABLE_TO_WORK_CHOICES = [
