@@ -233,6 +233,8 @@ class Employee_job(models.Model):
     def __str__(self):
         #return f'{self.employee.full_name} - {self.job}'
         return 'Esto es el __str__ de Employee_job'
+    class Meta:
+        unique_together = (('employee', 'job'),)
 
 #TODO por employee_job
 # @receiver(pre_save, sender=Employee_job)
