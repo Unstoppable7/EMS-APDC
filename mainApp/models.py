@@ -106,6 +106,11 @@ class EmployeeByCoordinator(Employee):
         proxy = True
         verbose_name = 'My employee'
 
+class EmployeeOpen(Employee): 
+    class Meta:
+        proxy = True
+        verbose_name = 'Recruiting'
+
 class Employee_head(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employeeWithHead')
     head = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='head')
@@ -310,7 +315,7 @@ class Application(models.Model):
     studies = models.CharField(max_length=12, choices=STUDIES_LEVEL_CHOICES)
     specialty_of_studies = models.CharField(max_length=50, blank=True)
     military_service = models.BooleanField()
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='application_employee')
 
     def __str__(self):
         return self.employee.name

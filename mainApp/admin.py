@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Location,Department,Employee,EmployeeInterview, Application, Emergency_contact, Document, MedicalForm, EmployeeByCoordinator, Employee_head, Employee_job, Job
+from .models import Location,Department,Employee,EmployeeInterview, Application, Emergency_contact, Document, MedicalForm, EmployeeByCoordinator, Employee_head, Employee_job, Job,EmployeeOpen
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.html import format_html
@@ -38,6 +38,155 @@ class Employee_jobInline(admin.StackedInline):
    extra = 1
 #END tabular inline models
 
+#CustomFilters
+
+class ExperienceListFilter(admin.SimpleListFilter):
+    # Human-readable title which will be displayed in the
+    # right admin sidebar just above the filter options.
+    title = ('Experience')
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'experience'
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each
+        tuple is the coded value for the option that will
+        appear in the URL query. The second element is the
+        human-readable name for the option that will appear
+        in the right sidebar.
+        """
+        return [('Manager', 'Manager'),
+        ('Housekeeping', 'Housekeeping'),
+        ('Houseman', 'Houseman'),
+        ('Community Areas', 'Community Areas'),
+        ('Supervisor', 'Supervisor'),
+        ('Inspector', 'Inspector'),
+        ('Cook', 'Cook'),
+        ('Precook', 'Precook'),
+        ('Bartender', 'Bartender'),
+        ('Steward', 'Steward'),
+        ('Front desk', 'Front desk'),
+        ('Guess services', 'Guess services'),
+        ('Maintenance', 'Maintenance'),
+        ('Other', 'Other'),]
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        # Compare the requested value (either '80s' or '90s')
+        # to decide how to filter the queryset.
+        if not self.value() == None:
+            return queryset.filter(application_employee__experience__icontains=self.value())
+
+class EnglishLevelListFilter(admin.SimpleListFilter):
+    # Human-readable title which will be displayed in the
+    # right admin sidebar just above the filter options.
+    title = ('English Level')
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'English_level'
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each
+        tuple is the coded value for the option that will
+        appear in the URL query. The second element is the
+        human-readable name for the option that will appear
+        in the right sidebar.
+        """
+        return [
+        ('None', 'None'),
+        ('Basic', 'Basic'),
+        ('Intermediate', 'Intermediate'),
+        ('Advanced', 'Advanced'),
+        ('Fluent', 'Fluent')
+        ]
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        # Compare the requested value (either '80s' or '90s')
+        # to decide how to filter the queryset.
+        if not self.value() == None:
+            return queryset.filter(application_employee__english_level=self.value())
+
+class CanTravelListFilter(admin.SimpleListFilter):
+    # Human-readable title which will be displayed in the
+    # right admin sidebar just above the filter options.
+    title = ('Can Travel')
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'Can_travel'
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each
+        tuple is the coded value for the option that will
+        appear in the URL query. The second element is the
+        human-readable name for the option that will appear
+        in the right sidebar.
+        """
+        return [
+        ('true', 'Yes'),
+        ('false', 'No'),
+        ]
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        # Compare the requested value (either '80s' or '90s')
+        # to decide how to filter the queryset.
+        if self.value() == 'true':
+            return queryset.filter(application_employee__can_travel=True)
+        if self.value() == 'false':
+            return queryset.filter(application_employee__can_travel=False)
+
+class CanWorkNightListFilter(admin.SimpleListFilter):
+    # Human-readable title which will be displayed in the
+    # right admin sidebar just above the filter options.
+    title = ('Can Work Night')
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'can_work_night'
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each
+        tuple is the coded value for the option that will
+        appear in the URL query. The second element is the
+        human-readable name for the option that will appear
+        in the right sidebar.
+        """
+        return [
+        ('true', 'Yes'),
+        ('false', 'No'),
+        ]
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        # Compare the requested value (either '80s' or '90s')
+        # to decide how to filter the queryset.
+        if self.value() == 'true':
+            return queryset.filter(application_employee__can_work_nights=True)
+        if self.value() == 'false':
+            return queryset.filter(application_employee__can_work_nights=False)
+
+#END customFilters
+
 @admin.register(Employee) 
 class EmployeeAdmin(admin.ModelAdmin): 
     fields=('type', 'status', 'name', 'last_name', 'phone_number', 'mail', 'date_of_birth', 
@@ -50,7 +199,7 @@ class EmployeeAdmin(admin.ModelAdmin):
     search_fields = ['name', 'last_name', 'status']
 
     #Propiedad que me dice que campos tendran el link que lleva a editar
-    list_display_links = ('status',)
+    list_display_links = ('full_name',)
     
     #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
     #list_editable = ('status',)
@@ -93,13 +242,78 @@ class EmployeeAdminInterview(admin.ModelAdmin):
     list_display = ['id', 'full_name', 'date_of_birth','get_application_experience',
     'get_application_english_level','get_application_can_travel','get_application_can_work_nights',
     'date_created']
-    #list_filter = ['date_created']
+    list_filter = [ExperienceListFilter,EnglishLevelListFilter,CanTravelListFilter,CanWorkNightListFilter]
     search_fields = ['name', 'last_name']
+    list_display_links = ('full_name',)
 
     def get_queryset(self, request):
         
         qs = super().get_queryset(request)
         return qs.filter(status="Interview")
+
+    def get_application_english_level(self, obj):
+        
+        application = Application.objects.filter(employee=obj.id).first()
+        
+        if(application == None):
+            return '-'
+        
+        return application.english_level
+    get_application_english_level.short_description = 'english_level'
+
+    def get_application_can_travel(self, obj):
+        
+        application = Application.objects.filter(employee=obj.id).first()
+        
+        if(application == None):
+            return '-'
+        
+        if application.can_travel:
+            return 'Yes'
+        else:
+            return 'No'
+    get_application_can_travel.short_description = 'can travel'
+
+    def get_application_experience(self, obj):
+        
+        application = Application.objects.filter(employee=obj.id).first()
+
+        if(application == None):
+            return '-'
+        
+        return application.experience
+    get_application_experience.short_description = 'experience'
+
+    def get_application_can_work_nights(self, obj):
+        
+        application = Application.objects.filter(employee=obj.id).first()
+        
+        if(application == None):
+            return '-'
+        
+        if application.can_work_nights:
+            return 'Yes'
+        else:
+            return 'No'
+    get_application_can_work_nights.short_description = 'can work nights'
+
+@admin.register(EmployeeOpen) 
+class EmployeeOpenAdmin(admin.ModelAdmin): 
+    fields=('type', 'status', 'name', 'last_name', 'phone_number', 'mail', 'date_of_birth', 
+    'address','city','zip_code') 
+    inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
+
+    list_display = ['id', 'full_name', 'date_of_birth','get_application_experience',
+    'get_application_english_level','get_application_can_travel','get_application_can_work_nights',
+    'date_created']
+    list_filter = [ExperienceListFilter,EnglishLevelListFilter,CanTravelListFilter,CanWorkNightListFilter]
+    search_fields = ['name', 'last_name']
+    list_display_links = ('full_name',)
+
+    def get_queryset(self, request):
+        
+        qs = super().get_queryset(request)
+        return qs.filter(status="Open")
 
     def get_application_english_level(self, obj):
         
@@ -160,7 +374,7 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
     search_fields = ['name', 'last_name', 'status']
 
     #Propiedad que me dice que campos tendran el link que lleva a editar
-    #list_display_links = ('status',)
+    list_display_links = ('full_name',)
     
     #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
     #list_editable = ('status',)
@@ -199,11 +413,11 @@ admin.site.register(Location)
 admin.site.register(Job)
 
 # @admin.register(Employee_job)
-# class Employee_job(admin.ModelAdmin):
+# class Employee_jobAdmin(admin.ModelAdmin):
 #     list_display = ('employee','job')
 
 # @admin.register(Employee_head) 
-# class EmployeeHead(admin.ModelAdmin):
+# class Employee_headAdmin(admin.ModelAdmin):
 
 #     #inlines=[ApplicationInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
