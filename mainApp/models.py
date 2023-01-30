@@ -80,7 +80,7 @@ class Employee(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     #job = models.ForeignKey(Job, default= get_default_none_job, on_delete=models.CASCADE)
     date_created = models.DateTimeField(default=current_time)
-    updated_at = models.DateTimeField(default=current_time)
+    updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return self.name
@@ -104,7 +104,7 @@ class EmployeeInterview(Employee):
 class EmployeeByCoordinator(Employee): 
     class Meta:
         proxy = True
-        verbose_name = 'Employee By Coordinator Deprecated'
+        verbose_name = 'My employee'
 
 class Employee_head(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employeeWithHead')
@@ -235,6 +235,7 @@ class Employee_job(models.Model):
         return 'Esto es el __str__ de Employee_job'
     class Meta:
         unique_together = (('employee', 'job'),)
+
 
 #TODO por employee_job
 # @receiver(pre_save, sender=Employee_job)
