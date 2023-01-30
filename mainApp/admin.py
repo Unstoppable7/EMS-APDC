@@ -408,9 +408,18 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
 class Department(admin.ModelAdmin):
     list_display = ('name','location')
 
+@admin.register(Job)
+class Job(admin.ModelAdmin):
+    list_display = ('name','department','get_location')
+
+    @admin.display(ordering='department__location')
+    def get_location(self,obj):
+        return obj.department.location
+    get_location.short_description = 'Location'
+    
+        
 admin.site.register(Location)
 #admin.site.register(Employee_head)
-admin.site.register(Job)
 
 # @admin.register(Employee_job)
 # class Employee_jobAdmin(admin.ModelAdmin):

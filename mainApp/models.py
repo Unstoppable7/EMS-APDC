@@ -236,8 +236,7 @@ class Employee_job(models.Model):
             pass
 
     def __str__(self):
-        #return f'{self.employee.full_name} - {self.job}'
-        return 'Esto es el __str__ de Employee_job'
+        return f'{self.employee.full_name} - {self.job}'
     class Meta:
         unique_together = (('employee', 'job'),)
 
