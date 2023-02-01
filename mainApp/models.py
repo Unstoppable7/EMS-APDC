@@ -125,7 +125,7 @@ class Employee_head(models.Model):
         return self.employee == other.employee and self.head == other.head
 
 class Employee_job(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee')
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee_job_employee')
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='job')
 
     #Sobrescribimos el metodo save
@@ -239,6 +239,7 @@ class Employee_job(models.Model):
         return f'{self.employee.full_name} - {self.job}'
     class Meta:
         unique_together = (('employee', 'job'),)
+        verbose_name = "Employee Job"
 
 
 #TODO por employee_job
@@ -317,7 +318,7 @@ class Application(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='application_employee')
 
     def __str__(self):
-        return self.employee.name
+        return self.employee.full_name
 
 class Emergency_contact(models.Model):
     name = models.CharField(max_length=50)
@@ -327,6 +328,10 @@ class Emergency_contact(models.Model):
     
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Emergency Contact"
+
 
 class Document(models.Model):
     TYPE_CHOICES = [

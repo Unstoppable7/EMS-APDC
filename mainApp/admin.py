@@ -185,6 +185,24 @@ class CanWorkNightListFilter(admin.SimpleListFilter):
         if self.value() == 'false':
             return queryset.filter(application_employee__can_work_nights=False)
 
+class LocationListFilter(admin.SimpleListFilter):
+    title = 'Location'
+    parameter_name = 'location'
+
+    def lookups(self, request, model_admin):
+        #qs = model_admin.get_queryset(request)
+        #types = qs.values_list('Location')
+
+        #Buscar solo los nombres
+        types = Location.objects.values_list('name',flat=True)
+
+        return [(value, value) for value in types]
+
+    def queryset(self, request, queryset):
+        if self.value() is None:
+            return queryset
+        return queryset.filter(employee_job_employee__job__department__location__name=self.value())
+
 #END customFilters
 
 @admin.register(Employee) 
@@ -193,21 +211,27 @@ class EmployeeAdmin(admin.ModelAdmin):
     'address','city','zip_code') 
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['id', 'status', 'type', 'full_name', 'phone_number', 'date_of_birth',
+    list_display = ['status', 'type', 'full_name', 'phone_number', 'date_of_birth',
     'get_job_name','get_head','date_created', 'updated_at']
-    list_filter = ['type', 'status', 'date_created', 'updated_at']
+    list_filter = ['type', 'status',LocationListFilter, 'date_created', 'updated_at']
     search_fields = ['name', 'last_name', 'status']
 
     #Propiedad que me dice que campos tendran el link que lleva a editar
     list_display_links = ('full_name',)
     
     #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
-    #list_editable = ('status',)
+    #list_editable = ('updated_at',)
 
-    # @admin.display(ordering='job__department__location__name')
-    # def get_location(self, obj):
-    #     return obj.job.department.location
-    # get_location.short_description = 'location'
+    # def get_locations(obj):
+    #     locations = []
+    #     for employee_job in Employee_job.objects.filter(employee=obj.value()):
+
+    #         locations.append(str(employee_job.job.department.location))
+        
+    #     if not locations:
+    #         return '-'
+    #     return ','.join(locations)
+
 
     #@admin.display(ordering='job__name')
     def get_job_name(self, obj):
@@ -239,9 +263,8 @@ class EmployeeAdminInterview(admin.ModelAdmin):
     'address','city','zip_code') 
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['id', 'full_name', 'date_of_birth','get_application_experience',
-    'get_application_english_level','get_application_can_travel','get_application_can_work_nights',
-    'date_created']
+    list_display = ['full_name', 'date_of_birth','get_application_experience',
+    'get_application_english_level','get_application_can_travel','get_application_can_work_nights',]
     list_filter = [ExperienceListFilter,EnglishLevelListFilter,CanTravelListFilter,CanWorkNightListFilter]
     search_fields = ['name', 'last_name']
     list_display_links = ('full_name',)
@@ -303,9 +326,9 @@ class EmployeeOpenAdmin(admin.ModelAdmin):
     'address','city','zip_code') 
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['id', 'full_name', 'date_of_birth','get_application_experience',
+    list_display = ['full_name', 'phone_number','date_of_birth','get_application_experience',
     'get_application_english_level','get_application_can_travel','get_application_can_work_nights',
-    'date_created']
+    ]
     list_filter = [ExperienceListFilter,EnglishLevelListFilter,CanTravelListFilter,CanWorkNightListFilter]
     search_fields = ['name', 'last_name']
     list_display_links = ('full_name',)
@@ -368,9 +391,9 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
     'address','city','zip_code') 
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['id', 'status', 'type', 'full_name', 'phone_number', 'date_of_birth',
+    list_display = ['status', 'type', 'full_name', 'phone_number', 'date_of_birth',
     'get_job_name','date_created', 'updated_at']
-    list_filter = ['type', 'status', 'date_created', 'updated_at']
+    list_filter = ['type', 'status', LocationListFilter, 'date_created', 'updated_at']
     search_fields = ['name', 'last_name', 'status']
 
     #Propiedad que me dice que campos tendran el link que lleva a editar
@@ -406,11 +429,15 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
 
 @admin.register(Department)
 class Department(admin.ModelAdmin):
-    list_display = ('name','location')
+    list_display = ('id','name','location')
+
+@admin.register(Employee_job)
+class Employee_jobs(admin.ModelAdmin):
+    list_display = ('id','employee','job')
 
 @admin.register(Job)
 class Job(admin.ModelAdmin):
-    list_display = ('name','department','get_location')
+    list_display = ('id','name','department','get_location')
 
     @admin.display(ordering='department__location')
     def get_location(self,obj):
