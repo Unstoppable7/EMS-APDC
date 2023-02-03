@@ -103,7 +103,6 @@ class EnglishLevelListFilter(admin.SimpleListFilter):
         ('Basic', 'Basic'),
         ('Intermediate', 'Intermediate'),
         ('Advanced', 'Advanced'),
-        ('Fluent', 'Fluent')
         ]
 
     def queryset(self, request, queryset):
@@ -115,6 +114,10 @@ class EnglishLevelListFilter(admin.SimpleListFilter):
         # Compare the requested value (either '80s' or '90s')
         # to decide how to filter the queryset.
         if not self.value() == None:
+            
+            if self.value() == 'Intermediate':
+                return queryset.filter(Q(application_employee__english_level='Intermediate') | Q(application_employee__english_level='Advanced'))
+
             return queryset.filter(application_employee__english_level=self.value())
 
 class CanTravelListFilter(admin.SimpleListFilter):
@@ -212,33 +215,33 @@ class EmployeeAdmin(admin.ModelAdmin):
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
     list_display = ['status', 'type', 'full_name', 'phone_number', 'date_of_birth',
-    'get_job_name','get_head','date_created', 'updated_at']
-    list_filter = ['type', 'status',LocationListFilter, 'date_created', 'updated_at']
-    search_fields = ['name', 'last_name', 'status']
+    'get_job_name','get_locations','get_head','date_created', 'updated_at']
+    list_filter = ['type', 'status','employee_job_employee__job__department__location__name', 'date_created', 'updated_at',]
+    search_fields = ['name', 'last_name', 'status', 'employee_job_employee__job__department__location__name']
 
     #Propiedad que me dice que campos tendran el link que lleva a editar
     list_display_links = ('full_name',)
     
     #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
     #list_editable = ('updated_at',)
+    @admin.display(ordering='employee_job_employee__job__department__location__name')
+    def get_locations(self, obj):
+        locations = []
+        for employee_job in Employee_job.objects.filter(employee=obj):
 
-    # def get_locations(obj):
-    #     locations = []
-    #     for employee_job in Employee_job.objects.filter(employee=obj.value()):
-
-    #         locations.append(str(employee_job.job.department.location))
+            locations.append(str(employee_job.job.department.location))
         
-    #     if not locations:
-    #         return '-'
-    #     return ','.join(locations)
-
+        if not locations:
+            return '-'
+        return ','.join(locations)
+    get_locations.short_description = 'Location'
 
     #@admin.display(ordering='job__name')
     def get_job_name(self, obj):
         jobs = []
         for employee_job in Employee_job.objects.filter(employee=obj):
 
-            jobs.append(str(employee_job.job))
+            jobs.append(str(employee_job.job.name))
         
         if not jobs:
             return '-'
@@ -393,8 +396,8 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
 
     list_display = ['status', 'type', 'full_name', 'phone_number', 'date_of_birth',
     'get_job_name','date_created', 'updated_at']
-    list_filter = ['type', 'status', LocationListFilter, 'date_created', 'updated_at']
-    search_fields = ['name', 'last_name', 'status']
+    list_filter = ['type', 'status', 'employee_job_employee__job__department__location__name', 'date_created', 'updated_at']
+    search_fields = ['name', 'last_name', 'status','employee_job_employee__job__department__location__name']
 
     #Propiedad que me dice que campos tendran el link que lleva a editar
     list_display_links = ('full_name',)
@@ -431,9 +434,9 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
 class Department(admin.ModelAdmin):
     list_display = ('id','name','location')
 
-@admin.register(Employee_job)
-class Employee_jobs(admin.ModelAdmin):
-    list_display = ('id','employee','job')
+# @admin.register(Employee_job)
+# class Employee_jobs(admin.ModelAdmin):
+#     list_display = ('id','employee','job')
 
 @admin.register(Job)
 class Job(admin.ModelAdmin):
