@@ -34,19 +34,17 @@ class Location(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Call the "real" save() method.
+        dpt = Department.objects.create(name='Coordination',location=self)
+        Job.objects.create(name='Coordinator',department=dpt)
+
 class Department(models.Model):
     name = models.CharField(max_length=100)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
-
-def get_default_none_job():
-    noneState = State.objects.get_or_create(name="None")[0]
-    noneCity = City.objects.get_or_create(name="None", state=noneState)[0]
-    noneLocation = Location.objects.get_or_create(name="None", city=noneCity)[0]
-    noneDepartment = Department.objects.get_or_create(name="None", location=noneLocation)[0]
-    return Job.objects.get_or_create(name="None", department=noneDepartment)[0]
 
 class Job(models.Model):
     name = models.CharField(max_length=100)
@@ -78,7 +76,6 @@ class Employee(models.Model):
     zip_code = models.CharField(max_length=10)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="Interview")
     city = models.ForeignKey(City, on_delete=models.CASCADE)
-    #job = models.ForeignKey(Job, default= get_default_none_job, on_delete=models.CASCADE)
     date_created = models.DateTimeField(default=current_time)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -298,7 +295,6 @@ class Application(models.Model):
         ('Basic', 'Basic'),
         ('Intermediate', 'Intermediate'),
         ('Advanced', 'Advanced'),
-        ('Fluent', 'Fluent')
     ]
     STUDIES_LEVEL_CHOICES = [
         ('None', 'None'),
