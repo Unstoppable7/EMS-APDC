@@ -94,8 +94,11 @@ class Employee(models.Model):
         unique_together = (('phone_number', 'date_of_birth'),)
 
     def save(self, *args, **kwargs):
+        print("\n\n")
+        if(self.status != "Active"):
+            for e in Employee_job.objects.filter(employee=self):
+                e.delete()
         super().save(*args, **kwargs)
-
         
 class EmployeeInterview(Employee): 
     class Meta:
@@ -144,6 +147,10 @@ class Employee_job(models.Model):
 
         #Metodo padre que guarda el objeto en la db
         super().save(*args, **kwargs)  # Call the "real" save() method.
+        
+        #Cambio el status del empleado a Active
+        self.employee.status = "Active"
+        self.employee.save()
 
         #Si el cambio del objeto fue que su trabajo ahora sea coordinator o si venia de ser coordinator y ahora no lo es
         if self.job.name == 'Coordinator' or was_coordinator:

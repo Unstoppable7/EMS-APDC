@@ -223,6 +223,7 @@ class EmployeeAdmin(admin.ModelAdmin):
     @admin.action(description='Mark as active')
     def make_active(self, request, queryset):
         updated = queryset.update(status='Active')
+        
         self.message_user(request, ngettext(
             '%d employee was successfully marked as active.',
             '%d employees were successfully marked as active.',
@@ -231,30 +232,40 @@ class EmployeeAdmin(admin.ModelAdmin):
 
     @admin.action(description='Mark as open')
     def make_open(self, request, queryset):
-        updated = queryset.update(status='Open')
+            
+        for e in queryset:
+            e.status = 'Open'
+            e.save()
+
         self.message_user(request, ngettext(
             '%d employee was successfully marked as open.',
             '%d employees were successfully marked as open.',
-            updated,
-        ) % updated, messages.SUCCESS)
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
 
     @admin.action(description='Mark as inactive')
     def make_inactive(self, request, queryset):
-        updated = queryset.update(status='Inactive')
+        for e in queryset:
+            e.status = 'Inactive'
+            e.save()
+
         self.message_user(request, ngettext(
             '%d employee was successfully marked as inactive.',
             '%d employees were successfully marked as inactive.',
-            updated,
-        ) % updated, messages.SUCCESS)
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
 
     @admin.action(description='Mark as do not hire')
     def make_do_not_hire(self, request, queryset):
-        updated = queryset.update(status='Do Not Hire')
+        for e in queryset:
+            e.status = 'Do Not Hire'
+            e.save()
+
         self.message_user(request, ngettext(
             '%d employee was successfully marked as do not hire.',
             '%d employees were successfully marked as do not hire.',
-            updated,
-        ) % updated, messages.SUCCESS)
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
 
     #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
     #list_editable = ('updated_at',)
@@ -321,21 +332,28 @@ class EmployeeAdminInterview(admin.ModelAdmin):
 
     @admin.action(description='Mark as open')
     def make_open(self, request, queryset):
-        updated = queryset.update(status='Open')
+            
+        for e in queryset:
+            e.status = 'Open'
+            e.save()
+
         self.message_user(request, ngettext(
             '%d employee was successfully marked as open.',
             '%d employees were successfully marked as open.',
-            updated,
-        ) % updated, messages.SUCCESS)
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
 
     @admin.action(description='Mark as do not hire')
     def make_do_not_hire(self, request, queryset):
-        updated = queryset.update(status='Do Not Hire')
+        for e in queryset:
+            e.status = 'Do Not Hire'
+            e.save()
+
         self.message_user(request, ngettext(
             '%d employee was successfully marked as do not hire.',
             '%d employees were successfully marked as do not hire.',
-            updated,
-        ) % updated, messages.SUCCESS)
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
 
     def get_queryset(self, request):
         
@@ -415,12 +433,15 @@ class EmployeeOpenAdmin(admin.ModelAdmin):
 
     @admin.action(description='Mark as do not hire')
     def make_do_not_hire(self, request, queryset):
-        updated = queryset.update(status='Do Not Hire')
+        for e in queryset:
+            e.status = 'Do Not Hire'
+            e.save()
+
         self.message_user(request, ngettext(
             '%d employee was successfully marked as do not hire.',
             '%d employees were successfully marked as do not hire.',
-            updated,
-        ) % updated, messages.SUCCESS)
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
 
     def get_queryset(self, request):
         
@@ -494,31 +515,41 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
 
     @admin.action(description='Mark as open')
     def make_open(self, request, queryset):
-        updated = queryset.update(status='Open')
+            
+        for e in queryset:
+            e.status = 'Open'
+            e.save()
+
         self.message_user(request, ngettext(
             '%d employee was successfully marked as open.',
             '%d employees were successfully marked as open.',
-            updated,
-        ) % updated, messages.SUCCESS)
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
 
     @admin.action(description='Mark as inactive')
     def make_inactive(self, request, queryset):
-        updated = queryset.update(status='Inactive')
+        for e in queryset:
+            e.status = 'Inactive'
+            e.save()
+
         self.message_user(request, ngettext(
             '%d employee was successfully marked as inactive.',
             '%d employees were successfully marked as inactive.',
-            updated,
-        ) % updated, messages.SUCCESS)
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
 
     @admin.action(description='Mark as do not hire')
     def make_do_not_hire(self, request, queryset):
-        updated = queryset.update(status='Do Not Hire')
+        for e in queryset:
+            e.status = 'Do Not Hire'
+            e.save()
+
         self.message_user(request, ngettext(
             '%d employee was successfully marked as do not hire.',
             '%d employees were successfully marked as do not hire.',
-            updated,
-        ) % updated, messages.SUCCESS)
-        
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
+
     def get_queryset(self, request):
         my_empoyees = super().get_queryset(request)
         
