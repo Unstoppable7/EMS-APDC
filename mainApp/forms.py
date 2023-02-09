@@ -2,6 +2,8 @@ from django import forms
 from .models import Employee,Application,Emergency_contact,Document,MedicalForm,City
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit
+from django.core.exceptions import NON_FIELD_ERRORS
+
 
 class EmployeeForm(forms.ModelForm):
 
@@ -19,6 +21,12 @@ class EmployeeForm(forms.ModelForm):
             'name':'Enter the name as it appears on your identity document',
             'last_name':'Enter the last name as it appears on your identity document',
             'mail':'Email',
+        }
+        error_messages = {
+            NON_FIELD_ERRORS: {
+                #'unique_together': "%(model_name)s's %(field_labels)s are not unique.",
+                'unique_together': "There is already a person registered with %(field_labels)s",
+            }
         }
     def clean_name(self):
         name = self.cleaned_data.get('name')

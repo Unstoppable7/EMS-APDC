@@ -1,12 +1,7 @@
 from django.contrib import admin
 from .models import Location,Department,Employee,EmployeeInterview, Application, Emergency_contact, Document, MedicalForm, EmployeeByCoordinator, Employee_head, Employee_job, Job,EmployeeOpen
-from django.urls import reverse
-from django.utils.http import urlencode
-from django.utils.html import format_html
-
-from django.shortcuts import redirect
-from django.urls import path
-
+from django.contrib import messages
+from django.utils.translation import ngettext
 from django.db.models import Q
 
 #Tabular inline models
@@ -221,7 +216,46 @@ class EmployeeAdmin(admin.ModelAdmin):
 
     #Propiedad que me dice que campos tendran el link que lleva a editar
     list_display_links = ('full_name',)
-    
+    #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
+    #list_editable = ('status',)
+    actions = ['make_active','make_open','make_inactive', 'make_do_not_hire']
+
+    @admin.action(description='Mark as active')
+    def make_active(self, request, queryset):
+        updated = queryset.update(status='Active')
+        self.message_user(request, ngettext(
+            '%d employee was successfully marked as active.',
+            '%d employees were successfully marked as active.',
+            updated,
+        ) % updated, messages.SUCCESS)
+
+    @admin.action(description='Mark as open')
+    def make_open(self, request, queryset):
+        updated = queryset.update(status='Open')
+        self.message_user(request, ngettext(
+            '%d employee was successfully marked as open.',
+            '%d employees were successfully marked as open.',
+            updated,
+        ) % updated, messages.SUCCESS)
+
+    @admin.action(description='Mark as inactive')
+    def make_inactive(self, request, queryset):
+        updated = queryset.update(status='Inactive')
+        self.message_user(request, ngettext(
+            '%d employee was successfully marked as inactive.',
+            '%d employees were successfully marked as inactive.',
+            updated,
+        ) % updated, messages.SUCCESS)
+
+    @admin.action(description='Mark as do not hire')
+    def make_do_not_hire(self, request, queryset):
+        updated = queryset.update(status='Do Not Hire')
+        self.message_user(request, ngettext(
+            '%d employee was successfully marked as do not hire.',
+            '%d employees were successfully marked as do not hire.',
+            updated,
+        ) % updated, messages.SUCCESS)
+
     #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
     #list_editable = ('updated_at',)
     @admin.display(ordering='employee_job_employee__job__department__location__name')
@@ -271,6 +305,37 @@ class EmployeeAdminInterview(admin.ModelAdmin):
     list_filter = [ExperienceListFilter,EnglishLevelListFilter,CanTravelListFilter,CanWorkNightListFilter]
     search_fields = ['name', 'last_name']
     list_display_links = ('full_name',)
+
+    #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
+    #list_editable = ('status',)
+    actions = ['make_active','make_open','make_do_not_hire']
+
+    @admin.action(description='Mark as active')
+    def make_active(self, request, queryset):
+        updated = queryset.update(status='Active')
+        self.message_user(request, ngettext(
+            '%d employee was successfully marked as active.',
+            '%d employees were successfully marked as active.',
+            updated,
+        ) % updated, messages.SUCCESS)
+
+    @admin.action(description='Mark as open')
+    def make_open(self, request, queryset):
+        updated = queryset.update(status='Open')
+        self.message_user(request, ngettext(
+            '%d employee was successfully marked as open.',
+            '%d employees were successfully marked as open.',
+            updated,
+        ) % updated, messages.SUCCESS)
+
+    @admin.action(description='Mark as do not hire')
+    def make_do_not_hire(self, request, queryset):
+        updated = queryset.update(status='Do Not Hire')
+        self.message_user(request, ngettext(
+            '%d employee was successfully marked as do not hire.',
+            '%d employees were successfully marked as do not hire.',
+            updated,
+        ) % updated, messages.SUCCESS)
 
     def get_queryset(self, request):
         
@@ -335,6 +400,27 @@ class EmployeeOpenAdmin(admin.ModelAdmin):
     list_filter = [ExperienceListFilter,EnglishLevelListFilter,CanTravelListFilter,CanWorkNightListFilter]
     search_fields = ['name', 'last_name']
     list_display_links = ('full_name',)
+#Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
+    #list_editable = ('status',)
+    actions = ['make_active','make_open','make_do_not_hire']
+
+    @admin.action(description='Mark as active')
+    def make_active(self, request, queryset):
+        updated = queryset.update(status='Active')
+        self.message_user(request, ngettext(
+            '%d employee was successfully marked as active.',
+            '%d employees were successfully marked as active.',
+            updated,
+        ) % updated, messages.SUCCESS)
+
+    @admin.action(description='Mark as do not hire')
+    def make_do_not_hire(self, request, queryset):
+        updated = queryset.update(status='Do Not Hire')
+        self.message_user(request, ngettext(
+            '%d employee was successfully marked as do not hire.',
+            '%d employees were successfully marked as do not hire.',
+            updated,
+        ) % updated, messages.SUCCESS)
 
     def get_queryset(self, request):
         
@@ -401,10 +487,38 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
 
     #Propiedad que me dice que campos tendran el link que lleva a editar
     list_display_links = ('full_name',)
-    
     #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
-    #list_editable = ('status',)
+    list_editable = ('status',)
+    
+    actions = ['make_open','make_inactive','make_do_not_hire']
 
+    @admin.action(description='Mark as open')
+    def make_open(self, request, queryset):
+        updated = queryset.update(status='Open')
+        self.message_user(request, ngettext(
+            '%d employee was successfully marked as open.',
+            '%d employees were successfully marked as open.',
+            updated,
+        ) % updated, messages.SUCCESS)
+
+    @admin.action(description='Mark as inactive')
+    def make_inactive(self, request, queryset):
+        updated = queryset.update(status='Inactive')
+        self.message_user(request, ngettext(
+            '%d employee was successfully marked as inactive.',
+            '%d employees were successfully marked as inactive.',
+            updated,
+        ) % updated, messages.SUCCESS)
+
+    @admin.action(description='Mark as do not hire')
+    def make_do_not_hire(self, request, queryset):
+        updated = queryset.update(status='Do Not Hire')
+        self.message_user(request, ngettext(
+            '%d employee was successfully marked as do not hire.',
+            '%d employees were successfully marked as do not hire.',
+            updated,
+        ) % updated, messages.SUCCESS)
+        
     def get_queryset(self, request):
         my_empoyees = super().get_queryset(request)
         
