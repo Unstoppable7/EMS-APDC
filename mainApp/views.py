@@ -463,6 +463,7 @@ def form_to_pdf(employeeForm, applicationForm, medicalForm, emergency_contactFor
     elements.append(Spacer(1, 5))
     elements.append(table30rows1)
 
+    pdf_file.title = employee.full_name 
     pdf_file.build(elements) 
 
     buffer.seek(0)
@@ -471,12 +472,6 @@ def form_to_pdf(employeeForm, applicationForm, medicalForm, emergency_contactFor
     pdf_content.name = employee.full_name + '.pdf'
 
     return pdf_content
-
-def handle_uploaded_file(f):
-    path = settings.MEDIA_ROOT + '/employee_documents/' + f.name +'.pdf'
-    with open(path, 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
 
 # Create your views here.
 def create_employee_application(request):

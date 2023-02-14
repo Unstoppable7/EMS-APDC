@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib import admin
 import datetime
-from django.db.models.signals import post_save, pre_save
-from django.dispatch import receiver
 
 from django.db.models import Q
 
@@ -63,6 +61,7 @@ class Employee(models.Model):
         ('Open', 'Open'),
         ('Active', 'Active'),
         ('Inactive', 'Inactive'),
+        ('Do Not Hire', 'Do Not Hire'),
         ('Interview', 'Interview'),
     ]
     name = models.CharField(max_length=100)
@@ -74,7 +73,7 @@ class Employee(models.Model):
     #Payroll, etc
     type = models.CharField(max_length=10, choices=TYPES_CHOICES, default="Regular")
     zip_code = models.CharField(max_length=10)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="Interview")
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default="Interview")
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     date_created = models.DateTimeField(default=current_time)
     updated_at = models.DateTimeField(auto_now=True)
@@ -92,7 +91,15 @@ class Employee(models.Model):
 
     class Meta:
         verbose_name = 'Company Employee'
+        unique_together = (('phone_number', 'date_of_birth'),)
 
+    def save(self, *args, **kwargs):
+        print("\n\n")
+        if(self.status != "Active"):
+            for e in Employee_job.objects.filter(employee=self):
+                e.delete()
+        super().save(*args, **kwargs)
+        
 class EmployeeInterview(Employee): 
     class Meta:
         proxy = True
@@ -140,6 +147,10 @@ class Employee_job(models.Model):
 
         #Metodo padre que guarda el objeto en la db
         super().save(*args, **kwargs)  # Call the "real" save() method.
+        
+        #Cambio el status del empleado a Active
+        self.employee.status = "Active"
+        self.employee.save()
 
         #Si el cambio del objeto fue que su trabajo ahora sea coordinator o si venia de ser coordinator y ahora no lo es
         if self.job.name == 'Coordinator' or was_coordinator:
