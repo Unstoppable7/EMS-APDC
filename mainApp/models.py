@@ -59,11 +59,21 @@ class Employee(models.Model):
     ]
     STATUS_CHOICES = [
         ('Open', 'Open'),
+        ('Stand By', 'Stand By'),
+        ('Do Not Hire', 'Do Not Hire'),
         ('Active', 'Active'),
         ('Inactive', 'Inactive'),
-        ('Do Not Hire', 'Do Not Hire'),
-        ('Interview', 'Interview'),
+        ('Undefined', 'Undefined'),
     ]
+    APPLICATION_STATUS_CHOICES = [
+        ('FrontDesk', 'FrontDesk'),
+        ('No Application', 'No Application'),
+        ('Regular Application', 'Regular Application'),
+        ('Southeast', 'Southeast'),
+        ('Human Resources', 'Human Resources'),
+        ('Undefined', 'Undefined'),
+    ]
+    
     name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     address = models.CharField(max_length=200)
@@ -73,7 +83,8 @@ class Employee(models.Model):
     #Payroll, etc
     type = models.CharField(max_length=10, choices=TYPES_CHOICES, default="Regular")
     zip_code = models.CharField(max_length=10)
-    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default="Interview")
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default="Undefined")
+    application_status = models.CharField(max_length=20, choices=APPLICATION_STATUS_CHOICES, default="Undefined")
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     date_created = models.DateTimeField(default=current_time)
     updated_at = models.DateTimeField(auto_now=True)
@@ -94,10 +105,10 @@ class Employee(models.Model):
         unique_together = (('phone_number', 'date_of_birth'),)
 
     def save(self, *args, **kwargs):
-        print("\n\n")
         if(self.status != "Active"):
             for e in Employee_job.objects.filter(employee=self):
                 e.delete()
+
         super().save(*args, **kwargs)
         
 class EmployeeInterview(Employee): 
@@ -109,11 +120,18 @@ class EmployeeByCoordinator(Employee):
     class Meta:
         proxy = True
         verbose_name = 'My employee'
+        ordering = ['-status', '-date_created']
 
 class EmployeeOpen(Employee): 
     class Meta:
         proxy = True
         verbose_name = 'Recruiting'
+
+class EmployeeManagement(Employee): 
+    class Meta:
+        proxy = True
+        verbose_name = 'Employee Management'
+        verbose_name_plural = 'Employee Management'
 
 class Employee_head(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employeeWithHead')
@@ -343,12 +361,12 @@ class Emergency_contact(models.Model):
 class Document(models.Model):
     TYPE_CHOICES = [
         ('Application', 'Application'),
+        ('Southeast', 'Southeast'),
         ('Form', 'Form'),
         ('Passport', 'Passport'),
         ('Driver license', 'Driver license'),
         ('ID card', 'ID card'),
-        ('Social security card', 'Social security card'),
-        ('Work permit', 'Work permit'),
+
     ]
     type = models.CharField(max_length=20, choices=TYPE_CHOICES)
     date_of_expiration = models.DateField(blank=True, null=True,)
@@ -357,6 +375,30 @@ class Document(models.Model):
 
     def __str__(self):
         return self.type
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        
+        if self.type == "Application":
+            for e in Employee.objects.filter(id=self.employee.id):
+                e.application_status = 'Regular Application'
+                e.save()
+        elif self.type == "Southeast":    
+            for e in Employee.objects.filter(id=self.employee.id):
+                e.application_status = 'Southeast'
+                e.save()
+
+    def delete(self, *args, **kwargs):
+        if self.type == "Application":
+            for e in Employee.objects.filter(id=self.employee.id):
+                e.application_status = 'Undefined'
+                e.save()
+        elif self.type == "Southeast":    
+            for e in Employee.objects.filter(id=self.employee.id):
+                e.application_status = 'Undefined'
+                e.save()
+        super().delete(*args, **kwargs)
+
 
 class MedicalForm(models.Model):
     height = models.DecimalField(max_digits=5, decimal_places=2)

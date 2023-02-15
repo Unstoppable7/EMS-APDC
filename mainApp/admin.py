@@ -1,8 +1,11 @@
 from django.contrib import admin
-from .models import Location,Department,Employee,EmployeeInterview, Application, Emergency_contact, Document, MedicalForm, EmployeeByCoordinator, Employee_head, Employee_job, Job,EmployeeOpen
+from .models import Location,Department,Employee,EmployeeInterview, Application, Emergency_contact, Document, MedicalForm, EmployeeByCoordinator, Employee_head, Employee_job, Job,EmployeeOpen,EmployeeManagement
 from django.contrib import messages
 from django.utils.translation import ngettext
 from django.db.models import Q
+
+# Eliminar la acción de eliminación para todos los modelos
+admin.site.disable_action('delete_selected')
 
 #Tabular inline models
 
@@ -31,6 +34,7 @@ class Employee_jobInline(admin.StackedInline):
    model= Employee_job 
    fields = ['employee', 'job']
    extra = 1
+   verbose_name = 'Job'
 #END tabular inline models
 
 #CustomFilters
@@ -205,7 +209,7 @@ class LocationListFilter(admin.SimpleListFilter):
 
 @admin.register(Employee) 
 class EmployeeAdmin(admin.ModelAdmin): 
-    fields=('type', 'status', 'name', 'last_name', 'phone_number', 'mail', 'date_of_birth', 
+    fields=('type', 'status', 'application_status','name', 'last_name', 'phone_number', 'mail', 'date_of_birth', 
     'address','city','zip_code') 
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
@@ -319,16 +323,16 @@ class EmployeeAdminInterview(admin.ModelAdmin):
 
     #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
     #list_editable = ('status',)
-    actions = ['make_active','make_open','make_do_not_hire']
+    actions = ['make_open','make_do_not_hire']
 
-    @admin.action(description='Mark as active')
-    def make_active(self, request, queryset):
-        updated = queryset.update(status='Active')
-        self.message_user(request, ngettext(
-            '%d employee was successfully marked as active.',
-            '%d employees were successfully marked as active.',
-            updated,
-        ) % updated, messages.SUCCESS)
+    # @admin.action(description='Mark as active')
+    # def make_active(self, request, queryset):
+    #     updated = queryset.update(status='Active')
+    #     self.message_user(request, ngettext(
+    #         '%d employee was successfully marked as active.',
+    #         '%d employees were successfully marked as active.',
+    #         updated,
+    #     ) % updated, messages.SUCCESS)
 
     @admin.action(description='Mark as open')
     def make_open(self, request, queryset):
@@ -358,7 +362,7 @@ class EmployeeAdminInterview(admin.ModelAdmin):
     def get_queryset(self, request):
         
         qs = super().get_queryset(request)
-        return qs.filter(status="Interview")
+        return qs.filter(status="Undefined")
 
     def get_application_english_level(self, obj):
         
@@ -412,16 +416,40 @@ class EmployeeOpenAdmin(admin.ModelAdmin):
     'address','city','zip_code') 
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['full_name', 'phone_number','date_of_birth','get_application_experience',
+    list_display = ['full_name', 'application_status','phone_number','date_of_birth','get_application_experience',
     'get_application_english_level','get_application_can_travel','get_application_can_work_nights',
     ]
     list_filter = [ExperienceListFilter,EnglishLevelListFilter,CanTravelListFilter,CanWorkNightListFilter]
     search_fields = ['name', 'last_name']
     list_display_links = ('full_name',)
-#Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
+    #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
     #list_editable = ('status',)
-    actions = ['make_active','make_open','make_do_not_hire']
+    actions = ['make_stand_by','make_active','make_open','make_do_not_hire']
 
+    @admin.action(description='Mark as stand by')
+    def make_stand_by(self, request, queryset):
+        
+        coordinator = Employee.objects.filter(Q(mail=request.user.email) & Q(employee_job_employee__job__name='Coordinator')).first()
+
+        if coordinator is not None:
+            for e in queryset:
+
+                e.status = 'Stand By'
+                Employee_head.objects.create(employee=e, head=coordinator)
+                e.save()
+
+            self.message_user(request, ngettext(
+                '%d employee was successfully marked as "stand by" and added to the "my employees" section.',
+                '%d employees were successfully marked as "stand by" and added to the "my employees" section.',
+                queryset.count(),
+            ) % queryset.count(), messages.SUCCESS)
+        else:
+            self.message_user(request, ngettext(
+                '%d employee could not be marked as "stand by" and was not added to the "my employees" section. \nThere is a problem with the registered email.',
+                '%d employees could not be marked as "stand by" and were not added to the "my employees" section. \nThere is a problem with the registered email.',
+                queryset.count(),
+            ) % queryset.count(), messages.ERROR)
+            
     @admin.action(description='Mark as active')
     def make_active(self, request, queryset):
         updated = queryset.update(status='Active')
@@ -501,15 +529,14 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
     'address','city','zip_code') 
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['status', 'type', 'full_name', 'phone_number', 'date_of_birth',
-    'get_job_name','date_created', 'updated_at']
+    list_display = ['status', 'full_name', 'application_status', 'phone_number','get_job_name']
     list_filter = ['type', 'status', 'employee_job_employee__job__department__location__name', 'date_created', 'updated_at']
     search_fields = ['name', 'last_name', 'status','employee_job_employee__job__department__location__name']
 
     #Propiedad que me dice que campos tendran el link que lleva a editar
     list_display_links = ('full_name',)
     #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
-    list_editable = ('status',)
+    #list_editable = ('status',)
     
     actions = ['make_open','make_inactive','make_do_not_hire']
 
@@ -517,7 +544,13 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
     def make_open(self, request, queryset):
             
         for e in queryset:
+            
+            if e.status == 'Stand By':
+                print("\nEntra\n")
+                Employee_head.objects.filter(employee=e).delete()
+
             e.status = 'Open'
+
             e.save()
 
         self.message_user(request, ngettext(
@@ -554,7 +587,7 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
         my_empoyees = super().get_queryset(request)
         
         try:
-
+            #TODO QUITAR GET
             head = None
             head = Employee.objects.get(mail=request.user.email)
 
@@ -574,6 +607,127 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
             return '-'
         return ','.join(jobs)
     get_job_name.short_description = 'Jobs'
+
+@admin.register(EmployeeManagement)
+class EmployeeAdminManagement(admin.ModelAdmin):
+    fields=('type', 'status', 'application_status', 'name', 'last_name', 'phone_number', 'mail', 'date_of_birth', 'address','city','zip_code') 
+    inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
+    list_display = ['status','full_name', 'application_status','get_job_name','get_locations','get_head', 'date_created']
+    list_editable = ('status','application_status',)
+    list_per_page = 10
+    search_fields = ['name', 'last_name',]
+    list_display_links = ('full_name',)
+
+    actions = ['make_no_application_open','make_frontdesk','make_regular_application','make_southeast']
+
+    def get_queryset(self, request):
+        my_empoyees = super().get_queryset(request)
+        
+        my_empoyees = super().get_queryset(request).filter(Q(application_status='Undefined') | Q(application_status='FrontDesk')| Q(application_status='Human Resources'))
+        
+        return my_empoyees
+
+    @admin.action(description='Mark to open and change to no application')
+    def make_no_application_open(self, request, queryset):
+            
+        for e in queryset:
+            e.application_status = 'No Application'
+            e.status = 'Open'
+            e.save()
+
+        self.message_user(request, ngettext(
+            '%d employee was successfully mark to Open and application status changed to No Application.',
+            '%d employees were successfully mark to Open and application status changed to No Application.',
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
+
+    # @admin.action(description='Change to no application')
+    # def make_no_application(self, request, queryset):
+            
+    #     for e in queryset:
+    #         e.application_status = 'No Application'
+    #         e.save()
+
+    #     self.message_user(request, ngettext(
+    #         '%d application status was successfully changed to No Application.',
+    #         '%d applications status were successfully changed to No Application.',
+    #         queryset.count(),
+    #     ) % queryset.count(), messages.SUCCESS)
+
+    @admin.action(description='Change to regular application')
+    def make_regular_application(self, request, queryset):
+            
+        for e in queryset:
+            e.application_status = 'Regular Application'
+            e.save()
+
+        self.message_user(request, ngettext(
+            '%d application status was successfully changed to Regular Application.',
+            '%d applications status were successfully changed to Regular Application.',
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
+    
+    @admin.action(description='Change to southeast')
+    def make_southeast(self, request, queryset):
+            
+        for e in queryset:
+            e.application_status = 'Southeast'
+            e.save()
+
+        self.message_user(request, ngettext(
+            '%d application status was successfully changed to Southeast.',
+            '%d applications status was successfully changed to Southeast.',
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
+
+    @admin.action(description='Change to frontdesk')
+    def make_frontdesk(self, request, queryset):
+            
+        for e in queryset:
+            e.application_status = 'Frontdesk'
+            e.save()
+
+        self.message_user(request, ngettext(
+            '%d application status was successfully changed to Frontdesk.',
+            '%d applications status was successfully changed to Frontdesk.',
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
+
+    @admin.display(ordering='employee_job_employee__job__department__location__name')
+    def get_locations(self, obj):
+        locations = []
+        for employee_job in Employee_job.objects.filter(employee=obj):
+
+            locations.append(str(employee_job.job.department.location))
+        
+        if not locations:
+            return '-'
+        return ','.join(locations)
+    get_locations.short_description = 'Location'
+
+    #@admin.display(ordering='job__name')
+    def get_job_name(self, obj):
+        jobs = []
+        for employee_job in Employee_job.objects.filter(employee=obj):
+
+            jobs.append(str(employee_job.job.name))
+        
+        if not jobs:
+            return '-'
+        return ','.join(jobs)
+    get_job_name.short_description = 'Jobs'
+
+    #@admin.display(ordering='head__full_name')
+    def get_head(self, obj):
+        heads = []
+        for employee_head in Employee_head.objects.filter(employee=obj):
+
+            heads.append(str(employee_head.head.full_name))
+        
+        if not heads:
+            return '-'
+        return ','.join(heads)
+    get_head.short_description = 'manager'
 
 @admin.register(Department)
 class Department(admin.ModelAdmin):
