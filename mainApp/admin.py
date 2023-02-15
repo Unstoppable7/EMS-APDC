@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Location,Department,Employee,EmployeeInterview, Application, Emergency_contact, Document, MedicalForm, EmployeeByCoordinator, Employee_head, Employee_job, Job,EmployeeOpen,EmployeeManagement
+from .models import Location,Department,Employee,EmployeeInterview, Application, Emergency_contact, Document, MedicalForm, MyEmployeeSection, Employee_head, Employee_job, Job,Recruiting,EmployeeManagement
 from django.contrib import messages
 from django.utils.translation import ngettext
 from django.db.models import Q
@@ -12,23 +12,30 @@ admin.site.disable_action('delete_selected')
 class ApplicationInline(admin.StackedInline): 
    model= Application 
    fields = ['days_available_to_work', 'can_travel', 'can_work_nights', 'can_background_check', 'position_to_apply', 'experience', 'english_level', 'studies', 'military_service']
-   extra = 1
+   extra = 0
 
 class MedicalFormInline(admin.StackedInline): 
    model= MedicalForm 
    fields = ['height', 'weight', 'allergic_to', 'diseases_suffered', 'received_workers_compensation',
    'received_surgery_for_fracture']
-   extra = 1
+   extra = 0
 
 class Emergency_contactInline(admin.StackedInline): 
    model= Emergency_contact 
    fields = ['name', 'phone_number', 'relationship']
-   extra = 1
+   extra = 0
 
 class DocumentInline(admin.StackedInline): 
-   model= Document 
-   fields = ['type', 'date_of_expiration', 'file']
-   extra = 1
+    model= Document 
+    fields = ['type', 'date_of_expiration', 'file']
+    extra = 1
+
+    #TODO agregar la condicion para evitar el acceso a las aplicaciones de southeast
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if request.user.email == 'prueba@prueba.com':
+            queryset = queryset.exclude(type='Southeast')
+        return queryset
 
 class Employee_jobInline(admin.StackedInline): 
    model= Employee_job 
@@ -209,14 +216,15 @@ class LocationListFilter(admin.SimpleListFilter):
 
 @admin.register(Employee) 
 class EmployeeAdmin(admin.ModelAdmin): 
-    fields=('type', 'status', 'application_status','name', 'last_name', 'phone_number', 'mail', 'date_of_birth', 
-    'address','city','zip_code') 
+    fields=('type', 'status', 'application_status','first_name', 'last_name', 'phone_number', 'email', 'date_of_birth','address','city','zip_code') 
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['status', 'type', 'full_name', 'phone_number', 'date_of_birth',
+    list_display = ['status', 'application_status', 'type', 'full_name', 'phone_number', 'date_of_birth',
     'get_job_name','get_locations','get_head','date_created', 'updated_at']
     list_filter = ['type', 'status','employee_job_employee__job__department__location__name', 'date_created', 'updated_at',]
-    search_fields = ['name', 'last_name', 'status', 'employee_job_employee__job__department__location__name']
+    search_fields = ['first_name', 'last_name', 'status', 'employee_job_employee__job__department__location__name']
+
+    list_per_page = 20
 
     #Propiedad que me dice que campos tendran el link que lleva a editar
     list_display_links = ('full_name',)
@@ -290,7 +298,7 @@ class EmployeeAdmin(admin.ModelAdmin):
         jobs = []
         for employee_job in Employee_job.objects.filter(employee=obj):
 
-            jobs.append(str(employee_job.job.name))
+            jobs.append(str(employee_job.job.name).capitalize())
         
         if not jobs:
             return '-'
@@ -302,7 +310,7 @@ class EmployeeAdmin(admin.ModelAdmin):
         heads = []
         for employee_head in Employee_head.objects.filter(employee=obj):
 
-            heads.append(str(employee_head.head.full_name))
+            heads.append(str(employee_head.head.full_name).capitalize())
         
         if not heads:
             return '-'
@@ -311,15 +319,17 @@ class EmployeeAdmin(admin.ModelAdmin):
 
 @admin.register(EmployeeInterview) 
 class EmployeeAdminInterview(admin.ModelAdmin): 
-    fields=('type', 'status', 'name', 'last_name', 'phone_number', 'mail', 'date_of_birth', 
+    fields=('first_name', 'last_name', 'phone_number', 'email', 'date_of_birth', 
     'address','city','zip_code') 
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
     list_display = ['full_name', 'date_of_birth','get_application_experience',
     'get_application_english_level','get_application_can_travel','get_application_can_work_nights',]
     list_filter = [ExperienceListFilter,EnglishLevelListFilter,CanTravelListFilter,CanWorkNightListFilter]
-    search_fields = ['name', 'last_name']
+    search_fields = ['first_name', 'last_name']
     list_display_links = ('full_name',)
+
+    list_per_page = 20
 
     #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
     #list_editable = ('status',)
@@ -410,9 +420,9 @@ class EmployeeAdminInterview(admin.ModelAdmin):
             return 'No'
     get_application_can_work_nights.short_description = 'can work nights'
 
-@admin.register(EmployeeOpen) 
-class EmployeeOpenAdmin(admin.ModelAdmin): 
-    fields=('type', 'status', 'name', 'last_name', 'phone_number', 'mail', 'date_of_birth', 
+@admin.register(Recruiting) 
+class RecruitingAdmin(admin.ModelAdmin): 
+    fields=('first_name', 'last_name', 'phone_number', 'email', 'date_of_birth', 
     'address','city','zip_code') 
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
@@ -420,16 +430,19 @@ class EmployeeOpenAdmin(admin.ModelAdmin):
     'get_application_english_level','get_application_can_travel','get_application_can_work_nights',
     ]
     list_filter = [ExperienceListFilter,EnglishLevelListFilter,CanTravelListFilter,CanWorkNightListFilter]
-    search_fields = ['name', 'last_name']
+    search_fields = ['first_name', 'last_name']
     list_display_links = ('full_name',)
     #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
     #list_editable = ('status',)
+
+    list_per_page = 20
+
     actions = ['make_stand_by','make_active','make_open','make_do_not_hire']
 
     @admin.action(description='Mark as stand by')
     def make_stand_by(self, request, queryset):
         
-        coordinator = Employee.objects.filter(Q(mail=request.user.email) & Q(employee_job_employee__job__name='Coordinator')).first()
+        coordinator = Employee.objects.filter(Q(email=request.user.email) & Q(employee_job_employee__job__name='Coordinator')).first()
 
         if coordinator is not None:
             for e in queryset:
@@ -522,22 +535,24 @@ class EmployeeOpenAdmin(admin.ModelAdmin):
             return 'No'
     get_application_can_work_nights.short_description = 'can work nights'
 
-@admin.register(EmployeeByCoordinator) 
+@admin.register(MyEmployeeSection) 
 class EmployeeAdminByCoordinator(admin.ModelAdmin): 
 
-    fields=('type', 'status', 'name', 'last_name', 'phone_number', 'mail', 'date_of_birth', 
+    fields=('first_name', 'last_name', 'phone_number', 'email', 'date_of_birth', 
     'address','city','zip_code') 
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
     list_display = ['status', 'full_name', 'application_status', 'phone_number','get_job_name']
     list_filter = ['type', 'status', 'employee_job_employee__job__department__location__name', 'date_created', 'updated_at']
-    search_fields = ['name', 'last_name', 'status','employee_job_employee__job__department__location__name']
+    search_fields = ['first_name', 'last_name', 'status','employee_job_employee__job__department__location__name']
 
     #Propiedad que me dice que campos tendran el link que lleva a editar
     list_display_links = ('full_name',)
     #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
     #list_editable = ('status',)
     
+    list_per_page = 20
+
     actions = ['make_open','make_inactive','make_do_not_hire']
 
     @admin.action(description='Mark as open')
@@ -546,7 +561,6 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
         for e in queryset:
             
             if e.status == 'Stand By':
-                print("\nEntra\n")
                 Employee_head.objects.filter(employee=e).delete()
 
             e.status = 'Open'
@@ -589,7 +603,7 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
         try:
             #TODO QUITAR GET
             head = None
-            head = Employee.objects.get(mail=request.user.email)
+            head = Employee.objects.filter(email=request.user.email).first()
 
             ## Relacion inversa atraves del parametro related_name del modelo Employee_head
             my_empoyees = super().get_queryset(request).filter(employeeWithHead__head=head)
@@ -601,7 +615,7 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
         jobs = []
         for employee_job in Employee_job.objects.filter(employee=obj):
 
-            jobs.append(str(employee_job.job))
+            jobs.append(str(employee_job.job).capitalize())
         
         if not jobs:
             return '-'
@@ -610,14 +624,14 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
 
 @admin.register(EmployeeManagement)
 class EmployeeAdminManagement(admin.ModelAdmin):
-    fields=('type', 'status', 'application_status', 'name', 'last_name', 'phone_number', 'mail', 'date_of_birth', 'address','city','zip_code') 
+    fields=('type', 'status', 'application_status', 'first_name', 'last_name', 'phone_number', 'email', 'date_of_birth', 'address','city','zip_code') 
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
     list_display = ['status','full_name', 'application_status','get_job_name','get_locations','get_head', 'date_created']
-    list_editable = ('status','application_status',)
+    list_editable = ('status','application_status')
     list_per_page = 10
-    search_fields = ['name', 'last_name',]
+    search_fields = ['first_name', 'last_name',]
     list_display_links = ('full_name',)
-
+    add_button_label = 'Add Employee'
     actions = ['make_no_application_open','make_frontdesk','make_regular_application','make_southeast']
 
     def get_queryset(self, request):
@@ -698,7 +712,7 @@ class EmployeeAdminManagement(admin.ModelAdmin):
         locations = []
         for employee_job in Employee_job.objects.filter(employee=obj):
 
-            locations.append(str(employee_job.job.department.location))
+            locations.append(str(employee_job.job.department.location).capitalize())
         
         if not locations:
             return '-'
@@ -710,7 +724,7 @@ class EmployeeAdminManagement(admin.ModelAdmin):
         jobs = []
         for employee_job in Employee_job.objects.filter(employee=obj):
 
-            jobs.append(str(employee_job.job.name))
+            jobs.append(str(employee_job.job.name).capitalize())
         
         if not jobs:
             return '-'
@@ -722,7 +736,7 @@ class EmployeeAdminManagement(admin.ModelAdmin):
         heads = []
         for employee_head in Employee_head.objects.filter(employee=obj):
 
-            heads.append(str(employee_head.head.full_name))
+            heads.append(str(employee_head.head.full_name).capitalize())
         
         if not heads:
             return '-'
@@ -732,97 +746,16 @@ class EmployeeAdminManagement(admin.ModelAdmin):
 @admin.register(Department)
 class Department(admin.ModelAdmin):
     list_display = ('id','name','location')
-
-# @admin.register(Employee_job)
-# class Employee_jobs(admin.ModelAdmin):
-#     list_display = ('id','employee','job')
+    list_per_page = 20
 
 @admin.register(Job)
 class Job(admin.ModelAdmin):
     list_display = ('id','name','department','get_location')
+    list_per_page = 20
 
     @admin.display(ordering='department__location')
     def get_location(self,obj):
         return obj.department.location
     get_location.short_description = 'Location'
-    
         
 admin.site.register(Location)
-#admin.site.register(Employee_head)
-
-# @admin.register(Employee_job)
-# class Employee_jobAdmin(admin.ModelAdmin):
-#     list_display = ('employee','job')
-
-# @admin.register(Employee_head) 
-# class Employee_headAdmin(admin.ModelAdmin):
-
-#     #inlines=[ApplicationInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
-
-#     list_display = ['get_employee_status','get_employee_type','get_employee_name','get_employee_phone_number','get_employee_date_of_birth','get_employee_address','get_employee_job','get_employee_location','get_employee_date_created','get_employee_updated_at',]
-    
-#     list_filter = ['employee__type', 'employee__status','employee__job','employee__job__department__location__name', 'employee__date_created', 'employee__updated_at']
-#     search_fields = ['employee__name', 'employee__last_name', 'employee__status','employee__job__department__location__name']
-
-#     def get_queryset(self, request):
-#         #cambiar a filtrar por email
-#         qs = super().get_queryset(request)
-#         return qs.filter(head__name=request.user.first_name)
-
-#     @admin.display(ordering='employee__address')
-#     def get_employee_address(self, obj):
-#         return obj.employee.address
-#     get_employee_address.short_description = 'Address'
-
-
-#     @admin.display(ordering='employee__updated_at')
-#     def get_employee_updated_at(self, obj):
-#         return obj.employee.updated_at
-#     get_employee_updated_at.short_description = 'Update at'
-
-#     @admin.display(ordering='employee__date_created')
-#     def get_employee_date_created(self, obj):
-#         return obj.employee.date_created
-#     get_employee_date_created.short_description = 'Date created'
-
-#     @admin.display(ordering='employee__job__department__location__name')
-#     def get_employee_location(self, obj):
-#         return obj.employee.job.department.location
-#     get_employee_location.short_description = 'Location'
-
-#     @admin.display(ordering='employee__job')
-#     def get_employee_job(self, obj):
-#         return obj.employee.job.name
-#     get_employee_job.short_description = 'Job'
-
-#     @admin.display(ordering='employee__date_of_birth')
-#     def get_employee_date_of_birth(self, obj):
-#         return obj.employee.date_of_birth
-#     get_employee_date_of_birth.short_description = 'Date of Birth'
-
-#     @admin.display(ordering='employee__full_name')
-#     def get_employee_name(self, obj):
-#         return obj.employee.full_name
-#     get_employee_name.short_description = 'Full name'
-
-#     @admin.display(ordering='employee__status')
-#     def get_employee_status(self, obj):
-#         return obj.employee.status
-#     get_employee_status.short_description = 'Status'
-
-#     @admin.display(ordering='employee__type')
-#     def get_employee_type(self, obj):
-#         return obj.employee.type
-#     get_employee_type.short_description = 'Type'
-
-#     @admin.display(ordering='employee__phone_number')
-#     def get_employee_phone_number(self, obj):
-#         return obj.employee.phone_number
-#     get_employee_phone_number.short_description = 'Phone Number'
-
-    # def change_view(self, request, object_id, form_url='', extra_context=None):
-    #     employee_head = self.get_object(request, object_id)
-    #     url = reverse('admin:%s_%s_change' % (employee_head.employee._meta.app_label, employee_head.employee._meta.model_name), args=[employee_head.employee.id])
-        
-    #     return redirect(url)
-

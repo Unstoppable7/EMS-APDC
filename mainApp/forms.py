@@ -4,7 +4,6 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit
 from django.core.exceptions import NON_FIELD_ERRORS
 
-
 class EmployeeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -16,7 +15,7 @@ class EmployeeForm(forms.ModelForm):
 
     class Meta:
         model = Employee
-        fields = ['name','last_name','phone_number','date_of_birth','mail','address','city_name','zip_code',]
+        fields = ['first_name','last_name','phone_number','date_of_birth','email','address','city_name','zip_code',]
         labels = {
             'name':'Enter the name as it appears on your identity document',
             'last_name':'Enter the last name as it appears on your identity document',
@@ -42,7 +41,7 @@ class EmployeeForm(forms.ModelForm):
         city_name = self.cleaned_data.get('city_name')
         city_name_formatted = city_name.capitalize()
         try:
-            city = City.objects.get(name=city_name_formatted)
+            city = City.objects.filter(name=city_name_formatted).first()
         except City.DoesNotExist:
             raise forms.ValidationError("Please enter a valid city.")
         return city

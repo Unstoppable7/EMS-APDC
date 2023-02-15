@@ -13,14 +13,14 @@ class State(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.name
+        return self.name.capitalize()
 
 class City(models.Model):
     name = models.CharField(max_length=100)
     state = models.ForeignKey(State, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.name.capitalize()
 
 class Location(models.Model):
     name = models.CharField(max_length=100, verbose_name='location')
@@ -30,7 +30,7 @@ class Location(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.name.capitalize()
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)  # Call the "real" save() method.
@@ -42,15 +42,15 @@ class Department(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.name.capitalize()
 
 class Job(models.Model):
     name = models.CharField(max_length=100)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name + ' - ' + self.department.location.name
-
+        return ("%s - %s" % (self.name, self.department.location.name)).capitalize()
+    
 class Employee(models.Model): 
     TYPES_CHOICES = [
         ('Payroll', 'Payroll'),
@@ -74,12 +74,12 @@ class Employee(models.Model):
         ('Undefined', 'Undefined'),
     ]
     
-    name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     address = models.CharField(max_length=200)
     phone_number = models.CharField(max_length=20)
     date_of_birth = models.DateField()
-    mail = models.EmailField(blank=True)
+    email = models.EmailField(blank=True)
     #Payroll, etc
     type = models.CharField(max_length=10, choices=TYPES_CHOICES, default="Regular")
     zip_code = models.CharField(max_length=10)
@@ -90,7 +90,7 @@ class Employee(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return self.name
+        return self.first_name
 
     @property
     @admin.display(
@@ -98,7 +98,7 @@ class Employee(models.Model):
         description='Full name',
     )
     def full_name(self):
-        return f'{self.name} {self.last_name}'
+        return ("%s %s" % (self.first_name, self.last_name)).capitalize()
 
     class Meta:
         verbose_name = 'Company Employee'
@@ -116,13 +116,13 @@ class EmployeeInterview(Employee):
         proxy = True
         verbose_name = 'Interview'
         
-class EmployeeByCoordinator(Employee): 
+class MyEmployeeSection(Employee): 
     class Meta:
         proxy = True
         verbose_name = 'My employee'
-        ordering = ['-status', '-date_created']
+        ordering = ['-status', '-updated_at']
 
-class EmployeeOpen(Employee): 
+class Recruiting(Employee): 
     class Meta:
         proxy = True
         verbose_name = 'Recruiting'
@@ -410,7 +410,7 @@ class MedicalForm(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.employee.name
+        return self.employee.first_name
 
 class PaymentMethod(models.Model):
     name = models.CharField(max_length=100)
