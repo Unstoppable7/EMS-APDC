@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en">
+
+<html dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" lang="{{ LANGUAGE_CODE }}">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">

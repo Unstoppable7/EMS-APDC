@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 
 import os
+from django.utils.translation import gettext_lazy as _
+from django.conf.locale import LANG_INFO
+from django.conf import global_settings
+
+gettext_noop = lambda s: s
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -48,6 +53,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -88,7 +94,7 @@ DATABASES = {
         'ENGINE'  : 'django.db.backends.mysql',
         'NAME'    : 'mytestdb',                 # <-- UPDATED line 
         'USER'    : 'root',                     # <-- UPDATED line
-        'PASSWORD': 'Mathias16=',              # <-- UPDATED line
+        'PASSWORD': 'Alejandro16=',              # <-- UPDATED line
         'HOST'    : 'localhost',                # <-- UPDATED line
         'PORT'    : '3306',
     }
@@ -115,16 +121,43 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/4.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
+
+LANGUAGES = (
+    ('en', _('English')),
+    ('es', _('Español')),
+    ('ht', _('Haitian Creole')),
+)
+EXTRA_LANG_INFO = {
+    'ht': {
+        'bidi': True, # right-to-left
+        'code': 'ht',
+        'name': 'Haitian Creole',
+        'name_local': 'Kreyòl ayisyen', #unicode codepoints here
+    },
+}
+
+# Add custom languages not provided by Django
+import django.conf.locale
+LANG_INFO = dict(django.conf.locale.LANG_INFO, **EXTRA_LANG_INFO)
+django.conf.locale.LANG_INFO = LANG_INFO
+
+#Esto causa que el panel de administrador se vea invertido horizontalmente, por eso lo comenté
+# Languages using BiDi (right-to-left) layout
+#LANGUAGES_BIDI = global_settings.LANGUAGES_BIDI + ["ht"]
 
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
 
+# URL de cambio de idioma
+LANGUAGE_COOKIE_NAME = 'django_language'
+LANGUAGE_SESSION_KEY = 'django_language'
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -139,6 +172,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 JAZZMIN_SETTINGS = {
     "site_brand": "Administration Panel",
+    "navigation_expanded": True,
+    "language_chooser": True,
     # "custom_links": {
     #     "mainapp": [{
     #         "name": "Make Messages", 

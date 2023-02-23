@@ -4,6 +4,8 @@ import datetime
 
 from django.db.models import Q
 
+from django.utils.translation import gettext_lazy as _
+
 def current_time():
     return datetime.datetime.now()
 
@@ -268,7 +270,6 @@ class Employee_job(models.Model):
         verbose_name = "Employee Job"
 
 
-#TODO por employee_job
 # @receiver(pre_save, sender=Employee_job)
 # def pre_save_employee_job(sender, instance, **kwargs):
 #     print('\n\n')
@@ -298,17 +299,17 @@ class Employee_job(models.Model):
       
 class Application(models.Model):
     DAYS_AVAILABLE_TO_WORK_CHOICES = [
-        ('Monday to Friday', 'Monday to Friday'),
-        ('Monday to Saturday', 'Monday to Saturday'),
-        ('Monday to Sunday', 'Monday to Sunday')
+        ('Monday to Friday', _('Monday to Friday')),
+        ('Monday to Saturday', _('Monday to Saturday')),
+        ('Monday to Sunday', _('Monday to Sunday')),
     ]
     POSITION_TO_APPLY_CHOICES = [
         ('Manager', 'Manager'),
         ('Housekeeping', 'Housekeeping'),
         ('Houseman', 'Houseman'),
         ('Community Areas', 'Community Areas'),
-        ('Supervisor', 'Supervisor'),
-        ('Inspector', 'Inspector'),
+        ('Housekeeping Supervisor', 'Housekeeping Supervisor'),
+        ('Housekeeping Inspector', 'Housekeeping Inspector'),
         ('Cook', 'Cook'),
         ('Precook', 'Precook'),
         ('Bartender', 'Bartender'),
@@ -316,17 +317,17 @@ class Application(models.Model):
         ('Front desk', 'Front desk'),
         ('Guess services', 'Guess services'),
         ('Maintenance', 'Maintenance'),
-        ('All the positions', 'All the positions'),
-        ('Other', 'Other'),
+        ('All the positions', _('All the positions')),
+        ('Other', _('Other')),
     ]
     ENGLISH_LEVEL_CHOICES = [
-        ('None', 'None'),
-        ('Basic', 'Basic'),
-        ('Intermediate', 'Intermediate'),
-        ('Advanced', 'Advanced'),
+        ('None', _('None')),
+        ('Basic', _('Basic')),
+        ('Intermediate', _('Intermediate')),
+        ('Advanced', _('Advanced')),
     ]
     STUDIES_LEVEL_CHOICES = [
-        ('None', 'None'),
+        ('None', _('None')),
         ('High school', 'High school'),
         ('University', 'University'),
     ]
@@ -334,7 +335,7 @@ class Application(models.Model):
     can_travel = models.BooleanField()
     can_work_nights = models.BooleanField()
     can_background_check = models.BooleanField()
-    position_to_apply = models.CharField(max_length=17, choices=POSITION_TO_APPLY_CHOICES)
+    position_to_apply = models.CharField(max_length=25, choices=POSITION_TO_APPLY_CHOICES)
     experience = models.CharField(max_length=500)
     english_level = models.CharField(max_length=12, choices=ENGLISH_LEVEL_CHOICES)
     studies = models.CharField(max_length=12, choices=STUDIES_LEVEL_CHOICES)

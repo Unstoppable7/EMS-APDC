@@ -1,19 +1,38 @@
 {% extends 'base.html' %}
+{% load i18n %}
+
 {% load crispy_forms_tags %}
 
 {% block content %}
 
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+    <input name="next" type="hidden" value="/">
+    <select name="language" onchange="this.form.submit()">
+        {% get_available_languages as LANGUAGES %}
+        {% get_language_info_list for LANGUAGES as languages %}
+        {% for language in languages %}
+            <option value="{{ language.code }}" {%if language.code == LANGUAGE_CODE%} selected{%endif%}>
+                {{ language.name_local }} ({{ language.code }})
+            </option>
+        {% endfor %}
+    </select>
+</form>
+
 
 
 <div class="card">
-  <h1 class="display-3 text-center">Application</h1>
+  <h1 class="display-3 text-center">{% trans "Application" %}</h1>
   
     <form action="{% url 'create_employee_application' %}" enctype="multipart/form-data" class="employee-form" method="POST">
       <div class="card">
         <h5 class="card-header">
-            Personal Information
+            {% trans "Personal Information" %}
             <br>
-            <small>Add all your personal data.</small>
+            
+            <small>{% trans "Add all your personal data." %}</small>
         </h5>
         <div class="card-body">
           {% crispy employee_form %}
@@ -22,9 +41,11 @@
       
       <div class="card">
         <h5 class="card-header">
-          Employment Eligibility
+          {% trans "Employment Eligibility" %}
           <br>
-          <small>Information related to the job you want and your experience in previous jobs.</small>
+          <small>
+            {% trans "Information related to the job you want and your experience in previous jobs." %}
+            </small>
         </h5>
         <div class="card-body">
           {% crispy application_form %}
@@ -33,9 +54,11 @@
 
       <div class="card">
         <h5 class="card-header">
-          Medical Form
+          {% trans "Medical Form" %}
           <br>
-          <small>Information related to your medical condition.</small>
+          <small>
+          {% trans "Information related to your medical condition." %}
+          </small>
         </h5>
         <div class="card-body">
           {% crispy medicalForm_form %}
@@ -44,9 +67,11 @@
 
       <div class="card">
         <h5 class="card-header">
-          Emergency Contact
+          {% trans "Emergency Contact" %} 
           <br>
-          <small>Information of a relative or friend to contact in case of emergency.</small>
+          <small>
+            {% trans "Information of a relative or friend to contact in case of emergency." %}
+          </small>
         </h5>
         <div class="card-body">
           {% crispy emergency_contact_form %}

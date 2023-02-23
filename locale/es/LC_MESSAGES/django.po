@@ -1,0 +1,2700 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-17 11:51-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\mainApp\admin.py:240 .\mainApp\admin.py:470
+#, python-format
+msgid "%d employee was successfully marked as active."
+msgid_plural "%d employees were successfully marked as active."
+msgstr[0] "%d empleado se marcó correctamente como activo."
+msgstr[1] "%d empleados se marcaron correctamente como activos."
+
+#: .\mainApp\admin.py:253 .\mainApp\admin.py:355 .\mainApp\admin.py:571
+#, python-format
+msgid "%d employee was successfully marked as open."
+msgid_plural "%d employees were successfully marked as open."
+msgstr[0] "%d empleado se marcó correctamente como abierto."
+msgstr[1] "%d empleados se marcaron correctamente como vacantes."
+
+#: .\mainApp\admin.py:265 .\mainApp\admin.py:583
+#, python-format
+msgid "%d employee was successfully marked as inactive."
+msgid_plural "%d employees were successfully marked as inactive."
+msgstr[0] "%d empleado se marcó correctamente como inactivo."
+msgstr[1] "%d empleados se marcaron correctamente como inactivos."
+
+#: .\mainApp\admin.py:277 .\mainApp\admin.py:367 .\mainApp\admin.py:482
+#: .\mainApp\admin.py:595
+#, python-format
+msgid "%d employee was successfully marked as do not hire."
+msgid_plural "%d employees were successfully marked as do not hire."
+msgstr[0] "%d empleado se marcó con éxito como no contratar."
+msgstr[1] "%d empleados se marcaron con éxito como no contratar."
+
+#: .\mainApp\admin.py:455
+#, python-format
+msgid ""
+"%d employee was successfully marked as \"stand by\" and added to the \"my "
+"employees\" section."
+msgid_plural ""
+"%d employees were successfully marked as \"stand by\" and added to the \"my "
+"employees\" section."
+msgstr[0] ""
+"%d empleado se marcó con éxito como \"en espera\" y se agregó a la sección \"mis empleados\"."
+msgstr[1] ""
+"%d empleados se marcaron con éxito como \"en espera\" y se agregaron a la sección \"mis empleados\"."
+
+#: .\mainApp\admin.py:461
+#, python-format
+msgid ""
+"%d employee could not be marked as \"stand by\" and was not added to the "
+"\"my employees\" section. \n"
+"There is a problem with the registered email."
+msgid_plural ""
+"%d employees could not be marked as \"stand by\" and were not added to the "
+"\"my employees\" section. \n"
+"There is a problem with the registered email."
+msgstr[0] ""
+"%d empleado no se pudo marcar como \"en espera\" y no se agregó a la sección \"mis empleados\".\n"
+"Hay un problema con el correo registrado."
+msgstr[1] ""
+"%d empleados no se pudieron marcar como \"en espera\" y no se agregaron a la sección \"mis empleados\".\n"
+"Hay un problema con el correo registrado."
+
+#: .\mainApp\admin.py:653
+#, python-format
+msgid ""
+"%d employee was successfully mark to Open and application status changed to "
+"No Application."
+msgid_plural ""
+"%d employees were successfully mark to Open and application status changed "
+"to No Application."
+msgstr[0] ""
+"%d empleado se marcó con éxito como Abierto y el estado de la aplicación cambió a "
+"Sin aplicación."
+msgstr[1] ""
+"%d empleados se marcaron correctamente como Abierto y el estado de la aplicación cambió "
+"a Sin aplicación."
+
+#: .\mainApp\admin.py:679
+#, python-format
+msgid "%d application status was successfully changed to Regular Application."
+msgid_plural ""
+"%d applications status were successfully changed to Regular Application."
+msgstr[0] "El estado de la aplicación %d se cambió correctamente a Aplicación regular."
+msgstr[1] ""
+"El estado de las aplicaciones de %d se cambió con éxito a Aplicación regular."
+
+#: .\mainApp\admin.py:692
+#, python-format
+msgid "%d application status was successfully changed to Southeast."
+msgid_plural "%d applications status was successfully changed to Southeast."
+msgstr[0] "El estado de la aplicación de %d se cambió correctamente a Southeast."
+msgstr[1] "El estado de las aplicaciones de %d se cambió correctamente a Southeast."
+
+#: .\mainApp\admin.py:705
+#, python-format
+msgid "%d application status was successfully changed to Frontdesk."
+msgid_plural "%d applications status was successfully changed to Frontdesk."
+msgstr[0] "El estado de la aplicación %d se cambió correctamente a Frontdesk".
+msgstr[1] "El estado de las aplicaciones de %d se cambió correctamente a Frontdesk".
+
+#: .\venv\Lib\site-packages\click\_termui_impl.py:496
+#, python-brace-format
+msgid "{editor}: Editing failed"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\_termui_impl.py:500
+#, python-brace-format
+msgid "{editor}: Editing failed: {e}"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\core.py:1097
+msgid "Aborted!"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\core.py:1282
+#: .\venv\Lib\site-packages\click\decorators.py:495
+msgid "Show this message and exit."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\core.py:1313
+#: .\venv\Lib\site-packages\click\core.py:1339
+#, python-brace-format
+msgid "(Deprecated) {text}"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\core.py:1357
+msgid "Options"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\core.py:1383
+#, python-brace-format
+msgid "Got unexpected extra argument ({args})"
+msgid_plural "Got unexpected extra arguments ({args})"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\venv\Lib\site-packages\click\core.py:1399
+msgid "DeprecationWarning: The command {name!r} is deprecated."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\core.py:1605
+msgid "Commands"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\core.py:1637
+msgid "Missing command."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\core.py:1715
+msgid "No such command {name!r}."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\core.py:2271
+msgid "Value must be an iterable."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\core.py:2291
+#, python-brace-format
+msgid "Takes {nargs} values but 1 was given."
+msgid_plural "Takes {nargs} values but {len} were given."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\venv\Lib\site-packages\click\core.py:2734
+#, python-brace-format
+msgid "env var: {var}"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\core.py:2764
+msgid "(dynamic)"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\core.py:2777
+#, python-brace-format
+msgid "default: {default}"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\core.py:2790
+msgid "required"
+msgstr "Requerido"
+
+#: .\venv\Lib\site-packages\click\decorators.py:400
+#, python-format
+msgid "%(prog)s, version %(version)s"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\decorators.py:464
+msgid "Show the version and exit."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\exceptions.py:43
+#: .\venv\Lib\site-packages\click\exceptions.py:79
+#, python-brace-format
+msgid "Error: {message}"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\exceptions.py:71
+#, python-brace-format
+msgid "Try '{command} {option}' for help."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\exceptions.py:120
+#, python-brace-format
+msgid "Invalid value: {message}"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\exceptions.py:122
+#, python-brace-format
+msgid "Invalid value for {param_hint}: {message}"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\exceptions.py:178
+msgid "Missing argument"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\exceptions.py:180
+msgid "Missing option"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\exceptions.py:182
+msgid "Missing parameter"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\exceptions.py:184
+#, python-brace-format
+msgid "Missing {param_type}"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\exceptions.py:191
+#, python-brace-format
+msgid "Missing parameter: {param_name}"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\exceptions.py:211
+#, python-brace-format
+msgid "No such option: {name}"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\exceptions.py:223
+#, python-brace-format
+msgid "Did you mean {possibility}?"
+msgid_plural "(Possible options: {possibilities})"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\venv\Lib\site-packages\click\exceptions.py:261
+msgid "unknown error"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\exceptions.py:268
+msgid "Could not open file {filename!r}: {message}"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\parser.py:231
+msgid "Argument {name!r} takes {nargs} values."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\parser.py:413
+msgid "Option {name!r} does not take a value."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\parser.py:474
+msgid "Option {name!r} requires an argument."
+msgid_plural "Option {name!r} requires {nargs} arguments."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\venv\Lib\site-packages\click\shell_completion.py:316
+msgid "Shell completion is not supported for Bash versions older than 4.4."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\shell_completion.py:322
+msgid "Couldn't detect Bash version, shell completion is not supported."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\termui.py:160
+msgid "Repeat for confirmation"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\termui.py:176
+msgid "Error: The value you entered was invalid."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\termui.py:178
+#, python-brace-format
+msgid "Error: {e.message}"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\termui.py:189
+msgid "Error: The two entered values do not match."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\termui.py:245
+msgid "Error: invalid input"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\termui.py:776
+msgid "Press any key to continue..."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\types.py:265
+#, python-brace-format
+msgid ""
+"Choose from:\n"
+"\t{choices}"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\types.py:297
+msgid "{value!r} is not {choice}."
+msgid_plural "{value!r} is not one of {choices}."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\venv\Lib\site-packages\click\types.py:387
+msgid "{value!r} does not match the format {format}."
+msgid_plural "{value!r} does not match the formats {formats}."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\venv\Lib\site-packages\click\types.py:409
+msgid "{value!r} is not a valid {number_type}."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\types.py:465
+#, python-brace-format
+msgid "{value} is not in the range {range}."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\types.py:606
+msgid "{value!r} is not a valid boolean."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\types.py:630
+msgid "{value!r} is not a valid UUID."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\types.py:811
+msgid "file"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\types.py:813
+msgid "directory"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\types.py:815
+msgid "path"
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\types.py:861
+msgid "{name} {filename!r} does not exist."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\types.py:870
+msgid "{name} {filename!r} is a file."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\types.py:878
+#, python-brace-format
+msgid "{name} '{filename}' is a directory."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\types.py:887
+msgid "{name} {filename!r} is not readable."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\types.py:896
+msgid "{name} {filename!r} is not writable."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\types.py:905
+msgid "{name} {filename!r} is not executable."
+msgstr ""
+
+#: .\venv\Lib\site-packages\click\types.py:972
+#, python-brace-format
+msgid "{len_type} values are required, but {len_value} was given."
+msgid_plural "{len_type} values are required, but {len_value} were given."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\venv\Lib\site-packages\crispy_forms\tests\test_form_helper.py:130
+#: .\venv\Lib\site-packages\crispy_forms\tests\test_form_helper.py:140
+#: .\venv\Lib\site-packages\django\forms\fields.py:91
+msgid "This field is required."
+msgstr "Este campo es obligatorio."
+
+#: .\venv\Lib\site-packages\crispy_forms\tests\test_layout.py:392
+msgid "i18n text"
+msgstr ""
+
+#: .\venv\Lib\site-packages\crispy_forms\tests\test_layout.py:394
+msgid "i18n legend"
+msgstr ""
+
+#: .\venv\Lib\site-packages\crispy_forms\tests\test_layout_objects.py:143
+#: .\venv\Lib\site-packages\django\core\validators.py:22
+msgid "Enter a valid value."
+msgstr "Ingrese un valor valido."
+
+#: .\venv\Lib\site-packages\django\contrib\messages\apps.py:15
+msgid "Messages"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\contrib\sitemaps\apps.py:8
+msgid "Site Maps"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\contrib\staticfiles\apps.py:9
+msgid "Static Files"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\contrib\syndication\apps.py:7
+msgid "Syndication"
+msgstr ""
+
+#. Translators: String used to replace omitted page numbers in elided page
+#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
+#: .\venv\Lib\site-packages\django\core\paginator.py:30
+msgid "…"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\core\paginator.py:50
+msgid "That page number is not an integer"
+msgstr "Ese número de página no es un número entero."
+
+#: .\venv\Lib\site-packages\django\core\paginator.py:52
+msgid "That page number is less than 1"
+msgstr "Ese número de página es menor que 1"
+
+#: .\venv\Lib\site-packages\django\core\paginator.py:57
+msgid "That page contains no results"
+msgstr "Esa página no contiene resultados."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:104
+#: .\venv\Lib\site-packages\django\forms\fields.py:751
+msgid "Enter a valid URL."
+msgstr "Ingrese una URL válida."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:164
+msgid "Enter a valid integer."
+msgstr "Ingrese un número entero válido."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:175
+msgid "Enter a valid email address."
+msgstr "Ingrese un correo electrónico válido."
+
+#. Translators: "letters" means latin letters: a-z and A-Z.
+#: .\venv\Lib\site-packages\django\core\validators.py:256
+msgid ""
+"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
+msgstr "Introduzca un \"slug\" válido que consista en letras, números, guiones bajos o guiones."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:264
+msgid ""
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
+"hyphens."
+msgstr "Ingrese un \"slug\" válido que consista en letras Unicode, números, guiones bajos o "
+"guiones."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:276
+#: .\venv\Lib\site-packages\django\core\validators.py:284
+#: .\venv\Lib\site-packages\django\core\validators.py:313
+msgid "Enter a valid IPv4 address."
+msgstr "Ingrese una dirección IPv4 válida."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:293
+#: .\venv\Lib\site-packages\django\core\validators.py:314
+msgid "Enter a valid IPv6 address."
+msgstr "Ingrese una dirección IPV6 válida,"
+
+#: .\venv\Lib\site-packages\django\core\validators.py:305
+#: .\venv\Lib\site-packages\django\core\validators.py:312
+msgid "Enter a valid IPv4 or IPv6 address."
+msgstr "Ingrese una dirección IPv4 o IPv6 válida."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:348
+msgid "Enter only digits separated by commas."
+msgstr "Ingrese solo digitos separados por comas."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:354
+#, python-format
+msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+msgstr "Asegúrese de que este valor sea %(limit_value)s (es %(show_value)s)."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:389
+#, python-format
+msgid "Ensure this value is less than or equal to %(limit_value)s."
+msgstr "Asegúrese de que este valor sea menor o igual que %(limit_value)s."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:398
+#, python-format
+msgid "Ensure this value is greater than or equal to %(limit_value)s."
+msgstr "Asegúrese de que este valor sea mayor o igual que %(limit_value)s."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:407
+#, python-format
+msgid "Ensure this value is a multiple of step size %(limit_value)s."
+msgstr "Asegúrese de que este valor sea un múltiplo del tamaño de paso %(limit_value)s."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:417
+#, python-format
+msgid ""
+"Ensure this value has at least %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at least %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] "Asegúrese de que este valor tenga al menos el carácter %(limit_value)d (tiene "
+"%(mostrar_valor)d)."
+msgstr[1] "Asegúrese de que este valor tenga al menos %(limit_value)d caracteres (tiene "
+"%(mostrar_valor)d)."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:435
+#, python-format
+msgid ""
+"Ensure this value has at most %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at most %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] "Asegúrese de que este valor tenga como máximo el carácter %(limit_value)d (tiene "
+"%(mostrar_valor)d)."
+msgstr[1] "Asegúrese de que este valor tenga como máximo %(limit_value)d caracteres (tiene "
+"%(mostrar_valor)d)."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:458
+#: .\venv\Lib\site-packages\django\forms\fields.py:347
+#: .\venv\Lib\site-packages\django\forms\fields.py:386
+msgid "Enter a number."
+msgstr "Ingrese un número."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:460
+#, python-format
+msgid "Ensure that there are no more than %(max)s digit in total."
+msgid_plural "Ensure that there are no more than %(max)s digits in total."
+msgstr[0] "Asegúrese de que no haya más de %(max)s dígitos en total."
+msgstr[1] "Asegúrese de que no haya más de %(max)s dígitos en total."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:465
+#, python-format
+msgid "Ensure that there are no more than %(max)s decimal place."
+msgid_plural "Ensure that there are no more than %(max)s decimal places."
+msgstr[0] "Asegúrese de que no haya más de %(max)s decimales."
+msgstr[1] "Asegúrese de que no haya más de %(max)s lugares decimales."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:470
+#, python-format
+msgid ""
+"Ensure that there are no more than %(max)s digit before the decimal point."
+msgid_plural ""
+"Ensure that there are no more than %(max)s digits before the decimal point."
+msgstr[0] "Asegúrese de que no haya más de %(max)s dígitos antes del punto decimal."
+msgstr[1] "Asegúrese de que no haya más de %(max)s dígitos antes del punto decimal."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:539
+#, python-format
+msgid ""
+"File extension “%(extension)s” is not allowed. Allowed extensions are: "
+"%(allowed_extensions)s."
+msgstr "La extensión de archivo “%(extension)s” no está permitida. Las extensiones permitidas son: "
+"%(extensiones_permitidas)s."
+
+
+
+
+
+
+#: .\venv\Lib\site-packages\django\core\validators.py:600
+msgid "Null characters are not allowed."
+msgstr "No se permiten caracteres nulos."
+
+#: .\venv\Lib\site-packages\django\db\models\base.py:1401
+#: .\venv\Lib\site-packages\django\forms\models.py:899
+msgid "and"
+msgstr "y"
+
+#: .\venv\Lib\site-packages\django\db\models\base.py:1403
+#, python-format
+msgid "%(model_name)s with this %(field_labels)s already exists."
+msgstr "%(model_name)s con este %(field_labels)s ya existe."
+
+#: .\venv\Lib\site-packages\django\db\models\constraints.py:17
+#, python-format
+msgid "Constraint “%(name)s” is violated."
+msgstr "Se infringe la restricción “%(name)s”."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:129
+#, python-format
+msgid "Value %(value)r is not a valid choice."
+msgstr "El valor %(value)r no es una opción válida."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:130
+msgid "This field cannot be null."
+msgstr "Este campo no puede ser nulo."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:131
+msgid "This field cannot be blank."
+msgstr "Este campo no puede estar vacío."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:132
+#, python-format
+msgid "%(model_name)s with this %(field_label)s already exists."
+msgstr "%(model_name)s con este %(field_label)s ya existe."
+
+#. Translators: The 'lookup_type' is one of 'date', 'year' or
+#. 'month'. Eg: "Title must be unique for pub_date year"
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:136
+#, python-format
+msgid ""
+"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+msgstr "%(field_label)s debe ser único para %(date_field_label)s %(lookup_type)s."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:174
+#, python-format
+msgid "Field of type: %(field_type)s"
+msgstr "Campo de tipo: %(field_type)s"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1065
+#, python-format
+msgid "“%(value)s” value must be either True or False."
+msgstr "El valor “%(value)s” debe ser Verdadero o Falso."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1066
+#, python-format
+msgid "“%(value)s” value must be either True, False, or None."
+msgstr "El valor “%(value)s” debe ser Verdadero, Falso o Ninguno."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1068
+msgid "Boolean (Either True or False)"
+msgstr "Booleano (ya sea verdadero o falso)"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1118
+#, python-format
+msgid "String (up to %(max_length)s)"
+msgstr "Cadena (hasta %(max_length)s)"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1222
+msgid "Comma-separated integers"
+msgstr "Enteros separados por comas"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1323
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+"format."
+msgstr "El valor “%(value)s” tiene un formato de fecha no válido. Debe estar en el formato AAAA-MM-DD"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1327
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1462
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
+"date."
+msgstr "El valor “%(valor)s” tiene el formato correcto (AAAA-MM-DD) pero no es una "
+"fecha."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1331
+msgid "Date (without time)"
+msgstr "Fecha (sin hora)"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1458
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[."
+"uuuuuu]][TZ] format."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1466
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"[TZ]) but it is an invalid date/time."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1471
+msgid "Date (with time)"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1595
+#, python-format
+msgid "“%(value)s” value must be a decimal number."
+msgstr "El valor “%(value)s” debe ser un número decimal."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1597
+msgid "Decimal number"
+msgstr "Número decimal"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1754
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:]ss[."
+"uuuuuu] format."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1758
+msgid "Duration"
+msgstr "Duración"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1810
+msgid "Email address"
+msgstr "Dirección de correo electrónico"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1835
+msgid "File path"
+msgstr "Ruta de archivo"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1913
+#, python-format
+msgid "“%(value)s” value must be a float."
+msgstr "El valor “%(value)s” debe ser un flotante."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1915
+msgid "Floating point number"
+msgstr "Número de punto flotante"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1955
+#, python-format
+msgid "“%(value)s” value must be an integer."
+msgstr "El valor “%(value)s” debe ser un número entero."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1957
+msgid "Integer"
+msgstr "Entero"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2049
+msgid "Big (8 byte) integer"
+msgstr "Entero grande (8 bytes)"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2066
+msgid "Small integer"
+msgstr "Entero pequeño"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2074
+msgid "IPv4 address"
+msgstr "Dirección IPv4"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2105
+msgid "IP address"
+msgstr "Dirección IP"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2198
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2199
+#, python-format
+msgid "“%(value)s” value must be either None, True or False."
+msgstr "El valor de “%(value)s” debe ser Ninguno, Verdadero o Falso."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2201
+msgid "Boolean (Either True, False or None)"
+msgstr "Booleano (Verdadero, Falso o Ninguno)"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2252
+msgid "Positive big integer"
+msgstr "Entero grande positivo"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2267
+msgid "Positive integer"
+msgstr "Entero positivo"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2282
+msgid "Positive small integer"
+msgstr "Entero pequeño positivo"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2298
+#, python-format
+msgid "Slug (up to %(max_length)s)"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2334
+msgid "Text"
+msgstr "Texto"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2409
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"format."
+msgstr "El valor “%(value)s” tiene un formato no válido. Debe estar en HH:MM[:ss[.uuuuuu]]"
+"formato."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2413
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"invalid time."
+msgstr "El valor “%(value)s” tiene el formato correcto (HH:MM[:ss[.uuuuuu]]) pero es un "
+"tiempo inválido."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2417
+msgid "Time"
+msgstr "Tiempo"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2525
+msgid "URL"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2549
+msgid "Raw binary data"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2614
+#, python-format
+msgid "“%(value)s” is not a valid UUID."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2616
+msgid "Universally unique identifier"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\db\models\fields\files.py:232
+msgid "File"
+msgstr "Archivo"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\files.py:392
+msgid "Image"
+msgstr "Imagen"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\json.py:18
+msgid "A JSON object"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\db\models\fields\json.py:20
+msgid "Value must be valid JSON."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\db\models\fields\related.py:920
+#, python-format
+msgid "%(model)s instance with %(field)s %(value)r does not exist."
+msgstr "La instancia de %(model)s con %(field)s %(value)r no existe."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\related.py:922
+msgid "Foreign Key (type determined by related field)"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\db\models\fields\related.py:1229
+msgid "One-to-one relationship"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\db\models\fields\related.py:1286
+#, python-format
+msgid "%(from)s-%(to)s relationship"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\db\models\fields\related.py:1288
+#, python-format
+msgid "%(from)s-%(to)s relationships"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\db\models\fields\related.py:1336
+msgid "Many-to-many relationship"
+msgstr ""
+
+#. Translators: If found as last label character, these punctuation
+#. characters will prevent the default label_suffix to be appended to the label
+#: .\venv\Lib\site-packages\django\forms\boundfield.py:176
+msgid ":?.!"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:298
+msgid "Enter a whole number."
+msgstr "Introduzca un número entero."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:467
+#: .\venv\Lib\site-packages\django\forms\fields.py:1240
+msgid "Enter a valid date."
+msgstr "Introduzca una fecha válida."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:490
+#: .\venv\Lib\site-packages\django\forms\fields.py:1241
+msgid "Enter a valid time."
+msgstr "Introduzca una hora válida."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:517
+msgid "Enter a valid date/time."
+msgstr "Introduzca una fecha/hora válida."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:551
+msgid "Enter a valid duration."
+msgstr "Introduzca una duración válida."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:552
+#, python-brace-format
+msgid "The number of days must be between {min_days} and {max_days}."
+msgstr "El número de días debe estar entre {min_days} y {max_days}."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:618
+msgid "No file was submitted. Check the encoding type on the form."
+msgstr "No se envió ningún archivo. Compruebe el tipo de codificación en el formulario."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:619
+msgid "No file was submitted."
+msgstr "No se envió ningún archivo."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:620
+msgid "The submitted file is empty."
+msgstr "El archivo enviado está vacío."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:622
+#, python-format
+msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid_plural ""
+"Ensure this filename has at most %(max)d characters (it has %(length)d)."
+msgstr[0] "Asegúrese de que este nombre de archivo tenga como máximo %(max)d carácter (tiene %(longitud)d)."
+msgstr[1] "Asegúrese de que este nombre de archivo tenga como máximo %(max)d caracteres (tiene %(longitud)d)."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:627
+msgid "Please either submit a file or check the clear checkbox, not both."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:693
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:856
+#: .\venv\Lib\site-packages\django\forms\fields.py:948
+#: .\venv\Lib\site-packages\django\forms\models.py:1572
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr "Seleccione una opción válida. %(value)s no es una de las opciones disponibles."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:950
+#: .\venv\Lib\site-packages\django\forms\fields.py:1069
+#: .\venv\Lib\site-packages\django\forms\models.py:1570
+msgid "Enter a list of values."
+msgstr "Introduzca una lista de valores."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:1070
+msgid "Enter a complete value."
+msgstr "Introduzca un valor completo."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:1309
+msgid "Enter a valid UUID."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:1339
+msgid "Enter a valid JSON."
+msgstr ""
+
+#. Translators: This is the default suffix added to form field labels
+#: .\venv\Lib\site-packages\django\forms\forms.py:98
+msgid ":"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\forms\forms.py:248
+#: .\venv\Lib\site-packages\django\forms\forms.py:332
+#, python-format
+msgid "(Hidden field %(name)s) %(error)s"
+msgstr "(Campo oculto %(nombre)s) %(error)s"
+
+#: .\venv\Lib\site-packages\django\forms\formsets.py:63
+#, python-format
+msgid ""
+"ManagementForm data is missing or has been tampered with. Missing fields: "
+"%(field_names)s. You may need to file a bug report if the issue persists."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\forms\formsets.py:67
+#, python-format
+msgid "Please submit at most %(num)d form."
+msgid_plural "Please submit at most %(num)d forms."
+msgstr[0] "Envíe como máximo %(num)d formulario."
+msgstr[1] "Envíe como máximo %(num)d formularios."
+
+#: .\venv\Lib\site-packages\django\forms\formsets.py:72
+#, python-format
+msgid "Please submit at least %(num)d form."
+msgid_plural "Please submit at least %(num)d forms."
+msgstr[0] "Envíe al menos %(num)d formulario."
+msgstr[1] "Envíe al menos %(num)d formularios."
+
+#: .\venv\Lib\site-packages\django\forms\formsets.py:483
+#: .\venv\Lib\site-packages\django\forms\formsets.py:490
+msgid "Order"
+msgstr "Orden"
+
+#: .\venv\Lib\site-packages\django\forms\formsets.py:496
+#: .\venv\Lib\site-packages\grappelli\templates\admin\delete_confirmation.html:19
+#: .\venv\Lib\site-packages\grappelli\templates\admin\submit_line.html:7
+#: .\venv\Lib\site-packages\grappelli\templates\related_widget_wrapper.html:26
+msgid "Delete"
+msgstr "Borrar"
+
+#: .\venv\Lib\site-packages\django\forms\models.py:892
+#, python-format
+msgid "Please correct the duplicate data for %(field)s."
+msgstr "Corrija los datos duplicados de %(field)s."
+
+#: .\venv\Lib\site-packages\django\forms\models.py:897
+#, python-format
+msgid "Please correct the duplicate data for %(field)s, which must be unique."
+msgstr "Corrija los datos duplicados de %(field)s, que deben ser únicos."
+
+#: .\venv\Lib\site-packages\django\forms\models.py:904
+#, python-format
+msgid ""
+"Please correct the duplicate data for %(field_name)s which must be unique "
+"for the %(lookup)s in %(date_field)s."
+msgstr "Corrija los datos duplicados para %(field_name)s que deben ser únicos "
+"para los %(búsqueda)s en %(date_field)s."
+
+#: .\venv\Lib\site-packages\django\forms\models.py:913
+msgid "Please correct the duplicate values below."
+msgstr "Corrija los valores duplicados a continuación."
+
+#: .\venv\Lib\site-packages\django\forms\models.py:1344
+msgid "The inline value did not match the parent instance."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\forms\models.py:1435
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr "Seleccione una opción válida. Esa elección no es una de las opciones disponibles."
+
+#: .\venv\Lib\site-packages\django\forms\models.py:1574
+#, python-format
+msgid "“%(pk)s” is not a valid value."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\forms\utils.py:226
+#, python-format
+msgid ""
+"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
+"may be ambiguous or it may not exist."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\forms\widgets.py:439
+msgid "Clear"
+msgstr "Limpiar"
+
+#: .\venv\Lib\site-packages\django\forms\widgets.py:440
+msgid "Currently"
+msgstr "Actualmente"
+
+#: .\venv\Lib\site-packages\django\forms\widgets.py:441
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\stacked.html:26
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\tabular.html:78
+#: .\venv\Lib\site-packages\grappelli\templates\related_widget_wrapper.html:10
+msgid "Change"
+msgstr "Cambiar"
+
+#: .\venv\Lib\site-packages\django\forms\widgets.py:770
+msgid "Unknown"
+msgstr "Desconocido"
+
+#: .\venv\Lib\site-packages\django\forms\widgets.py:771
+msgid "Yes"
+msgstr "Si"
+
+#: .\venv\Lib\site-packages\django\forms\widgets.py:772
+msgid "No"
+msgstr "No"
+
+#. Translators: Please do not add spaces around commas.
+#: .\venv\Lib\site-packages\django\template\defaultfilters.py:853
+msgid "yes,no,maybe"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\template\defaultfilters.py:883
+#: .\venv\Lib\site-packages\django\template\defaultfilters.py:900
+#, python-format
+msgid "%(size)d byte"
+msgid_plural "%(size)d bytes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\venv\Lib\site-packages\django\template\defaultfilters.py:902
+#, python-format
+msgid "%s KB"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\template\defaultfilters.py:904
+#, python-format
+msgid "%s MB"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\template\defaultfilters.py:906
+#, python-format
+msgid "%s GB"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\template\defaultfilters.py:908
+#, python-format
+msgid "%s TB"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\template\defaultfilters.py:910
+#, python-format
+msgid "%s PB"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dateformat.py:77
+msgid "p.m."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dateformat.py:78
+msgid "a.m."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dateformat.py:83
+msgid "PM"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dateformat.py:84
+msgid "AM"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dateformat.py:155
+msgid "midnight"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dateformat.py:157
+msgid "noon"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:7
+msgid "Monday"
+msgstr "Lunes"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:8
+msgid "Tuesday"
+msgstr "Martes"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:9
+msgid "Wednesday"
+msgstr "Miercoles"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:10
+msgid "Thursday"
+msgstr "Jueves"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:11
+msgid "Friday"
+msgstr "Viernes"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:12
+msgid "Saturday"
+msgstr "Sabado"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:13
+msgid "Sunday"
+msgstr "Domingo"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:16
+msgid "Mon"
+msgstr "Lunes"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:17
+msgid "Tue"
+msgstr "Martes"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:18
+msgid "Wed"
+msgstr "Miercoles"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:19
+msgid "Thu"
+msgstr "Jueves"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:20
+msgid "Fri"
+msgstr "Viernes"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:21
+msgid "Sat"
+msgstr "Sabado"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:22
+msgid "Sun"
+msgstr "Domingo"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:25
+msgid "January"
+msgstr "Enero"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:26
+msgid "February"
+msgstr "Febrero"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:27
+msgid "March"
+msgstr "Marzo"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:28
+msgid "April"
+msgstr "Abril"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:29
+msgid "May"
+msgstr "Mayo"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:30
+msgid "June"
+msgstr "Junio"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:31
+msgid "July"
+msgstr "Julio"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:32
+msgid "August"
+msgstr "Agosto"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:33
+msgid "September"
+msgstr "Septiembre"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:34
+msgid "October"
+msgstr "Octubre"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:35
+msgid "November"
+msgstr "Noviembre"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:36
+msgid "December"
+msgstr "Diciembre"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:39
+msgid "jan"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:40
+msgid "feb"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:41
+msgid "mar"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:42
+msgid "apr"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:43
+msgid "may"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:44
+msgid "jun"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:45
+msgid "jul"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:46
+msgid "aug"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:47
+msgid "sep"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:48
+msgid "oct"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:49
+msgid "nov"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:50
+msgid "dec"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:53
+msgctxt "abbrev. month"
+msgid "Jan."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:54
+msgctxt "abbrev. month"
+msgid "Feb."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:55
+msgctxt "abbrev. month"
+msgid "March"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:56
+msgctxt "abbrev. month"
+msgid "April"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:57
+msgctxt "abbrev. month"
+msgid "May"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:58
+msgctxt "abbrev. month"
+msgid "June"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:59
+msgctxt "abbrev. month"
+msgid "July"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:60
+msgctxt "abbrev. month"
+msgid "Aug."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:61
+msgctxt "abbrev. month"
+msgid "Sept."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:62
+msgctxt "abbrev. month"
+msgid "Oct."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:63
+msgctxt "abbrev. month"
+msgid "Nov."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:64
+msgctxt "abbrev. month"
+msgid "Dec."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:67
+msgctxt "alt. month"
+msgid "January"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:68
+msgctxt "alt. month"
+msgid "February"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:69
+msgctxt "alt. month"
+msgid "March"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:70
+msgctxt "alt. month"
+msgid "April"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:71
+msgctxt "alt. month"
+msgid "May"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:72
+msgctxt "alt. month"
+msgid "June"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:73
+msgctxt "alt. month"
+msgid "July"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:74
+msgctxt "alt. month"
+msgid "August"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:75
+msgctxt "alt. month"
+msgid "September"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:76
+msgctxt "alt. month"
+msgid "October"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:77
+msgctxt "alt. month"
+msgid "November"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:78
+msgctxt "alt. month"
+msgid "December"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\ipv6.py:8
+msgid "This is not a valid IPv6 address."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\text.py:76
+#, python-format
+msgctxt "String to return when truncating text"
+msgid "%(truncated_text)s…"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\text.py:252
+msgid "or"
+msgstr ""
+
+#. Translators: This string is used as a separator between list elements
+#: .\venv\Lib\site-packages\django\utils\text.py:271
+#: .\venv\Lib\site-packages\django\utils\timesince.py:94
+msgid ", "
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\utils\timesince.py:9
+#, python-format
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\venv\Lib\site-packages\django\utils\timesince.py:10
+#, python-format
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\venv\Lib\site-packages\django\utils\timesince.py:11
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\venv\Lib\site-packages\django\utils\timesince.py:12
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\venv\Lib\site-packages\django\utils\timesince.py:13
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\venv\Lib\site-packages\django\utils\timesince.py:14
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\venv\Lib\site-packages\django\views\csrf.py:111
+msgid "Forbidden"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\csrf.py:112
+msgid "CSRF verification failed. Request aborted."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\csrf.py:116
+msgid ""
+"You are seeing this message because this HTTPS site requires a “Referer "
+"header” to be sent by your web browser, but none was sent. This header is "
+"required for security reasons, to ensure that your browser is not being "
+"hijacked by third parties."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\csrf.py:122
+msgid ""
+"If you have configured your browser to disable “Referer” headers, please re-"
+"enable them, at least for this site, or for HTTPS connections, or for “same-"
+"origin” requests."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\csrf.py:127
+msgid ""
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
+"including the “Referrer-Policy: no-referrer” header, please remove them. The "
+"CSRF protection requires the “Referer” header to do strict referer checking. "
+"If you’re concerned about privacy, use alternatives like <a rel=\"noreferrer"
+"\" …> for links to third-party sites."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\csrf.py:136
+msgid ""
+"You are seeing this message because this site requires a CSRF cookie when "
+"submitting forms. This cookie is required for security reasons, to ensure "
+"that your browser is not being hijacked by third parties."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\csrf.py:142
+msgid ""
+"If you have configured your browser to disable cookies, please re-enable "
+"them, at least for this site, or for “same-origin” requests."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\csrf.py:148
+msgid "More information is available with DEBUG=True."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:44
+msgid "No year specified"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:64
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:115
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:214
+msgid "Date out of range"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:94
+msgid "No month specified"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:147
+msgid "No day specified"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:194
+msgid "No week specified"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:349
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:380
+#, python-format
+msgid "No %(verbose_name_plural)s available"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:652
+#, python-format
+msgid ""
+"Future %(verbose_name_plural)s not available because %(class_name)s."
+"allow_future is False."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:692
+#, python-format
+msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\generic\detail.py:56
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\generic\list.py:70
+msgid "Page is not “last”, nor can it be converted to an int."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\generic\list.py:77
+#, python-format
+msgid "Invalid page (%(page_number)s): %(message)s"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\generic\list.py:169
+#, python-format
+msgid "Empty list and “%(class_name)s.allow_empty” is False."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\static.py:38
+msgid "Directory indexes are not allowed here."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\static.py:40
+#, python-format
+msgid "“%(path)s” does not exist"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\static.py:79
+#, python-format
+msgid "Index of %(directory)s"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:7
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:221
+msgid "The install worked successfully! Congratulations!"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:207
+#, python-format
+msgid ""
+"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:222
+#, python-format
+msgid ""
+"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" rel=\"noopener"
+"\">DEBUG=True</a> is in your settings file and you have not configured any "
+"URLs."
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:230
+msgid "Django Documentation"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:231
+msgid "Topics, references, &amp; how-to’s"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:239
+msgid "Tutorial: A Polling App"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:240
+msgid "Get started with Django"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:248
+msgid "Django Community"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:249
+msgid "Connect, get help, or contribute"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\dashboards.py:87
+msgid "Dashboard"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\dashboards.py:131
+msgid "Quick links"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\dashboards.py:134
+msgid "Return to site"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\dashboards.py:135
+#: .\venv\Lib\site-packages\grappelli\templates\admin\auth\user\change_password.html:11
+#: .\venv\Lib\site-packages\grappelli\templates\admin\auth\user\change_password.html:57
+#: .\venv\Lib\site-packages\grappelli\templates\admin\base.html:103
+msgid "Change password"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\dashboards.py:137
+#: .\venv\Lib\site-packages\grappelli\templates\admin\base.html:106
+msgid "Log out"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\dashboards.py:143
+#: .\venv\Lib\site-packages\grappelli\dashboard\modules.py:216
+msgid "Applications"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\dashboards.py:149
+msgid "Administration"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\dashboards.py:154
+#: .\venv\Lib\site-packages\grappelli\dashboard\modules.py:295
+#: .\venv\Lib\site-packages\grappelli\templates\admin\index.html:69
+msgid "Recent actions"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\dashboards.py:158
+msgid "Latest Django News"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\dashboards.py:165
+msgid "Support"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\dashboards.py:168
+msgid "Django documentation"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\dashboards.py:174
+msgid "Django \"django-users\" mailing list"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\dashboards.py:180
+msgid "Django irc channel"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\modules.py:184
+msgid "Links"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\modules.py:356
+msgid "RSS Feed"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\templates\admin\index.html:25
+#: .\venv\Lib\site-packages\grappelli\templates\admin\500.html:9
+#: .\venv\Lib\site-packages\grappelli\templates\admin\app_index.html:11
+#: .\venv\Lib\site-packages\grappelli\templates\admin\auth\user\change_password.html:7
+#: .\venv\Lib\site-packages\grappelli\templates\admin\base.html:136
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_form.html:153
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list.html:141
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_confirm.html:141
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_confirm_sidebar.html:142
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_sidebar.html:142
+#: .\venv\Lib\site-packages\grappelli\templates\admin\constance\change_list.html:72
+#: .\venv\Lib\site-packages\grappelli\templates\admin\csv_export_selected_confirmation.html:9
+#: .\venv\Lib\site-packages\grappelli\templates\admin\delete_confirmation.html:13
+#: .\venv\Lib\site-packages\grappelli\templates\admin\delete_selected_confirmation.html:13
+#: .\venv\Lib\site-packages\grappelli\templates\admin\index.html:18
+#: .\venv\Lib\site-packages\grappelli\templates\admin\invalid_setup.html:9
+#: .\venv\Lib\site-packages\grappelli\templates\admin\object_history.html:9
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\bookmarklets.html:8
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\index.html:9
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\missing_docutils.html:8
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\model_detail.html:20
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\model_index.html:23
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\template_filter_index.html:25
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\template_tag_index.html:27
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\view_detail.html:7
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\view_index.html:23
+#: .\venv\Lib\site-packages\grappelli\templates\grp_doc\basic_page_structure.html:132
+#: .\venv\Lib\site-packages\grappelli\templates\grp_doc\context_navigation.html:55
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_change_done.html:6
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_change_form.html:6
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\recover_form.html:7
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\recover_list.html:6
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\revision_form.html:7
+#: .\venv\Lib\site-packages\grappelli\templates\smuggler\load_data_form.html:24
+msgid "Home"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\templates\grappelli\dashboard\modules\app_list.html:19
+#: .\venv\Lib\site-packages\grappelli\dashboard\templates\grappelli\dashboard\modules\model_list.html:9
+#: .\venv\Lib\site-packages\grappelli\templates\admin\app_index.html:30
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_form.html:159
+#: .\venv\Lib\site-packages\grappelli\templates\admin\index.html:44
+#: .\venv\Lib\site-packages\grappelli\templates\related_widget_wrapper.html:18
+msgid "Add"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\dashboard\templates\grappelli\dashboard\modules\recent_actions.html:18
+msgid "None Available"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\404.html:7
+#: .\venv\Lib\site-packages\grappelli\templates\admin\404.html:11
+msgid "Page not found"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\404.html:12
+msgid "We're sorry, but the requested page could not be found."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\500.html:10
+msgid "Server error"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\500.html:15
+msgid "Server error (500)"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\500.html:19
+msgid "Server Error <em>(500)</em>"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\500.html:20
+msgid ""
+"There's been an error. It's been reported to the site administrators via e-"
+"mail and should be fixed shortly. Thanks for your patience."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\actions.html:4
+msgid "Run the selected action"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\actions.html:4
+msgid "Go"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\actions.html:11
+msgid "Click here to select the objects across all pages"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\actions.html:11
+#, python-format
+msgid "Select all %(total_count)s %(module_name)s"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\actions.html:12
+msgid "Clear selection"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\app_index.html:13
+#, python-format
+msgid "<li>%(name)s</li>"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\app_index.html:37
+#: .\venv\Lib\site-packages\grappelli\templates\admin\index.html:52
+msgid "You don´t have permission to edit anything."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\auth\user\change_password.html:15
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_change_done.html:7
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_change_form.html:7
+msgid "Password change"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\auth\user\change_password.html:24
+#, python-format
+msgid "Enter a new password for the user <strong>%(username)s</strong>."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\auth\user\change_password.html:27
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_form.html:190
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list.html:222
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_confirm.html:230
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_confirm_sidebar.html:227
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_sidebar.html:221
+#: .\venv\Lib\site-packages\grappelli\templates\admin\login.html:31
+#: .\venv\Lib\site-packages\grappelli\templates\smuggler\load_data_form.html:40
+msgid "Please correct the error below."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\auth\user\change_password.html:27
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_form.html:190
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list.html:222
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_confirm.html:230
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_confirm_sidebar.html:227
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_sidebar.html:221
+#: .\venv\Lib\site-packages\grappelli\templates\admin\login.html:31
+#: .\venv\Lib\site-packages\grappelli\templates\smuggler\load_data_form.html:42
+msgid "Please correct the errors below."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\auth\user\change_password.html:34
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_change_form.html:30
+msgid "New password"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\auth\user\change_password.html:46
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_change_form.html:37
+msgid "Password (again)"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\auth\user\change_password.html:50
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_confirm.html:29
+msgid "Enter the same password as above, for verification."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\base.html:82
+msgid "Django administration"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\base.html:113
+msgid "View site"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\base.html:118
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\bookmarklets.html:9
+msgid "Documentation"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_form.html:143
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\stacked.html:9
+msgid "Open All Items"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_form.html:144
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\stacked.html:10
+msgid "Close All Items"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_form.html:171
+#: .\venv\Lib\site-packages\grappelli\templates\admin\object_history.html:15
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\revision_form.html:11
+msgid "History"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_form.html:172
+msgid "View on site"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list.html:159
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_confirm.html:159
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_confirm_sidebar.html:160
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_sidebar.html:160
+#: .\venv\Lib\site-packages\grappelli\templates\smuggler\change_list.html:15
+#, python-format
+msgid "Add %(name)s"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list.html:188
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_confirm.html:188
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_confirm_sidebar.html:175
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_sidebar.html:175
+msgid "Filter"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list.html:249
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_confirm.html:257
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_confirm_sidebar.html:254
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_sidebar.html:248
+#: .\venv\Lib\site-packages\grappelli\templates\admin\constance\change_list.html:108
+#: .\venv\Lib\site-packages\grappelli\templates\admin\submit_line.html:10
+msgid "Submit"
+msgstr "Entregar"
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_confirm.html:195
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_confirm_sidebar.html:179
+msgid "Apply"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_confirm.html:196
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_filter_confirm_sidebar.html:180
+msgid "Reset"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_results.html:18
+msgid "Toggle sorting"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_results.html:19
+#, python-format
+msgid "Sorting priority: %(priority_number)s"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\change_list_results.html:20
+msgid "Remove from sorting"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\constance\includes\results_list.html:8
+msgid "Name"
+msgstr "Nombre"
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\constance\includes\results_list.html:13
+msgid "Default"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\constance\includes\results_list.html:18
+msgid "Value"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\constance\includes\results_list.html:23
+msgid "Is modified"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\constance\includes\results_list.html:67
+msgid "Reset to default"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\csv_export_selected_confirmation.html:12
+msgid "Export selection as CSV"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\csv_export_selected_confirmation.html:31
+msgid "Export following fields:"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\csv_export_selected_confirmation.html:34
+msgid "Select all"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\csv_export_selected_confirmation.html:54
+msgid "Back"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\csv_export_selected_confirmation.html:55
+#: .\venv\Lib\site-packages\grappelli\templates\admin\import_export\change_list_export_item.html:4
+msgid "Export"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\delete_confirmation.html:29
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would result in deleting "
+"related objects, but your account doesn't have permission to delete the "
+"following types of objects:"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\delete_confirmation.html:37
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would require deleting the "
+"following protected related objects:"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\delete_confirmation.html:47
+#, python-format
+msgid ""
+"Are you sure you want to delete the %(object_name)s \"%(escaped_object)s\"? "
+"All of the following related items will be deleted:"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\delete_confirmation.html:55
+#: .\venv\Lib\site-packages\grappelli\templates\admin\delete_selected_confirmation.html:58
+msgid "Cancel"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\delete_confirmation.html:56
+#: .\venv\Lib\site-packages\grappelli\templates\admin\delete_selected_confirmation.html:59
+msgid "Yes, I'm sure"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\delete_selected_confirmation.html:16
+msgid "Delete multiple objects"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\delete_selected_confirmation.html:26
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would result in deleting related "
+"objects, but your account doesn't have permission to delete the following "
+"types of objects:"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\delete_selected_confirmation.html:34
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would require deleting the following "
+"protected related objects:"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\delete_selected_confirmation.html:44
+#, python-format
+msgid ""
+"Are you sure you want to delete the selected %(objects_name)s? All of the "
+"following objects and their related items will be deleted:"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\stacked.html:11
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\stacked.html:60
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\tabular.html:108
+msgid "Add Item"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\stacked.html:29
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\tabular.html:81
+msgid "View on Site"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\stacked.html:31
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\tabular.html:83
+msgid "Move Item"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\stacked.html:35
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\stacked.html:40
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\tabular.html:87
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\tabular.html:92
+msgid "Delete Item"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\stacked.html:58
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\tabular.html:106
+#, python-format
+msgid "Add another %(verbose_name)s"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\edit_inline\tabular.html:9
+msgid "Add Another"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\filter.html:4
+#: .\venv\Lib\site-packages\grappelli\templates\admin\filter_listing.html:3
+#, python-format
+msgid "%(filter_title)s"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\import_export\change_list_import_item.html:4
+msgid "Import"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\includes\object_delete_summary.html:3
+msgid "Summary"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\index.html:57
+msgid "Custom Views"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\index.html:71
+msgid "My actions"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\index.html:74
+msgid "None available"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\invalid_setup.html:16
+msgid ""
+"Something's wrong with your database installation. Make sure the appropriate "
+"database tables have been created, and make sure the database is readable by "
+"the appropriate user."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\login.html:26
+#: .\venv\Lib\site-packages\grappelli\templates\admin\login.html:67
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_complete.html:17
+msgid "Log in"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\login.html:60
+msgid "Forgotten your password or username?"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\object_history.html:26
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\object_history.html:13
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\recover_list.html:22
+msgid "Date/time"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\object_history.html:27
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\object_history.html:14
+msgid "User"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\object_history.html:28
+msgid "Action"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\object_history.html:34
+msgid "DATETIME_FORMAT"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\object_history.html:42
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\object_history.html:36
+msgid ""
+"This object doesn't have a change history. It probably wasn't added via this "
+"admin site."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\pagination.html:9
+#: .\venv\Lib\site-packages\grappelli\views\related.py:256
+#, python-format
+msgid "%(counter)s result"
+msgid_plural "%(counter)s results"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\pagination.html:14
+#: .\venv\Lib\site-packages\grappelli\templates\admin\pagination.html:16
+#, python-format
+msgid "%(full_result_count)s total"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\pagination.html:22
+#, python-format
+msgid ""
+"\n"
+"                        %(counter)s result\n"
+"                    "
+msgid_plural ""
+"\n"
+"                        %(counter)s results\n"
+"                    "
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\pagination.html:31
+#: .\venv\Lib\site-packages\grappelli\templates\admin\pagination.html:44
+msgid "Show all"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\popup_response.html:3
+msgid "Popup closing..."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\related_widget_wrapper.html:24
+#: .\venv\Lib\site-packages\grappelli\templates\admin\widgets\related_widget_wrapper.html:18
+#: .\venv\Lib\site-packages\grappelli\templates\related_widget_wrapper.html:16
+#, python-format
+msgid "Add another %(model)s"
+msgstr "Agregar otro %(model)s"
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\submit_line.html:13
+msgid "Save as new"
+msgstr "Guardar como nuevo"
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\submit_line.html:16
+msgid "Save and add another"
+msgstr "Guardar y agregar otro"
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\submit_line.html:19
+msgid "Save and continue editing"
+msgstr "Guardar y continuar editando"
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\widgets\related_widget_wrapper.html:11
+#: .\venv\Lib\site-packages\grappelli\templates\related_widget_wrapper.html:8
+#, python-format
+msgid "Change selected %(model)s"
+msgstr "Cambiar %(modelo) seleccionado"
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin\widgets\related_widget_wrapper.html:25
+#: .\venv\Lib\site-packages\grappelli\templates\related_widget_wrapper.html:24
+#, python-format
+msgid "Delete selected %(model)s"
+msgstr "Eliminar %(modelo)s seleccionados"
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\bookmarklets.html:10
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\bookmarklets.html:16
+msgid "Bookmarklets"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\bookmarklets.html:13
+msgid "Documentation bookmarklets"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\bookmarklets.html:18
+msgid ""
+"\n"
+"            <p>To install bookmarklets, drag the link to your bookmarks\n"
+"    toolbar, or right-click the link and add it to your bookmarks. Now you "
+"can\n"
+"    select the bookmarklet from any page in the site.  Note that some of "
+"these\n"
+"    bookmarklets require you to be viewing the site from a computer "
+"designated\n"
+"    as \"internal\" (talk to your system administrator if you aren't sure "
+"if\n"
+"    your computer is \"internal\").</p>\n"
+"        "
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\bookmarklets.html:27
+msgid "Documentation for this page"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\bookmarklets.html:28
+msgid ""
+"Jumps you from any page to the documentation for the view that generates "
+"that page."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\bookmarklets.html:31
+msgid "Show object ID"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\bookmarklets.html:32
+msgid ""
+"Shows the content-type and unique ID for pages that represent a single "
+"object."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\bookmarklets.html:35
+msgid "Edit this object (current window)"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\bookmarklets.html:36
+msgid "Jumps to the admin page for pages that represent a single object."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\bookmarklets.html:39
+msgid "Edit this object (new window)"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\bookmarklets.html:40
+msgid "As above, but opens the admin page in a new window."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\view_index.html:43
+msgid "Empty namespace"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\admin_doc\view_index.html:57
+msgid "Views by empty namespace"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\logged_out.html:16
+msgid "Log in again"
+msgstr "Ingresar de nuevo"
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_change_done.html:16
+msgid "Your password was changed."
+msgstr "Tu contraseña fue cambiada."
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_change_form.html:18
+msgid ""
+"Please enter your old password, for security's sake, and then enter your new "
+"password twice so we can verify you typed it in correctly."
+msgstr "Ingrese su contraseña anterior, por razones de seguridad, y luego ingrese su nueva "
+"contraseña dos veces para que podamos verificar que la escribiste correctamente."
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_change_form.html:23
+msgid "Old password"
+msgstr "Contraseña anterior"
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_change_form.html:46
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_confirm.html:35
+msgid "Change my password"
+msgstr "Cambiar mi contraseña"
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_complete.html:16
+msgid "Your password has been set. You may go ahead and log in now."
+msgstr "Su contraseña ha sido establecida. Puede continuar e iniciar sesión ahora."
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_confirm.html:18
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
+msgstr "Ingrese su nueva contraseña dos veces para que podamos verificar que la escribió "
+"correctamente."
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_confirm.html:21
+msgid "New password:"
+msgstr "Nueva contraseña:"
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_confirm.html:26
+msgid "Confirm password:"
+msgstr "Coonfirmar contraseña:"
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_confirm.html:47
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used. Please request a new password reset."
+msgstr "El enlace de restablecimiento de contraseña no era válido, posiblemente porque ya ha sido "
+"Usado. Solicite un nuevo restablecimiento de contraseña."
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_done.html:5
+msgid "Password reset successful"
+msgstr "Restablecimiento de contraseña exitoso"
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_done.html:16
+msgid ""
+"We've emailed you instructions for setting your password, if an account "
+"exists with the email you entered. You should receive them shortly."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_done.html:17
+msgid ""
+"If you don't receive an email, please make sure you've entered the address "
+"you registered with, and check your spam folder."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_email.html:2
+#, python-format
+msgid ""
+"You're receiving this email because you requested a password reset for your "
+"user account at %(site_name)s."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_email.html:4
+msgid "Please go to the following page and choose a new password:"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_email.html:8
+msgid "Your username, in case you've forgotten:"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_email.html:10
+msgid "Thanks for using our site!"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_email.html:12
+#, python-format
+msgid "The %(site_name)s team"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_form.html:5
+msgid "Password reset"
+msgstr "Restablecimiento de contraseña"
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_form.html:17
+msgid ""
+"Forgotten your password? Enter your email address below, and we'll email "
+"instructions for setting a new one."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_form.html:20
+msgid "Email address:"
+msgstr "Dirección de correo electrónico:"
+
+#: .\venv\Lib\site-packages\grappelli\templates\registration\password_reset_form.html:28
+msgid "Reset my password"
+msgstr "Restablecer mi contraseña"
+
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\change_list.html:6
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\recover_form.html:10
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\recover_list.html:9
+#, python-format
+msgid "Recover deleted %(name)s"
+msgstr "Recuperar %(name)s eliminados"
+
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\object_history.html:7
+msgid ""
+"Choose a date from the list below to revert to a previous version of this "
+"object."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\object_history.html:15
+msgid "Comment"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\recover_form.html:20
+msgid "Press the save button below to recover this version of the object."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\recover_list.html:16
+msgid ""
+"Choose a date from the list below to recover a deleted version of an object."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\recover_list.html:36
+msgid "There are no deleted objects to recover."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\revision_form.html:12
+#, python-format
+msgid "Revert %(verbose_name)s"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\reversion\revision_form.html:21
+msgid "Press the save button below to revert to this version of the object."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\smuggler\change_list.html:7
+msgid "Dump data"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\smuggler\change_list.html:11
+#: .\venv\Lib\site-packages\grappelli\templates\smuggler\load_data_form.html:6
+#: .\venv\Lib\site-packages\grappelli\templates\smuggler\load_data_form.html:25
+#: .\venv\Lib\site-packages\grappelli\templates\smuggler\load_data_form.html:35
+msgid "Load data"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\smuggler\load_data_form.html:46
+msgid ""
+"Existing items with same <strong>primary key</strong> will be overwritten."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templates\smuggler\load_data_form.html:53
+msgid "Load"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\templatetags\grp_tags.py:63
+msgid "Django site admin"
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\tests\test_switch.py:101
+#: .\venv\Lib\site-packages\grappelli\tests\test_switch.py:160
+#: .\venv\Lib\site-packages\grappelli\views\switch.py:44
+#: .\venv\Lib\site-packages\grappelli\views\switch.py:55
+msgid "Permission denied."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\tests\test_switch.py:144
+#: .\venv\Lib\site-packages\grappelli\views\switch.py:47
+#: .\venv\Lib\site-packages\grappelli\views\switch.py:58
+#, python-format
+msgid "%(name)s object with primary key %(key)r does not exist."
+msgstr ""
+
+#: .\venv\Lib\site-packages\grappelli\views\related.py:126
+#: .\venv\Lib\site-packages\grappelli\views\related.py:156
+msgid "?"
+msgstr ""
+
+
+
+
+
+
+
+
+msgid "Names"
+msgstr "Nombres"
+
+msgid "Surnames"
+msgstr "Apellidos"
+
+msgid "Phone number"
+msgstr "Número de télefono"
+
+msgid "Date of birth"
+msgstr "Fecha de nacimiento"
+
+msgid "Email"
+msgstr "Correo electrónico"
+
+msgid "Address"
+msgstr "Dirección"
+
+msgid "City"
+msgstr "Ciudad"
+
+msgid "Zip code"
+msgstr "Código postal"
+
+msgid "There is already a person registered with %(field_labels)s"
+msgstr "Ya hay una persona registrada con %(field_labels)s"
+
+msgid "Please enter a valid city."
+msgstr "Por favor introduzca una ciudad válida."
+
+msgid "Days available to work"
+msgstr "Días disponibles para trabajar"
+
+msgid "Monday to Friday"
+msgstr "Lunes a viernes"
+
+msgid "Monday to Saturday"
+msgstr "Lunes a sabado"
+
+msgid "Monday to Sunday"
+msgstr "Lunes a domingo"
+
+msgid "Other"
+msgstr "Otro"
+
+msgid "None"
+msgstr "Ninguno"
+
+msgid "Basic"
+msgstr "Básico"
+
+msgid "Intermediate"
+msgstr "Intermedio"
+
+msgid "Advanced"
+msgstr "Avanzado"
+
+msgid "All the positions"
+msgstr "Todas las posiciones"
+
+msgid "If the job requires it, can you travel?"
+msgstr "Si el trabajo lo requiere, ¿puede viajar?"
+
+msgid "Can you work nights?"
+msgstr "¿Puedes trabajar de noche?"
+
+msgid "Desired job"
+msgstr "Trabajo deseado"
+
+msgid "Full Time"
+msgstr "Tiempo Completo"
+
+msgid "Part Time"
+msgstr "Medio tiempo"
+
+msgid "Seasonal"
+msgstr "Temporal"
+
+msgid "Desired payment"
+msgstr "Pago deseado"
+
+msgid "Position to which applies"
+msgstr "Posición a la que aplica"
+
+msgid "Have you worked for this company before?. If the answer is yes, indicate the start date and end date"
+msgstr "¿Ha trabajado para esta empresa antes?. Si la respuesta es sí, indique la fecha de inicio y la fecha de finalización"
+
+msgid "Have you ever been convicted of a felony?. If the answer is yes, explain"
+msgstr "¿Alguna vez has sido condenado por un delito grave?. Si la respuesta es sí, explique"
+
+msgid "If Hired, Are You Willing To Test For Controlled Substances?"
+msgstr "Si es contratado, ¿está dispuesto a realizar pruebas de sustancias controladas?"
+
+msgid "Are you open to a background check?"
+msgstr "¿Estás abierto a una verificación de antecedentes?"
+
+msgid "Select the jobs in which you have experience"
+msgstr "Selecciona los trabajos en los que tienes experiencia"
+
+msgid "English language level"
+msgstr "Nivel de idioma ingles"
+
+msgid "Indicate the studies you have carried out"
+msgstr "Indique los estudios que ha realizado"
+
+msgid "Specialty of your studies"
+msgstr "Especialidad de tus estudios"
+
+msgid "Have you ever been a member of the united states armed services?"
+msgstr "¿Alguna vez ha sido miembro de las fuerzas armadas de los Estados Unidos?"
+
+msgid "Enter the branch in which you performed your military service (if apply)"
+msgstr "Ingrese la rama en la que realizó su servicio militar (si aplica)"
+
+msgid "Military service start date (if apply)"
+msgstr "Fecha de inicio del servicio militar (si aplica)"
+
+msgid "Military service end date (if apply)"
+msgstr "Fecha de finalización del servicio militar (si aplica)"
+
+msgid "Describe your duties and any special training (if apply)"
+msgstr "Describa sus deberes y cualquier capacitación especial (si aplica)"
+
+msgid "Enter your height in feet"
+msgstr "Ingrese su altura en pies"
+
+msgid "Enter your weight in pounds"
+msgstr "Ingrese su peso en libras"
+
+msgid "Mention any allergies you have"
+msgstr "Menciona cualquier alergia que tengas"
+
+msgid "Select the diseases you suffer from"
+msgstr "Selecciona las enfermedades que padeces"
+
+msgid "Epilepsy"
+msgstr "Epilepsia"
+
+msgid "Heart disease"
+msgstr "Enfermedad del corazón"
+
+msgid "Hyperinsulinism"
+msgstr "Hiperinsulinismo"
+
+msgid "Thrombopheblitis"
+msgstr "Tromboflebitis"
+
+msgid "Total deafness"
+msgstr "Sordera total"
+
+msgid "Hemophilia"
+msgstr "Hemofilia"
+
+msgid "Polio"
+msgstr "Polio"
+
+msgid "Herniated vertebral disc"
+msgstr "Disco vertebral herniado"
+
+msgid "Multiple sclerosis"
+msgstr "Esclerosis múltiple"
+
+msgid "Inflammation of the bones"
+msgstr "Inflamación de los huesos"
+
+msgid "Inflammation of the joint cartilage"
+msgstr "Inflamación del cartílago articular"
+
+msgid "Amputation of, feet, leg, arm, hand.."
+msgstr "Amputación de pies, piernas, brazos, manos.."
+
+msgid "Total or partial loss of vision"
+msgstr "Pérdida total o parcial de la visión"
+
+msgid "One spinal disc removed"
+msgstr "Se extrajo un disco espinal"
+
+msgid "Any back or neck injury"
+msgstr "Cualquier lesión en la espalda o el cuello"
+
+msgid "Knee ligament fracture"
+msgstr "Fractura del ligamento de la rodilla"
+
+msgid "Parkinson''s disease"
+msgstr "Enfermedad de Parkinson"
+
+msgid "Cerebral palsy"
+msgstr "Parálisis cerebral"
+
+msgid "Muscular dystrophy"
+msgstr "Distrofia muscular"
+
+msgid "Have you ever received workers compensation due to an injury at work? If the answer is yes, describe why?"
+msgstr "¿Alguna vez ha recibido compensación laboral debido a una lesión en el trabajo? Si la respuesta es afirmativa, describe ¿por qué?"
+
+msgid "Have you received surgery for a fracture? If the answer is yes, describe all the details"
+msgstr "¿Ha sido operado de una fractura? Si la respuesta es afirmativa, describa todos los detalles."
+
+msgid "Have you received any kind of physical disability evaluation or assigned by any insurance company or state/or federal agency? If the answer is yes, describe why, when and where"
+msgstr "¿Ha recibido algún tipo de evaluación de discapacidad física o asignado por alguna compañía de seguros o agencia estatal o federal? Si la respuesta es sí, describe por qué, cuándo y dónde"
+
+msgid "Relationship"
+msgstr "Relación"
+
+msgid "Application"
+msgstr "Aplicación"
+
+msgid "Personal Information"
+msgstr "Información Personal"
+
+msgid "Add all your personal data."
+msgstr "Añade todos tus datos personales."
+
+msgid "Employment Eligibility"
+msgstr "Elegibilidad de empleo"
+
+msgid "Information related to the job you want and your experience in previous jobs."
+msgstr "Información relacionada con el trabajo que deseas y tu experiencia en trabajos anteriores."
+
+msgid "Medical Form"
+msgstr "Planilla médica"
+
+msgid "Information related to your medical condition."
+msgstr "Información relacionada con su condición médica."
+
+msgid "Emergency Contact"
+msgstr "Contacto de emergencia"
+
+msgid "Information of a relative or friend to contact in case of emergency."
+msgstr "Información de un familiar o amigo para contactar en caso de emergencia."

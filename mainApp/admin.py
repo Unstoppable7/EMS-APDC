@@ -601,7 +601,6 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
         my_empoyees = super().get_queryset(request)
         
         try:
-            #TODO QUITAR GET
             head = None
             head = Employee.objects.filter(email=request.user.email).first()
 
@@ -631,7 +630,6 @@ class EmployeeAdminManagement(admin.ModelAdmin):
     list_per_page = 10
     search_fields = ['first_name', 'last_name',]
     list_display_links = ('full_name',)
-    add_button_label = 'Add Employee'
     actions = ['make_no_application_open','make_frontdesk','make_regular_application','make_southeast']
 
     def get_queryset(self, request):
