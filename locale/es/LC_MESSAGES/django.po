@@ -18,36 +18,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\mainApp\admin.py:240 .\mainApp\admin.py:470
+#: .\management\admin.py:240 .\management\admin.py:470
 #, python-format
 msgid "%d employee was successfully marked as active."
 msgid_plural "%d employees were successfully marked as active."
 msgstr[0] "%d empleado se marcó correctamente como activo."
 msgstr[1] "%d empleados se marcaron correctamente como activos."
 
-#: .\mainApp\admin.py:253 .\mainApp\admin.py:355 .\mainApp\admin.py:571
+#: .\management\admin.py:253 .\management\admin.py:355 .\management\admin.py:571
 #, python-format
 msgid "%d employee was successfully marked as open."
 msgid_plural "%d employees were successfully marked as open."
 msgstr[0] "%d empleado se marcó correctamente como abierto."
 msgstr[1] "%d empleados se marcaron correctamente como vacantes."
 
-#: .\mainApp\admin.py:265 .\mainApp\admin.py:583
+#: .\management\admin.py:265 .\management\admin.py:583
 #, python-format
 msgid "%d employee was successfully marked as inactive."
 msgid_plural "%d employees were successfully marked as inactive."
 msgstr[0] "%d empleado se marcó correctamente como inactivo."
 msgstr[1] "%d empleados se marcaron correctamente como inactivos."
 
-#: .\mainApp\admin.py:277 .\mainApp\admin.py:367 .\mainApp\admin.py:482
-#: .\mainApp\admin.py:595
+#: .\management\admin.py:277 .\management\admin.py:367 .\management\admin.py:482
+#: .\management\admin.py:595
 #, python-format
 msgid "%d employee was successfully marked as do not hire."
 msgid_plural "%d employees were successfully marked as do not hire."
 msgstr[0] "%d empleado se marcó con éxito como no contratar."
 msgstr[1] "%d empleados se marcaron con éxito como no contratar."
 
-#: .\mainApp\admin.py:455
+#: .\management\admin.py:455
 #, python-format
 msgid ""
 "%d employee was successfully marked as \"stand by\" and added to the \"my "
@@ -60,7 +60,7 @@ msgstr[0] ""
 msgstr[1] ""
 "%d empleados se marcaron con éxito como \"en espera\" y se agregaron a la sección \"mis empleados\"."
 
-#: .\mainApp\admin.py:461
+#: .\management\admin.py:461
 #, python-format
 msgid ""
 "%d employee could not be marked as \"stand by\" and was not added to the "
@@ -77,7 +77,7 @@ msgstr[1] ""
 "%d empleados no se pudieron marcar como \"en espera\" y no se agregaron a la sección \"mis empleados\".\n"
 "Hay un problema con el correo registrado."
 
-#: .\mainApp\admin.py:653
+#: .\management\admin.py:653
 #, python-format
 msgid ""
 "%d employee was successfully mark to Open and application status changed to "
@@ -92,7 +92,7 @@ msgstr[1] ""
 "%d empleados se marcaron correctamente como Abierto y el estado de la aplicación cambió "
 "a Sin aplicación."
 
-#: .\mainApp\admin.py:679
+#: .\management\admin.py:679
 #, python-format
 msgid "%d application status was successfully changed to Regular Application."
 msgid_plural ""
@@ -101,19 +101,19 @@ msgstr[0] "El estado de la aplicación %d se cambió correctamente a Aplicación
 msgstr[1] ""
 "El estado de las aplicaciones de %d se cambió con éxito a Aplicación regular."
 
-#: .\mainApp\admin.py:692
+#: .\management\admin.py:692
 #, python-format
 msgid "%d application status was successfully changed to Southeast."
 msgid_plural "%d applications status was successfully changed to Southeast."
 msgstr[0] "El estado de la aplicación de %d se cambió correctamente a Southeast."
 msgstr[1] "El estado de las aplicaciones de %d se cambió correctamente a Southeast."
 
-#: .\mainApp\admin.py:705
+#: .\management\admin.py:705
 #, python-format
 msgid "%d application status was successfully changed to Frontdesk."
 msgid_plural "%d applications status was successfully changed to Frontdesk."
-msgstr[0] "El estado de la aplicación %d se cambió correctamente a Frontdesk".
-msgstr[1] "El estado de las aplicaciones de %d se cambió correctamente a Frontdesk".
+msgstr[0] "El estado de la aplicación %d se cambió correctamente a Frontdesk"
+msgstr[1] "El estado de las aplicaciones de %d se cambió correctamente a Frontdesk"
 
 #: .\venv\Lib\site-packages\click\_termui_impl.py:496
 #, python-brace-format
@@ -523,9 +523,9 @@ msgid_plural ""
 "Ensure this value has at least %(limit_value)d characters (it has "
 "%(show_value)d)."
 msgstr[0] "Asegúrese de que este valor tenga al menos el carácter %(limit_value)d (tiene "
-"%(mostrar_valor)d)."
+"%(show_value)d)."
 msgstr[1] "Asegúrese de que este valor tenga al menos %(limit_value)d caracteres (tiene "
-"%(mostrar_valor)d)."
+"%(show_value)d)."
 
 #: .\venv\Lib\site-packages\django\core\validators.py:435
 #, python-format
@@ -536,9 +536,9 @@ msgid_plural ""
 "Ensure this value has at most %(limit_value)d characters (it has "
 "%(show_value)d)."
 msgstr[0] "Asegúrese de que este valor tenga como máximo el carácter %(limit_value)d (tiene "
-"%(mostrar_valor)d)."
+"%(show_value)d)."
 msgstr[1] "Asegúrese de que este valor tenga como máximo %(limit_value)d caracteres (tiene "
-"%(mostrar_valor)d)."
+"%(show_value)d)."
 
 #: .\venv\Lib\site-packages\django\core\validators.py:458
 #: .\venv\Lib\site-packages\django\forms\fields.py:347
@@ -575,7 +575,7 @@ msgid ""
 "File extension “%(extension)s” is not allowed. Allowed extensions are: "
 "%(allowed_extensions)s."
 msgstr "La extensión de archivo “%(extension)s” no está permitida. Las extensiones permitidas son: "
-"%(extensiones_permitidas)s."
+"%(allowed_extensions)s."
 
 
 
@@ -668,7 +668,7 @@ msgstr "El valor “%(value)s” tiene un formato de fecha no válido. Debe esta
 msgid ""
 "“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
 "date."
-msgstr "El valor “%(valor)s” tiene el formato correcto (AAAA-MM-DD) pero no es una "
+msgstr "El valor “%(value)s” tiene el formato correcto (AAAA-MM-DD) pero no es una "
 "fecha."
 
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1331
@@ -916,8 +916,8 @@ msgstr "El archivo enviado está vacío."
 msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
 msgid_plural ""
 "Ensure this filename has at most %(max)d characters (it has %(length)d)."
-msgstr[0] "Asegúrese de que este nombre de archivo tenga como máximo %(max)d carácter (tiene %(longitud)d)."
-msgstr[1] "Asegúrese de que este nombre de archivo tenga como máximo %(max)d caracteres (tiene %(longitud)d)."
+msgstr[0] "Asegúrese de que este nombre de archivo tenga como máximo %(max)d carácter (tiene %(length)d)."
+msgstr[1] "Asegúrese de que este nombre de archivo tenga como máximo %(max)d caracteres (tiene %(length)d)."
 
 #: .\venv\Lib\site-packages\django\forms\fields.py:627
 msgid "Please either submit a file or check the clear checkbox, not both."
@@ -963,7 +963,7 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\forms\forms.py:332
 #, python-format
 msgid "(Hidden field %(name)s) %(error)s"
-msgstr "(Campo oculto %(nombre)s) %(error)s"
+msgstr "(Campo oculto %(name)s) %(error)s"
 
 #: .\venv\Lib\site-packages\django\forms\formsets.py:63
 #, python-format
@@ -1014,7 +1014,7 @@ msgid ""
 "Please correct the duplicate data for %(field_name)s which must be unique "
 "for the %(lookup)s in %(date_field)s."
 msgstr "Corrija los datos duplicados para %(field_name)s que deben ser únicos "
-"para los %(búsqueda)s en %(date_field)s."
+"para los %(lookup)s en %(date_field)s."
 
 #: .\venv\Lib\site-packages\django\forms\models.py:913
 msgid "Please correct the duplicate values below."
@@ -2194,13 +2194,13 @@ msgstr "Guardar y continuar editando"
 #: .\venv\Lib\site-packages\grappelli\templates\related_widget_wrapper.html:8
 #, python-format
 msgid "Change selected %(model)s"
-msgstr "Cambiar %(modelo) seleccionado"
+msgstr "Cambiar %(model) seleccionado"
 
 #: .\venv\Lib\site-packages\grappelli\templates\admin\widgets\related_widget_wrapper.html:25
 #: .\venv\Lib\site-packages\grappelli\templates\related_widget_wrapper.html:24
 #, python-format
-msgid "Delete selected %(model)s"
-msgstr "Eliminar %(modelo)s seleccionados"
+#  msgid "Delete selected %(model)s"
+#  msgstr "Eliminar %(modelo)s seleccionados"
 
 #: .\venv\Lib\site-packages\grappelli\templates\admin_doc\bookmarklets.html:10
 #: .\venv\Lib\site-packages\grappelli\templates\admin_doc\bookmarklets.html:16
@@ -2477,8 +2477,8 @@ msgstr "Apellidos"
 msgid "Phone number"
 msgstr "Número de télefono"
 
-msgid "Date of birth"
-msgstr "Fecha de nacimiento"
+msgid "Date of birth MM/DD/YYYY"
+msgstr "Fecha de nacimiento MM/DD/AAAA"
 
 msgid "Email"
 msgstr "Correo electrónico"

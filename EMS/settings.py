@@ -45,9 +45,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mainApp',
+    'management',
     'crispy_forms',
-    'wkhtmltopdf'
+    'wkhtmltopdf',
+    "django_rename_app",
+
 ]
 
 MIDDLEWARE = [
@@ -149,7 +151,7 @@ django.conf.locale.LANG_INFO = LANG_INFO
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
-USE_L10N = True
+USE_L10N = False
 USE_TZ = True
 
 # URL de cambio de idioma
@@ -169,21 +171,92 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": True,
+    "brand_small_text": False,
+    "brand_colour": False,
+    "accent": "accent-primary",
+    "navbar": "navbar-gray-dark navbar-dark",
+    "no_navbar_border": False,
+    "navbar_fixed": False,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": False,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": True,
+    "sidebar_nav_legacy_style": True,
+    "sidebar_nav_flat_style": False,
+    "theme": "solar",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-outline-secondary",
+        "info": "btn-outline-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    },
+    "actions_sticky_top": False
+}
 
 JAZZMIN_SETTINGS = {
     "site_brand": "Administration Panel",
-    "navigation_expanded": True,
     "language_chooser": True,
+    "show_ui_builder": True,
+    "welcome_sign": "Welcome",
+    "login_logo": None,
+    # "topmenu_links": [
+
+    #     # Url that gets reversed (Permissions can be added)
+    #     {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+
+    #     # external url that opens in a new window (Permissions can be added)
+    #     {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+
+    #     # model admin to link to (Permissions checked against model)
+    #     {"model": "auth.User"}, 
+
+    #     # App with dropdown menu to all its models pages (Permissions checked against models)
+    #     {"app": "management"},    
+    # ],
+    # Additional links to include in the user menu on the top right ("app" url type is not allowed)
+    # "usermenu_links": [
+    #     {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+    #     {"model": "auth.user"}
+    # ],
+    "show_sidebar": True,
+    #"navigation_expanded": False,
+    
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user-tie",
+        "auth.Group": "fas fa-users-cog",
+        "management.employee": "fas fa-users",
+        "management.department": "far fa-building",
+        "management.job": "fas fa-briefcase",
+        "management.location": "fas fa-map-pin",
+        "management.MyEmployeeSection": "fas fa-address-book",
+        "management.recruiting": "fas fa-phone-volume",
+        "management.EmployeeInterview": "far fa-clipboard",
+        "management.EmployeeManagement": "fas fa-user-cog",
+
+    },
+    "related_modal_active": True,
     # "custom_links": {
-    #     "mainapp": [{
+    #     "management": [{
     #         "name": "Make Messages", 
-    #         #"url": "/admin/mainApp/employee/?status__exact=Interview", 
+    #         #"url": "/admin/management/employee/?status__exact=Interview", 
     #         "url": "admin/home",
     #         "icon": "fas fa-comments",
     #         "permissions": []
     #     }]
     # },
-    #"hide_models": ["mainApp.employee"]
+    #"hide_models": ["management.employee"]
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

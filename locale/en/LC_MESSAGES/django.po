@@ -18,36 +18,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\mainApp\admin.py:240 .\mainApp\admin.py:470
+#: .\management\admin.py:240 .\management\admin.py:470
 #, python-format
 msgid "%d employee was successfully marked as active."
 msgid_plural "%d employees were successfully marked as active."
 msgstr[0] ""
 msgstr[1] ""
 
-#: .\mainApp\admin.py:253 .\mainApp\admin.py:355 .\mainApp\admin.py:571
+#: .\management\admin.py:253 .\management\admin.py:355 .\management\admin.py:571
 #, python-format
 msgid "%d employee was successfully marked as open."
 msgid_plural "%d employees were successfully marked as open."
 msgstr[0] ""
 msgstr[1] ""
 
-#: .\mainApp\admin.py:265 .\mainApp\admin.py:583
+#: .\management\admin.py:265 .\management\admin.py:583
 #, python-format
 msgid "%d employee was successfully marked as inactive."
 msgid_plural "%d employees were successfully marked as inactive."
 msgstr[0] ""
 msgstr[1] ""
 
-#: .\mainApp\admin.py:277 .\mainApp\admin.py:367 .\mainApp\admin.py:482
-#: .\mainApp\admin.py:595
+#: .\management\admin.py:277 .\management\admin.py:367 .\management\admin.py:482
+#: .\management\admin.py:595
 #, python-format
 msgid "%d employee was successfully marked as do not hire."
 msgid_plural "%d employees were successfully marked as do not hire."
 msgstr[0] ""
 msgstr[1] ""
 
-#: .\mainApp\admin.py:455
+#: .\management\admin.py:455
 #, python-format
 msgid ""
 "%d employee was successfully marked as \"stand by\" and added to the \"my "
@@ -58,7 +58,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: .\mainApp\admin.py:461
+#: .\management\admin.py:461
 #, python-format
 msgid ""
 "%d employee could not be marked as \"stand by\" and was not added to the "
@@ -71,7 +71,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: .\mainApp\admin.py:653
+#: .\management\admin.py:653
 #, python-format
 msgid ""
 "%d employee was successfully mark to Open and application status changed to "
@@ -82,7 +82,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: .\mainApp\admin.py:679
+#: .\management\admin.py:679
 #, python-format
 msgid "%d application status was successfully changed to Regular Application."
 msgid_plural ""
@@ -90,14 +90,14 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: .\mainApp\admin.py:692
+#: .\management\admin.py:692
 #, python-format
 msgid "%d application status was successfully changed to Southeast."
 msgid_plural "%d applications status was successfully changed to Southeast."
 msgstr[0] ""
 msgstr[1] ""
 
-#: .\mainApp\admin.py:705
+#: .\management\admin.py:705
 #, python-format
 msgid "%d application status was successfully changed to Frontdesk."
 msgid_plural "%d applications status was successfully changed to Frontdesk."
