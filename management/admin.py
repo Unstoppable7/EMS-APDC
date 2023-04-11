@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Location,Department,Employee,EmployeeInterview, Application, Emergency_contact, Document, MedicalForm, MyEmployeeSection, Employee_head, Employee_job, Job,Recruiting,EmployeeManagement
+from .models import Location,Department,Employee,EmployeeInterview, Application, Emergency_contact, Document, MedicalForm, MyEmployeeSection, Employee_head, Employee_job, Job,Recruiting,EmployeeManagement, AccountingStatus
 from django.contrib import messages
 from django.utils.translation import ngettext
 from django.db.models import Q
@@ -216,10 +216,10 @@ class LocationListFilter(admin.SimpleListFilter):
 
 @admin.register(Employee) 
 class EmployeeAdmin(admin.ModelAdmin): 
-    fields=('type', 'status', 'application_status','first_name', 'last_name', 'phone_number', 'email', 'date_of_birth','address','city','zip_code') 
+    fields=('type', 'status', 'application_status','quickbooks_status','first_name', 'last_name', 'phone_number', 'email', 'date_of_birth','address','city','zip_code') 
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['status', 'application_status', 'type', 'full_name', 'phone_number', 'date_of_birth',
+    list_display = ['id','status', 'application_status', 'quickbooks_status','type', 'full_name', 'phone_number', 'date_of_birth',
     'get_job_name','get_locations','get_head','date_created', 'updated_at']
     list_filter = ['type', 'status','employee_job_employee__job__department__location__name', 'date_created', 'updated_at',]
     search_fields = ['first_name', 'last_name', 'status', 'employee_job_employee__job__department__location__name']
@@ -316,6 +316,8 @@ class EmployeeAdmin(admin.ModelAdmin):
             return '-'
         return ','.join(heads)
     get_head.short_description = 'manager'
+
+    
 
 @admin.register(EmployeeInterview) 
 class EmployeeAdminInterview(admin.ModelAdmin): 
@@ -424,7 +426,7 @@ class EmployeeAdminInterview(admin.ModelAdmin):
 class RecruitingAdmin(admin.ModelAdmin): 
     fields=('first_name', 'last_name', 'phone_number', 'email', 'date_of_birth', 
     'address','city','zip_code') 
-    inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
+    inlines=[ApplicationInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
     list_display = ['full_name', 'application_status','phone_number','date_of_birth','get_application_experience',
     'get_application_english_level','get_application_can_travel','get_application_can_work_nights',
@@ -542,7 +544,7 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
     'address','city','zip_code') 
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['status', 'full_name', 'application_status', 'phone_number','get_job_name']
+    list_display = ['id', 'full_name','status', 'application_status', 'phone_number','get_job_name']
     list_filter = ['type', 'status', 'employee_job_employee__job__department__location__name', 'date_created', 'updated_at']
     search_fields = ['first_name', 'last_name', 'status','employee_job_employee__job__department__location__name']
 
@@ -559,12 +561,7 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
     def make_open(self, request, queryset):
             
         for e in queryset:
-            
-            if e.status == 'Stand By':
-                Employee_head.objects.filter(employee=e).delete()
-
             e.status = 'Open'
-
             e.save()
 
         self.message_user(request, ngettext(
@@ -598,17 +595,17 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
         ) % queryset.count(), messages.SUCCESS)
 
     def get_queryset(self, request):
-        my_empoyees = super().get_queryset(request)
+        my_employees = super().get_queryset(request)
         
         try:
             head = None
             head = Employee.objects.filter(email=request.user.email).first()
 
             ## Relacion inversa atraves del parametro related_name del modelo Employee_head
-            my_empoyees = super().get_queryset(request).filter(employeeWithHead__head=head)
+            my_employees = super().get_queryset(request).filter(employeeWithHead__head=head)
         except:
             pass
-        return my_empoyees
+        return my_employees
 
     def get_job_name(self, obj):
         jobs = []
@@ -625,10 +622,11 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
 class EmployeeAdminManagement(admin.ModelAdmin):
     fields=('type', 'status', 'application_status', 'first_name', 'last_name', 'phone_number', 'email', 'date_of_birth', 'address','city','zip_code') 
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
-    list_display = ['status','full_name', 'application_status','get_job_name','get_locations','get_head', 'date_created']
-    list_editable = ('status','application_status')
+    list_display = ['id','full_name','status', 'application_status','get_job_name','get_locations','get_head', 'date_created']
+    #list_editable = ('status','application_status')
     list_per_page = 10
-    search_fields = ['first_name', 'last_name',]
+    list_filter = ['employee_job_employee__job__department__location__name']
+    search_fields = ['first_name', 'last_name', 'employee_job_employee__job__department__location__name']
     list_display_links = ('full_name',)
     actions = ['make_no_application_open','make_frontdesk','make_regular_application','make_southeast']
 
@@ -652,19 +650,6 @@ class EmployeeAdminManagement(admin.ModelAdmin):
             '%d employees were successfully mark to Open and application status changed to No Application.',
             queryset.count(),
         ) % queryset.count(), messages.SUCCESS)
-
-    # @admin.action(description='Change to no application')
-    # def make_no_application(self, request, queryset):
-            
-    #     for e in queryset:
-    #         e.application_status = 'No Application'
-    #         e.save()
-
-    #     self.message_user(request, ngettext(
-    #         '%d application status was successfully changed to No Application.',
-    #         '%d applications status were successfully changed to No Application.',
-    #         queryset.count(),
-    #     ) % queryset.count(), messages.SUCCESS)
 
     @admin.action(description='Change to regular application')
     def make_regular_application(self, request, queryset):
@@ -717,7 +702,7 @@ class EmployeeAdminManagement(admin.ModelAdmin):
         return ','.join(locations)
     get_locations.short_description = 'Location'
 
-    #@admin.display(ordering='job__name')
+    @admin.display(ordering='employee_job_employee__job__name')
     def get_job_name(self, obj):
         jobs = []
         for employee_job in Employee_job.objects.filter(employee=obj):
@@ -729,7 +714,7 @@ class EmployeeAdminManagement(admin.ModelAdmin):
         return ','.join(jobs)
     get_job_name.short_description = 'Jobs'
 
-    #@admin.display(ordering='head__full_name')
+    @admin.display(ordering='employeeWithHead__head__first_name')
     def get_head(self, obj):
         heads = []
         for employee_head in Employee_head.objects.filter(employee=obj):
@@ -740,6 +725,99 @@ class EmployeeAdminManagement(admin.ModelAdmin):
             return '-'
         return ','.join(heads)
     get_head.short_description = 'manager'
+
+@admin.register(AccountingStatus) 
+class EmployeeAdminAccountingStatus(admin.ModelAdmin): 
+
+    #fields=('quickbooks_status','first_name', 'last_name', 'phone_number', 'date_of_birth', 
+    #'address','city','zip_code') 
+    #inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
+
+    list_display = ['quickbooks_status','id', 'full_name', 'phone_number','date_of_birth','address','city','get_state','zip_code']
+    
+    #list_filter = ['type', 'status', 'employee_job_employee__job__department__location__name', 'date_created', 'updated_at']
+    #search_fields = ['first_name', 'last_name', 'status','employee_job_employee__job__department__location__name']
+
+    #Propiedad que me dice que campos tendran el link que lleva a editar
+    #list_display_links = ('full_name',)
+    #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
+    #list_editable = ('status',)
+    
+    list_per_page = 20
+    actions = ['make_ready']
+
+    def get_queryset(self, request):
+        my_employees = super().get_queryset(request)
+        
+        my_employees = super().get_queryset(request).exclude(quickbooks_status__in=['Ready', 'Not Hired'])
+
+        # try:
+        #     head = None
+        #     head = Employee.objects.filter(email=request.user.email).first()
+
+        #     ## Relacion inversa atraves del parametro related_name del modelo Employee_head
+        #     my_empoyees = super().get_queryset(request).filter(employeeWithHead__head=head)
+        # except:
+        #     pass
+
+        return my_employees
+
+    @admin.display(ordering='city_state__state')
+    def get_state(self, obj):
+        
+        return str(obj.city.state).capitalize()
+    get_state.short_description = 'State'
+
+
+    @admin.action(description='Mark as ready')
+    def make_ready(self, request, queryset):
+            
+        for e in queryset:
+            e.quickbooks_status = 'Ready'
+            e.save()
+
+        self.message_user(request, ngettext(
+            '%d employee was successfully marked as ready.',
+            '%d employees were successfully marked as ready.',
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
+
+    @admin.action(description='Mark as Not Hired')
+    def make_not_hired(self, request, queryset):
+            
+        for e in queryset:
+            e.quickbooks_status = 'Not Hired'
+            e.save()
+
+        self.message_user(request, ngettext(
+            '%d employee was successfully marked as Not Hired.',
+            '%d employees were successfully marked as Not Hired.',
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
+
+    # @admin.action(description='Mark as inactive')
+    # def make_inactive(self, request, queryset):
+    #     for e in queryset:
+    #         e.status = 'Inactive'
+    #         e.save()
+
+    #     self.message_user(request, ngettext(
+    #         '%d employee was successfully marked as inactive.',
+    #         '%d employees were successfully marked as inactive.',
+    #         queryset.count(),
+    #     ) % queryset.count(), messages.SUCCESS)
+
+    # @admin.action(description='Mark as do not hire')
+    # def make_do_not_hire(self, request, queryset):
+    #     for e in queryset:
+    #         e.status = 'Do Not Hire'
+    #         e.save()
+
+    #     self.message_user(request, ngettext(
+    #         '%d employee was successfully marked as do not hire.',
+    #         '%d employees were successfully marked as do not hire.',
+    #         queryset.count(),
+    #     ) % queryset.count(), messages.SUCCESS)
 
 @admin.register(Department)
 class Department(admin.ModelAdmin):

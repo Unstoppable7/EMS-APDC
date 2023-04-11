@@ -192,6 +192,7 @@ JAZZMIN_UI_TWEAKS = {
     "sidebar_nav_legacy_style": True,
     "sidebar_nav_flat_style": False,
     "theme": "flatly",
+    #"theme": "solar",
     "dark_mode_theme": None,
     "button_classes": {
         "primary": "btn-primary",
@@ -232,6 +233,8 @@ JAZZMIN_SETTINGS = {
     "show_sidebar": True,
     #"navigation_expanded": False,
     
+    #fontawesome 5.13 version
+
     "icons": {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user-tie",
@@ -244,6 +247,8 @@ JAZZMIN_SETTINGS = {
         "management.recruiting": "fas fa-phone-volume",
         "management.EmployeeInterview": "far fa-clipboard",
         "management.EmployeeManagement": "fas fa-user-cog",
+        "management.AccountingStatus": "fas fa-money-check-alt"
+        #"management.AccountingStatus": "fas fa-file-invoice"
 
     },
     "related_modal_active": True,

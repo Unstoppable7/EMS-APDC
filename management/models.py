@@ -6,6 +6,9 @@ from django.db.models import Q
 
 from django.utils.translation import gettext_lazy as _
 
+from django.core.exceptions import ValidationError
+import pdb
+
 def current_time():
     return datetime.datetime.now()
 
@@ -19,7 +22,7 @@ class State(models.Model):
 
 class City(models.Model):
     name = models.CharField(max_length=100)
-    state = models.ForeignKey(State, on_delete=models.CASCADE)
+    state = models.ForeignKey(State, on_delete=models.CASCADE, related_name='city_state')
 
     def __str__(self):
         return self.name.capitalize()
@@ -75,6 +78,16 @@ class Employee(models.Model):
         ('Human Resources', 'Human Resources'),
         ('Undefined', 'Undefined'),
     ]
+
+    QUICKBOOKS_STATUS_CHOICES = [
+        ('Ready', 'Ready'),
+        ('Not Hired', 'Not Hired'), #status default
+        ('New Employee', 'New Employee'),
+        ('Update Personal Information', 'Update Personal Information'),
+        ('Update Address', 'Update Address'),
+        ('Update to Inactive', 'Update to Inactive'),
+        ('Update to Active', 'Update to Active'),
+    ]
     
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -88,6 +101,7 @@ class Employee(models.Model):
     zip_code = models.CharField(max_length=10)
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default="Undefined")
     application_status = models.CharField(max_length=20, choices=APPLICATION_STATUS_CHOICES, default="Undefined")
+    quickbooks_status = models.CharField(max_length=30, choices=QUICKBOOKS_STATUS_CHOICES, default="Not Hired")
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     date_created = models.DateTimeField(default=current_time)
     updated_at = models.DateTimeField(auto_now=True)
@@ -108,9 +122,39 @@ class Employee(models.Model):
         unique_together = (('phone_number', 'date_of_birth'),)
         
     def save(self, *args, **kwargs):
+        #pdb.set_trace()
+        #Empleado antes de ser guardado
+        employee_old = Employee.objects.filter(pk=self.pk)
+        employee_old_object =  employee_old.first()
+
         if(self.status != "Active"):
             for e in Employee_job.objects.filter(employee=self):
                 e.delete()
+        
+        if employee_old_object.status == 'Stand By' and self.status != "Stand By":
+            Employee_head.objects.filter(employee=employee_old_object).delete()
+            #pdb.set_trace()
+
+        #Si el empleado ya ha sido subido a Quickbooks
+        if(employee_old_object.quickbooks_status == "Ready"):
+
+
+            ##Cuando pasa de inactivo a activo se ejecutan estos dos if, sin embargo, funciona porque el ultimo es el que me interesa
+            #Empleado a cambiado de status a Do Not Hire o Inactive
+            if((employee_old_object.status != "Inactive" and employee_old_object.status != "Do Not Hire") and (self.status == "Do Not Hire" or self.status == "Inactive")):
+                #Cambiar en Quickbooks a inactivo
+                self.quickbooks_status = "Update to Inactive"
+                #pdb.set_trace()
+            if (employee_old_object.status == "Inactive" or employee_old_object.status == "Do Not Hire") and (self.status != "Do Not Hire" and self.status != "Inactive"):
+                self.quickbooks_status = "Update to Active"
+
+            #Empleado a cambiado de nombres, apellidos o numero de telefono
+            if(employee_old_object.first_name != self.first_name or employee_old_object.last_name != self.last_name or employee_old_object.phone_number != self.phone_number or employee_old_object.date_of_birth != self.date_of_birth):
+                self.quickbooks_status = "Update Personal Information"
+
+            #Empleado a cambiado de direccion
+            if employee_old_object.address != self.address:
+                self.quickbooks_status = "Update Address"
 
         super().save(*args, **kwargs)
         
@@ -136,6 +180,12 @@ class EmployeeManagement(Employee):
         verbose_name = 'Employee Management'
         verbose_name_plural = 'Employee Management'
 
+class AccountingStatus(Employee): 
+    class Meta:
+        proxy = True
+        verbose_name = 'Accounting Status'
+        verbose_name_plural = 'Accounting Status'
+
 class Employee_head(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employeeWithHead')
     head = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='head')
@@ -156,8 +206,11 @@ class Employee_job(models.Model):
     #Sobrescribimos el metodo save
     def save(self, *args, **kwargs):
 
+        #Buscamos en el objeto antes de ser editado
+        employee_job_old = Employee_job.objects.filter(pk=self.pk)
+         
         #Buscamos en el objeto antes de ser editado si tiene un trabajo de coordinator
-        employee_job_coordinator_old = Employee_job.objects.filter(pk=self.pk).filter(job__name="Coordinator")
+        employee_job_coordinator_old = employee_job_old.filter(job__name="Coordinator")
         
         #Variable que usaremos para definir si antes de ejecutar este save tenia un trabajo de coordinator
         was_coordinator = False
@@ -169,10 +222,18 @@ class Employee_job(models.Model):
         #Metodo padre que guarda el objeto en la db
         super().save(*args, **kwargs)  # Call the "real" save() method.
         
-        #Cambio el status del empleado a Active
-        self.employee.status = "Active"
-        self.employee.save()
+        # self.employee.status = "Active"
+        # self.employee.save(update_fields=['status'])
+        newQuickbooksStatus = self.employee.quickbooks_status
 
+        if self.employee.quickbooks_status == "Not Hired":
+            newQuickbooksStatus = "New Employee"
+        
+        #Cambio el status del empleado a Active
+        ###De esta manera solo se me ejecuta una vez el metodo Save()
+        Employee.objects.filter(id=self.employee.id).update(status="Active",quickbooks_status=newQuickbooksStatus)
+        
+        #pdb.set_trace()
         #Si el cambio del objeto fue que su trabajo ahora sea coordinator o si venia de ser coordinator y ahora no lo es
         if self.job.name == 'Coordinator' or was_coordinator:
             
@@ -392,7 +453,7 @@ class Document(models.Model):
         super().save(*args, **kwargs)
         
         if self.type == "Application":
-            for e in Employee.objects.filter(id=self.employee.id):
+            for e in Employee.objects.filter(id=self.employee):
                 e.application_status = 'Regular Application'
                 e.save()
         elif self.type == "Southeast":    
@@ -451,7 +512,7 @@ class Transaction(models.Model):
     Withdrawn_date = models.DateField(null=True, blank=True)
     
     def __str__(self):
-        return self.name
+        return self.first_name
 
 class JobHistory(models.Model):
     start_date = models.DateField()
@@ -460,7 +521,7 @@ class JobHistory(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.first_name
 
 # @receiver(post_save, sender=Employee)
 # def create_employee_head(sender, instance, created, **kwargs):
