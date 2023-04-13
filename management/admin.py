@@ -293,7 +293,7 @@ class EmployeeAdmin(admin.ModelAdmin):
         return ','.join(locations)
     get_locations.short_description = 'Location'
 
-    #@admin.display(ordering='job__name')
+    @admin.display(ordering='employee_job_employee__job__name')
     def get_job_name(self, obj):
         jobs = []
         for employee_job in Employee_job.objects.filter(employee=obj):
@@ -305,7 +305,7 @@ class EmployeeAdmin(admin.ModelAdmin):
         return ','.join(jobs)
     get_job_name.short_description = 'Jobs'
 
-    #@admin.display(ordering='head__full_name')
+    @admin.display(ordering='employeeWithHead__head__first_name')
     def get_head(self, obj):
         heads = []
         for employee_head in Employee_head.objects.filter(employee=obj):
@@ -439,7 +439,7 @@ class RecruitingAdmin(admin.ModelAdmin):
 
     list_per_page = 20
 
-    actions = ['make_stand_by','make_active','make_open','make_do_not_hire']
+    actions = ['make_stand_by','make_do_not_hire']
 
     @admin.action(description='Mark as stand by')
     def make_stand_by(self, request, queryset):
@@ -544,7 +544,7 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
     'address','city','zip_code') 
     inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['id', 'full_name','status', 'application_status', 'phone_number','get_job_name']
+    list_display = ['id', 'full_name','status', 'application_status', 'phone_number','get_job_name', 'get_locations']
     list_filter = ['type', 'status', 'employee_job_employee__job__department__location__name', 'date_created', 'updated_at']
     search_fields = ['first_name', 'last_name', 'status','employee_job_employee__job__department__location__name']
 
@@ -607,16 +607,30 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
             pass
         return my_employees
 
+    @admin.display(ordering='employee_job_employee__job__department__location__name')
+    def get_locations(self, obj):
+        locations = []
+        for employee_job in Employee_job.objects.filter(employee=obj):
+
+            locations.append(str(employee_job.job.department.location).capitalize())
+        
+        if not locations:
+            return '-'
+        return ','.join(locations)
+    get_locations.short_description = 'Location'
+
+    @admin.display(ordering='employee_job_employee__job__name')
     def get_job_name(self, obj):
         jobs = []
         for employee_job in Employee_job.objects.filter(employee=obj):
 
-            jobs.append(str(employee_job.job).capitalize())
+            jobs.append(str(employee_job.job.name).capitalize())
         
         if not jobs:
             return '-'
         return ','.join(jobs)
     get_job_name.short_description = 'Jobs'
+
 
 @admin.register(EmployeeManagement)
 class EmployeeAdminManagement(admin.ModelAdmin):
@@ -733,10 +747,10 @@ class EmployeeAdminAccountingStatus(admin.ModelAdmin):
     #'address','city','zip_code') 
     #inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['quickbooks_status','id', 'full_name', 'phone_number','date_of_birth','address','city','get_state','zip_code']
+    list_display = ['quickbooks_status','id', 'full_name', 'phone_number','date_of_birth','address','city','get_state','zip_code','type', 'get_job_name','get_locations','get_head','updated_at']
     
-    #list_filter = ['type', 'status', 'employee_job_employee__job__department__location__name', 'date_created', 'updated_at']
-    #search_fields = ['first_name', 'last_name', 'status','employee_job_employee__job__department__location__name']
+    list_filter = ['quickbooks_status', 'employee_job_employee__job__department__location__name']
+    search_fields = ['id','first_name', 'last_name','employee_job_employee__job__department__location__name']
 
     #Propiedad que me dice que campos tendran el link que lleva a editar
     #list_display_links = ('full_name',)
@@ -768,6 +782,41 @@ class EmployeeAdminAccountingStatus(admin.ModelAdmin):
         return str(obj.city.state).capitalize()
     get_state.short_description = 'State'
 
+    @admin.display(ordering='employee_job_employee__job__department__location__name')
+    def get_locations(self, obj):
+        locations = []
+        for employee_job in Employee_job.objects.filter(employee=obj):
+
+            locations.append(str(employee_job.job.department.location).capitalize())
+        
+        if not locations:
+            return '-'
+        return ','.join(locations)
+    get_locations.short_description = 'Location'
+
+    @admin.display(ordering='employee_job_employee__job__name')
+    def get_job_name(self, obj):
+        jobs = []
+        for employee_job in Employee_job.objects.filter(employee=obj):
+
+            jobs.append(str(employee_job.job.name).capitalize())
+        
+        if not jobs:
+            return '-'
+        return ','.join(jobs)
+    get_job_name.short_description = 'Jobs'
+
+    @admin.display(ordering='employeeWithHead__head__first_name')
+    def get_head(self, obj):
+        heads = []
+        for employee_head in Employee_head.objects.filter(employee=obj):
+
+            heads.append(str(employee_head.head.full_name).capitalize())
+        
+        if not heads:
+            return '-'
+        return ','.join(heads)
+    get_head.short_description = 'Manager'
 
     @admin.action(description='Mark as ready')
     def make_ready(self, request, queryset):

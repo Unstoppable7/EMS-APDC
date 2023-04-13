@@ -9,6 +9,9 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 import pdb
 
+from phonenumber_field.modelfields import PhoneNumberField
+#from address.models import AddressField
+
 def current_time():
     return datetime.datetime.now()
 
@@ -92,8 +95,10 @@ class Employee(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     address = models.CharField(max_length=200)
+    #address = AddressField()
+
     #phone_number = models.CharField(max_length=20, error_messages={'unique': _("This phone number is already in use."),})
-    phone_number = models.CharField(max_length=20)
+    phone_number = PhoneNumberField()
     date_of_birth = models.DateField()
     email = models.EmailField(blank=True)
     #Payroll, etc
@@ -131,31 +136,33 @@ class Employee(models.Model):
             for e in Employee_job.objects.filter(employee=self):
                 e.delete()
         
-        if employee_old_object.status == 'Stand By' and self.status != "Stand By":
-            Employee_head.objects.filter(employee=employee_old_object).delete()
-            #pdb.set_trace()
+        if employee_old_object != None:
 
-        #Si el empleado ya ha sido subido a Quickbooks
-        if(employee_old_object.quickbooks_status == "Ready"):
-
-
-            ##Cuando pasa de inactivo a activo se ejecutan estos dos if, sin embargo, funciona porque el ultimo es el que me interesa
-            #Empleado a cambiado de status a Do Not Hire o Inactive
-            if((employee_old_object.status != "Inactive" and employee_old_object.status != "Do Not Hire") and (self.status == "Do Not Hire" or self.status == "Inactive")):
-                #Cambiar en Quickbooks a inactivo
-                self.quickbooks_status = "Update to Inactive"
+            if employee_old_object.status == 'Stand By' and self.status != "Stand By":
+                Employee_head.objects.filter(employee=employee_old_object).delete()
                 #pdb.set_trace()
-            if (employee_old_object.status == "Inactive" or employee_old_object.status == "Do Not Hire") and (self.status != "Do Not Hire" and self.status != "Inactive"):
-                self.quickbooks_status = "Update to Active"
 
-            #Empleado a cambiado de nombres, apellidos o numero de telefono
-            if(employee_old_object.first_name != self.first_name or employee_old_object.last_name != self.last_name or employee_old_object.phone_number != self.phone_number or employee_old_object.date_of_birth != self.date_of_birth):
-                self.quickbooks_status = "Update Personal Information"
+            #Si el empleado ya ha sido subido a Quickbooks
+            if(employee_old_object.quickbooks_status == "Ready"):
 
-            #Empleado a cambiado de direccion
-            if employee_old_object.address != self.address:
-                self.quickbooks_status = "Update Address"
 
+                ##Cuando pasa de inactivo a activo se ejecutan estos dos if, sin embargo, funciona porque el ultimo es el que me interesa
+                #Empleado a cambiado de status a Do Not Hire o Inactive
+                if((employee_old_object.status != "Inactive" and employee_old_object.status != "Do Not Hire") and (self.status == "Do Not Hire" or self.status == "Inactive")):
+                    #Cambiar en Quickbooks a inactivo
+                    self.quickbooks_status = "Update to Inactive"
+                    #pdb.set_trace()
+                if (employee_old_object.status == "Inactive" or employee_old_object.status == "Do Not Hire") and (self.status != "Do Not Hire" and self.status != "Inactive"):
+                    self.quickbooks_status = "Update to Active"
+
+                #Empleado a cambiado de nombres, apellidos o numero de telefono
+                if(employee_old_object.first_name != self.first_name or employee_old_object.last_name != self.last_name or employee_old_object.phone_number != self.phone_number or employee_old_object.date_of_birth != self.date_of_birth):
+                    self.quickbooks_status = "Update Personal Information"
+
+                #Empleado a cambiado de direccion
+                if employee_old_object.address != self.address:
+                    self.quickbooks_status = "Update Address"
+        
         super().save(*args, **kwargs)
         
 class EmployeeInterview(Employee): 
@@ -167,7 +174,7 @@ class MyEmployeeSection(Employee):
     class Meta:
         proxy = True
         verbose_name = 'My employee'
-        ordering = ['-status', '-updated_at']
+        ordering = ['-status']
 
 class Recruiting(Employee): 
     class Meta:
@@ -179,12 +186,14 @@ class EmployeeManagement(Employee):
         proxy = True
         verbose_name = 'Employee Management'
         verbose_name_plural = 'Employee Management'
+        ordering = ['date_created']
 
 class AccountingStatus(Employee): 
     class Meta:
         proxy = True
         verbose_name = 'Accounting Status'
         verbose_name_plural = 'Accounting Status'
+        ordering = ['updated_at']
 
 class Employee_head(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employeeWithHead')
@@ -229,6 +238,9 @@ class Employee_job(models.Model):
         if self.employee.quickbooks_status == "Not Hired":
             newQuickbooksStatus = "New Employee"
         
+        if self.employee.status == "Inactive" or self.employee.status == "Do Not Hire":
+            newQuickbooksStatus = "Update to Active"
+
         #Cambio el status del empleado a Active
         ###De esta manera solo se me ejecuta una vez el metodo Save()
         Employee.objects.filter(id=self.employee.id).update(status="Active",quickbooks_status=newQuickbooksStatus)
@@ -420,7 +432,7 @@ class Application(models.Model):
 
 class Emergency_contact(models.Model):
     name = models.CharField(max_length=50)
-    phone_number = models.CharField(max_length=15)
+    phone_number = PhoneNumberField()
     relationship = models.CharField(max_length=20)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     

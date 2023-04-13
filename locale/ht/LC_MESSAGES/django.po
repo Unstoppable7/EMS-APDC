@@ -125,8 +125,8 @@ msgid "Phone number"
 msgstr "Nimewo telefòn"
 
 #: .\management\forms.py:24
-msgid "Date of birth MM/DD/YYYY"
-msgstr "Dat nesans MM/JJ/AAAA"
+msgid "Date of birth MONTH/DAY/YEAR"
+msgstr "Dat nesans MWA/JOU/ANE"
 
 #: .\management\forms.py:25
 msgid "Email"

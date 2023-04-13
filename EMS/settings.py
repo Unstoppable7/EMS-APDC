@@ -49,8 +49,11 @@ INSTALLED_APPS = [
     'crispy_forms',
     'wkhtmltopdf',
     "django_rename_app",
-
+    "phonenumber_field",
+    #'address',
 ]
+
+#GOOGLE_API_KEY = 'AIzaSyBoMcrb65POH2WYo0AV2ecsgwxz6sGN2iw'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

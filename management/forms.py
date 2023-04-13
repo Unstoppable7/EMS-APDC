@@ -4,6 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.utils.translation import gettext_lazy as _
+from .utils import only_letters
 
 class EmployeeForm(forms.ModelForm):
 
@@ -21,7 +22,7 @@ class EmployeeForm(forms.ModelForm):
             'first_name': _('Names'),
             'last_name': _('Surnames'),
             'phone_number': _('Phone number'),
-            'date_of_birth': _('Date of birth MM/DD/YYYY'),
+            'date_of_birth': _('Date of birth MONTH/DAY/YEAR'),
             'email': _('Email'),
             'address': _('Address'),
             'zip_code': _('Zip code'),
@@ -47,8 +48,20 @@ class EmployeeForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         for field in cleaned_data:
-            if isinstance(cleaned_data[field], str) and field != "email":
-                cleaned_data[field] = cleaned_data[field].title()
+            
+            try:
+                #Eliminamos espacios en blanco
+                cleaned_data[field] = cleaned_data[field].strip()
+            except:
+                pass
+
+            if isinstance(cleaned_data[field], str):
+
+                if field != "email":
+                    cleaned_data[field] = cleaned_data[field].title()
+                if field == "first_name" or field == "last_name" or field == "city":
+                    only_letters(cleaned_data[field])
+
         return cleaned_data
     
     def save(self, commit=True):
@@ -120,6 +133,20 @@ class ApplicationForm(forms.ModelForm):
     desired_job = forms.ChoiceField(choices=DESIRED_JOB_CHOICES, label=_("Desired job"))
     desired_payment = forms.CharField(label=_("Desired payment"))
 
+    def clean(self):
+        cleaned_data = super().clean()
+        for field in cleaned_data:
+            
+            try:
+                #Eliminamos espacios en blanco
+                cleaned_data[field] = cleaned_data[field].strip()
+            except:
+                pass
+            if isinstance(cleaned_data[field], str):
+                only_letters(cleaned_data[field])
+                cleaned_data[field] = cleaned_data[field].title()
+                    
+        return cleaned_data
     def save(self, commit=True):
         instance = super().save(commit=False)
         experience = self.cleaned_data['experience_jobs']
@@ -180,7 +207,15 @@ class MedicalFormForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         for field in cleaned_data:
+            
+            try:
+                #Eliminamos espacios en blanco
+                cleaned_data[field] = cleaned_data[field].strip()
+            except:
+                pass
+
             if isinstance(cleaned_data[field], str):
+                only_letters(cleaned_data[field])
                 cleaned_data[field] = cleaned_data[field].title()
         return cleaned_data
     
@@ -210,6 +245,13 @@ class EmergencyContactForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         for field in cleaned_data:
+            try:
+                #Eliminamos espacios en blanco
+                cleaned_data[field] = cleaned_data[field].strip()
+            except:
+                pass
+
             if isinstance(cleaned_data[field], str):
+
                 cleaned_data[field] = cleaned_data[field].title()
         return cleaned_data

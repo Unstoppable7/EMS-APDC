@@ -2477,8 +2477,8 @@ msgstr "Apellidos"
 msgid "Phone number"
 msgstr "Número de télefono"
 
-msgid "Date of birth MM/DD/YYYY"
-msgstr "Fecha de nacimiento MM/DD/AAAA"
+msgid "Date of birth MONTH/DAY/YEAR"
+msgstr "Fecha de nacimiento MES/DIA/AÑO"
 
 msgid "Email"
 msgstr "Correo electrónico"
