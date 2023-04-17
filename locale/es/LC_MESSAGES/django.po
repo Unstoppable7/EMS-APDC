@@ -2698,3 +2698,21 @@ msgstr "Contacto de emergencia"
 
 msgid "Information of a relative or friend to contact in case of emergency."
 msgstr "Información de un familiar o amigo para contactar en caso de emergencia."
+
+msgid "Address Information"
+msgstr "Información de Dirección Postal"
+
+msgid "Add all the information about your postal address"
+msgstr "Añade toda la información sobre tu dirección postal"
+
+msgid "Street Address"
+msgstr "Dirección"
+
+msgid "Apartment, unit, suite, or floor #"
+msgstr "Numero de apartamento, unidad, suite o piso"
+
+msgid "State"
+msgstr "Estado"
+
+msgid "Please enter a valid state."
+msgstr "Por favor ingrese un estado valido."

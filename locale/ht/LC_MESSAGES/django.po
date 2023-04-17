@@ -2765,3 +2765,21 @@ msgstr "Gen yon moun deja anrejistre ak %(field_labels)s"
 
 msgid "Please enter a valid city."
 msgstr "Tanpri antre yon vil ki valab."
+
+msgid "Address Information"
+msgstr "Enfòmasyon sou adrès postal"
+
+msgid "Add all the information about your postal address"
+msgstr "Ajoute tout enfòmasyon sou adrès postal ou"
+
+msgid "Street Address"
+msgstr "Adrès"
+
+msgid "Apartment, unit, suite, or floor #"
+msgstr "Nimewo apatman, inite, suite oswa etaj"
+
+msgid "State"
+msgstr "Eta"
+
+msgid "Please enter a valid state."
+msgstr "Tanpri antre nan yon eta valab."

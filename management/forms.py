@@ -1,5 +1,5 @@
 from django import forms
-from .models import Employee,Application,Emergency_contact,MedicalForm,City
+from .models import Employee,Application,Emergency_contact,MedicalForm,City,Address,State
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django.core.exceptions import NON_FIELD_ERRORS
@@ -13,19 +13,15 @@ class EmployeeForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
-    city_name = forms.CharField(required=True, label=_('City'))
-
     class Meta:
         model = Employee
-        fields = ['first_name','last_name','phone_number','date_of_birth','email','address','city_name','zip_code',]
+        fields = ['first_name','last_name','phone_number','date_of_birth','email']
         labels = {
             'first_name': _('Names'),
             'last_name': _('Surnames'),
             'phone_number': _('Phone number'),
             'date_of_birth': _('Date of birth MONTH/DAY/YEAR'),
             'email': _('Email'),
-            'address': _('Address'),
-            'zip_code': _('Zip code'),
         }
         error_messages = {
             NON_FIELD_ERRORS: {
@@ -34,16 +30,6 @@ class EmployeeForm(forms.ModelForm):
                 'unique_together': _("There is already a person registered with %(field_labels)s"),
             }
         }
-    
-    def clean_city_name(self):
-        city_name = self.cleaned_data.get('city_name')
-        city_name_formatted = city_name.title()
-        
-        city = City.objects.filter(name=city_name_formatted).first()
-        if(city is None):
-            
-            raise forms.ValidationError(_("Please enter a valid city."))
-        return city
     
     def clean(self):
         cleaned_data = super().clean()
@@ -59,17 +45,89 @@ class EmployeeForm(forms.ModelForm):
 
                 if field != "email":
                     cleaned_data[field] = cleaned_data[field].title()
-                if field == "first_name" or field == "last_name" or field == "city":
+                if field == "first_name" or field == "last_name":
                     only_letters(cleaned_data[field])
 
         return cleaned_data
     
     def save(self, commit=True):
         employee = super().save(commit=False)
-        employee.city = self.cleaned_data['city_name']
+        #employee.city = self.cleaned_data['city_name']
         if commit:
             employee.save()
         return employee
+
+class AddressForm(forms.ModelForm):
+    city_name = forms.CharField(required=True, label=_('City'))
+    state_name = forms.CharField(required=True, label=_('State'))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.attrs['autocomplete'] = 'nope'
+        self.fields['street'].widget.attrs.update({'autocomplete': 'off'})
+        self.fields['unit_number'].widget.attrs.update({'autocomplete': 'off'})
+        self.fields['city_name'].widget.attrs.update({'autocomplete': 'off'})
+        self.fields['state_name'].widget.attrs.update({'autocomplete': 'off'})
+        self.fields['postal_code'].widget.attrs.update({'autocomplete': 'off'})
+
+    class Meta:
+        model = Address
+        fields = ['street','unit_number','city_name','state_name','postal_code']
+        labels = {
+            'street': _('Street Address'),
+            'unit_number': _('Apartment, unit, suite, or floor #'),
+            'postal_code': _('Zip code'),
+        }
+    
+    def clean_city_name(self):
+        city_name = self.cleaned_data.get('city_name')
+        city_name_formatted = city_name.title()
+        
+        city = City.objects.filter(name=city_name_formatted).first()
+        if(city is None):
+            
+            raise forms.ValidationError(_("Please enter a valid city."))
+        return city
+    
+    def clean_state_name(self):
+        state_name = self.cleaned_data.get('state_name')
+        state_name_formatted = state_name.title()
+        
+        state = State.objects.filter(name=state_name_formatted).first()
+        if(state is None):
+            
+            raise forms.ValidationError(_("Please enter a valid state."))
+        return state
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        for field in cleaned_data:
+            
+            try:
+                #Eliminamos espacios en blanco
+                cleaned_data[field] = cleaned_data[field].strip()
+            except:
+                pass
+
+            if isinstance(cleaned_data[field], str):
+
+                cleaned_data[field] = cleaned_data[field].title()
+                if field == "city_name" or field == "state_name":
+                    only_letters(cleaned_data[field])
+
+        return cleaned_data
+    
+    def save(self, commit=True):
+        address = super().save(commit=False)
+        
+        address.city = self.cleaned_data['city_name']
+        address.state = self.cleaned_data['state_name']
+
+        if commit:
+            address.save()
+        return address
 
 class ApplicationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

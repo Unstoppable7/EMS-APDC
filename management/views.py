@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import EmployeeForm, ApplicationForm, MedicalFormForm,EmergencyContactForm
+from .forms import EmployeeForm, AddressForm, ApplicationForm, MedicalFormForm,EmergencyContactForm
 from .models import Document
 from django.shortcuts import redirect
 from django.http import HttpResponse
@@ -16,14 +16,16 @@ from reportlab.platypus import SimpleDocTemplate, Table
 from reportlab.lib import colors
 from reportlab.lib.styles import ParagraphStyle
 from django.core.files.base import ContentFile
+from django.conf import settings
 
 from django.conf import settings    
 
-def form_to_pdf(employeeForm, applicationForm, medicalForm, emergency_contactForm):
+def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergency_contactForm):
 
     name_label_text = "Names"
     last_name_label_text = "Surnames"
-    address_label_text = "Address"
+    street_street_address_label_text = "Street Address"
+    unit_number_label_text = "Apartment, unit, suite, or floor #"
     city_label_text = "City"
     state_label_text = "State"
     zipcode_label_text = "Zip code"
@@ -121,33 +123,32 @@ def form_to_pdf(employeeForm, applicationForm, medicalForm, emergency_contactFor
     personal_information = Paragraph("PERSONAL INFORMATION", section_style)
     name_label = Paragraph(name_label_text, label_style)
     name_field = Paragraph(employeeForm.cleaned_data['first_name'], field_style)
-    las_name_label = Paragraph(last_name_label_text, label_style)
-    las_name_field = Paragraph(employeeForm.cleaned_data['last_name'], field_style)
-    data1rows1 = [[name_label,name_field,las_name_label,las_name_field]]
+    last_name_label = Paragraph(last_name_label_text, label_style)
+    last_name_field = Paragraph(employeeForm.cleaned_data['last_name'], field_style)
+    data1rows1 = [[name_label,name_field,last_name_label,last_name_field]]
     table1rows1 = Table(data1rows1, colWidths=[90,150,90,None])
     table1rows1.setStyle(TableStyle([
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
 ]))
 
-    #address_label = Paragraph(employeeForm['address'].label, label_style)
-    address_label = Paragraph(address_label_text, label_style)
-    address_field = Paragraph(employeeForm.cleaned_data['address'], field_style)
-    data2rows1 = [[address_label,address_field]]
-    table2rows1 = Table(data2rows1, colWidths=[75,None])
+    street_address_label = Paragraph(street_street_address_label_text, label_style)
+    street_address_field = Paragraph(addressForm.cleaned_data['street'], field_style)
+    unit_number_label = Paragraph(unit_number_label, label_style)
+    unit_number_field = Paragraph(addressForm.cleaned_data['unit_number'], field_style)
+    data2rows1 = [[street_address_label,street_address_field, unit_number_label,unit_number_field]]
+    table2rows1 = Table(data2rows1, colWidths=[75,180,75,None])
     table2rows1.setStyle(TableStyle([
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
 ]))
 
-    # city_label = Paragraph(employeeForm['city_name'].label, label_style)
     city_label = Paragraph(city_label_text, label_style)
-    city_field = Paragraph(str(employeeForm.cleaned_data['city_name']).capitalize(), field_style)
+    city_field = Paragraph(str(addressForm.cleaned_data['city_name']).capitalize(), field_style)
 
     state_label = Paragraph(state_label_text, label_style)
-    state_field = Paragraph(str(employee.city.state), field_style)
+    state_field = Paragraph(str(addressForm.cleaned_data['state_name']), field_style)
 
-    # zipcode_label = Paragraph(employeeForm['zip_code'].label, label_style)
     zipcode_label = Paragraph(zipcode_label_text, label_style)
-    zipcode_field = Paragraph(employeeForm.cleaned_data['zip_code'], field_style)
+    zipcode_field = Paragraph(addressForm.cleaned_data['zip_code'], field_style)
     data3rows1 = [[city_label, city_field, state_label,state_field,zipcode_label,zipcode_field]]
     table3rows1 = Table(data3rows1, colWidths=[45,None,55,None,80,None])
     table3rows1.setStyle(TableStyle([
@@ -568,16 +569,21 @@ def form_to_pdf(employeeForm, applicationForm, medicalForm, emergency_contactFor
 def create_employee_application(request):
     if request.method == 'POST':
         employee_form = EmployeeForm(request.POST, prefix='employee')
+        address_form = AddressForm(request.POST)
         application_form = ApplicationForm(request.POST)
         medicalForm_form = MedicalFormForm(request.POST)
         emergency_contact_form = EmergencyContactForm(request.POST)
 
-        if employee_form.is_valid() and application_form.is_valid() and medicalForm_form.is_valid() and emergency_contact_form.is_valid():
+        if employee_form.is_valid() and address_form.is_valid() and application_form.is_valid() and medicalForm_form.is_valid() and emergency_contact_form.is_valid():
             
-            pdfFile = form_to_pdf(employee_form ,application_form,medicalForm_form, emergency_contact_form)            
+            pdfFile = form_to_pdf(employee_form, address_form,application_form,medicalForm_form, emergency_contact_form)            
             
             employee = employee_form.save(commit=False)
             employee.save()
+
+            address = address_form.save(commit=False)
+            address.employee = employee
+            address.save()
 
             application = application_form.save(commit=False)
             application.employee = employee
@@ -606,11 +612,12 @@ def create_employee_application(request):
             print('NO VALID')
     else:
         employee_form = EmployeeForm(prefix='employee')
+        address_form = AddressForm()
         application_form = ApplicationForm()
         medicalForm_form = MedicalFormForm()
         emergency_contact_form = EmergencyContactForm()
 
-    return render(request, 'employee_form.html', {'employee_form': employee_form, 'application_form': application_form, 'emergency_contact_form': emergency_contact_form, 'medicalForm_form': medicalForm_form,})
+    return render(request, 'employee_form.html', {'employee_form': employee_form, 'address_form': address_form, 'application_form': application_form, 'emergency_contact_form': emergency_contact_form, 'medicalForm_form': medicalForm_form,'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY})
 
 def create_application(request):
     if request.method == 'POST':
@@ -621,3 +628,6 @@ def create_application(request):
     else:
         form = ApplicationForm()
     return render(request, 'application_form.html', {'form': form})
+
+def autocomplete(request):       
+    return render(request, 'googleMap.html', {'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY})

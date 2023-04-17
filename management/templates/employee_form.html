@@ -21,12 +21,10 @@
     </select>
 </form>
 
-
-
 <div class="card">
   <h1 class="display-3 text-center">{% trans "Application" %}</h1>
   
-    <form action="{% url 'create_employee_application' %}" enctype="multipart/form-data" class="employee-form" method="POST">
+    <form action="{% url 'create_employee_application' %}" enctype="multipart/form-data" class="employee-form" method="POST" autocomplete="off">
       <div class="card">
         <h5 class="card-header">
             {% trans "Personal Information" %}
@@ -38,6 +36,19 @@
           {% crispy employee_form %}
         </div>
       </div>
+
+      <div class="card">
+        <h5 class="card-header">
+            {% trans "Address Information" %}
+            <br>
+            <small>
+              {% trans "Add all the information about your postal address" %}
+            </small>
+        </h5>
+        <div class="card-body">
+          {% crispy address_form %}
+        </div>
+      </div>
       
       <div class="card">
         <h5 class="card-header">
@@ -45,7 +56,7 @@
           <br>
           <small>
             {% trans "Information related to the job you want and your experience in previous jobs." %}
-            </small>
+          </small>
         </h5>
         <div class="card-body">
           {% crispy application_form %}

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Location,Department,Employee,EmployeeInterview, Application, Emergency_contact, Document, MedicalForm, MyEmployeeSection, Employee_head, Employee_job, Job,Recruiting,EmployeeManagement, AccountingStatus
+from .models import Location,Department,Employee,EmployeeInterview, Application, Emergency_contact, Document, MedicalForm, MyEmployeeSection, Employee_head, Employee_job, Job,Recruiting,EmployeeManagement, AccountingStatus,City,State
 from django.contrib import messages
 from django.utils.translation import ngettext
 from django.db.models import Q
@@ -747,7 +747,7 @@ class EmployeeAdminAccountingStatus(admin.ModelAdmin):
     #'address','city','zip_code') 
     #inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['quickbooks_status','id', 'full_name', 'phone_number','date_of_birth','address','city','get_state','zip_code','type', 'get_job_name','get_locations','get_head','updated_at']
+    list_display = ['quickbooks_status','id', 'full_name', 'phone_number','date_of_birth','type', 'get_job_name','get_locations','get_head','updated_at']
     
     list_filter = ['quickbooks_status', 'employee_job_employee__job__department__location__name']
     search_fields = ['id','first_name', 'last_name','employee_job_employee__job__department__location__name']
@@ -776,11 +776,11 @@ class EmployeeAdminAccountingStatus(admin.ModelAdmin):
 
         return my_employees
 
-    @admin.display(ordering='city_state__state')
-    def get_state(self, obj):
+    # @admin.display(ordering='city_state__state')
+    # def get_state(self, obj):
         
-        return str(obj.city.state).capitalize()
-    get_state.short_description = 'State'
+    #     return str(obj.city.state).capitalize()
+    # get_state.short_description = 'State'
 
     @admin.display(ordering='employee_job_employee__job__department__location__name')
     def get_locations(self, obj):
@@ -884,3 +884,5 @@ class Job(admin.ModelAdmin):
     get_location.short_description = 'Location'
         
 admin.site.register(Location)
+admin.site.register(City)
+admin.site.register(State)

@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     #'address',
 ]
 
-#GOOGLE_API_KEY = 'AIzaSyBoMcrb65POH2WYo0AV2ecsgwxz6sGN2iw'
+GOOGLE_MAPS_API_KEY = 'AIzaSyBoMcrb65POH2WYo0AV2ecsgwxz6sGN2iw'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
