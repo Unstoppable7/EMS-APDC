@@ -94,22 +94,18 @@ class Employee(models.Model):
     
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    address = models.CharField(max_length=200)
-    #address = AddressField()
-
-    #phone_number = models.CharField(max_length=20, error_messages={'unique': _("This phone number is already in use."),})
     phone_number = PhoneNumberField()
     date_of_birth = models.DateField()
     email = models.EmailField(blank=True)
-    #Payroll, etc
     type = models.CharField(max_length=10, choices=TYPES_CHOICES, default="Regular")
-    zip_code = models.CharField(max_length=10)
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default="Undefined")
     application_status = models.CharField(max_length=20, choices=APPLICATION_STATUS_CHOICES, default="Undefined")
     quickbooks_status = models.CharField(max_length=30, choices=QUICKBOOKS_STATUS_CHOICES, default="Not Hired")
-    city = models.ForeignKey(City, on_delete=models.CASCADE)
     date_created = models.DateTimeField(default=current_time)
     updated_at = models.DateTimeField(auto_now=True)
+    #address = models.CharField(max_length=200)
+    #city = models.ForeignKey(City, on_delete=models.CASCADE)
+    #zip_code = models.CharField(max_length=10)
     
     def __str__(self):
         return self.first_name
@@ -164,7 +160,18 @@ class Employee(models.Model):
                     self.quickbooks_status = "Update Address"
         
         super().save(*args, **kwargs)
-        
+
+class Address(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    street = models.CharField(max_length=100)
+    unit_number = models.CharField(max_length=10, blank=True)
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    state = models.ForeignKey(State, on_delete=models.CASCADE)
+    postal_code = models.CharField(max_length=10)
+
+    def __str__(self):
+        return f"{self.street}, {self.unit_number}, {self.city}, {self.state} {self.postal_code}"     
+
 class EmployeeInterview(Employee): 
     class Meta:
         proxy = True
