@@ -65,7 +65,7 @@ class AddressForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
-        self.helper.attrs['autocomplete'] = 'nope'
+        self.helper.attrs['autocomplete'] = 'off'
         self.fields['street'].widget.attrs.update({'autocomplete': 'off'})
         self.fields['unit_number'].widget.attrs.update({'autocomplete': 'off'})
         self.fields['city_name'].widget.attrs.update({'autocomplete': 'off'})
@@ -95,12 +95,18 @@ class AddressForm(forms.ModelForm):
         state_name = self.cleaned_data.get('state_name')
         state_name_formatted = state_name.title()
         
-        state = State.objects.filter(name=state_name_formatted).first()
-        if(state is None):
+        state_code = State.objects.filter(state_code=state_name_formatted).first()
+        state_name = State.objects.filter(name=state_name_formatted).first()
+        if(state_code is None and state_name is None):
             
             raise forms.ValidationError(_("Please enter a valid state."))
-        return state
-    
+        
+        if(state_code is not None):
+
+            return state_code
+        else:
+            return state_name
+
     def clean(self):
         cleaned_data = super().clean()
         for field in cleaned_data:
@@ -134,12 +140,6 @@ class ApplicationForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
-    
-    DESIRED_JOB_CHOICES = [
-        ('Full Time', _('Full Time')),
-        ('Part Time', _('Part Time')),
-        ('Seasonal', _('Seasonal')),
-    ]
 
     experience_jobs = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
@@ -162,16 +162,31 @@ class ApplicationForm(forms.ModelForm):
 
     class Meta:
         model = Application
-        fields = ['days_available_to_work','can_travel','can_work_nights','desired_job','desired_payment','position_to_apply','worked_for_this_company_before','has_been_convicted_of_a_felony','can_background_check',
+        fields = ['days_available_to_work','can_travel','can_work_nights','desired_job','desired_payment','position_to_apply','worked_for_this_company_before','start_date_worked_for_this_company','end_date_worked_for_this_company','has_been_convicted_of_a_felony','felony_details','can_background_check',
         'test_controlled_substances','experience_jobs','english_level','studies','specialty_of_studies','military_service','service_branch','start_period_service','end_period_service','duties_training_service']
         labels = {
             'days_available_to_work':_('Days available to work'),
             'can_travel':_('If the job requires it, can you travel?'),
             'can_work_nights':_('Can you work nights?'),
+            'desired_job':_("Desired job"),
+            'desired_payment':_("Desired pay per hour"),
             'position_to_apply':_('Position to which applies'),
+            'worked_for_this_company_before':_('Have you worked for this company before?'),
+            'start_date_worked_for_this_company':_('Start date MONTH/DAY/YEAR'),
+            'end_date_worked_for_this_company':_('End date MONTH/DAY/YEAR'),
+            'has_been_convicted_of_a_felony':_('Have you ever been convicted of a felony?'),
+            'felony_details': _('Describe the details of the crime for which you were convicted'),
             'can_background_check':_('Are you open to a background check?'),
-            'english_level':_('English language level'),'studies':_('Indicate the studies you have carried out'),
-            'specialty_of_studies':_('Specialty of your studies'),'military_service':_('Have you ever been a member of the united states armed services?'),
+            'test_controlled_substances':_('If Hired, Are You Willing To Test For Controlled Substances?'),
+            'english_level':_('English language level'),
+            'studies':_('Indicate the studies you have carried out'),
+            'specialty_of_studies':_('Specialty of your studies'),
+            'military_service':_('Have you ever been a member of the united states armed services?'),
+            'service_branch':_('Enter the branch in which you performed your military service'),
+            'start_period_service':_('Start date MONTH/DAY/YEAR'),
+            'end_period_service':_('End date MONTH/DAY/YEAR'),
+            'duties_training_service':_('Describe your duties and any special training')
+
         }
         
         widgets = {
@@ -179,17 +194,16 @@ class ApplicationForm(forms.ModelForm):
         }
 
     ##Manejar en el HTML
-    service_branch = forms.CharField(required=False, label=_('Enter the branch in which you performed your military service (if apply)'))
-    start_period_service = forms.DateField(required=False,label=_('Military service start date (if apply)'))
-    end_period_service = forms.DateField(required=False,label=_('Military service end date (if apply)'))
-    duties_training_service = forms.CharField(label=_('Describe your duties and any special training (if apply)'),required=False)
+    #service_branch = forms.CharField(required=False, label=_('Enter the branch in which you performed your military service (if apply)'))
+    #start_period_service = forms.DateField(required=False,label=_('Military service start date (if apply)'))
+    #end_period_service = forms.DateField(required=False,label=_('Military service end date (if apply)'))
+    #duties_training_service = forms.CharField(label=_('Describe your duties and any special training (if apply)'),required=False)
 
-    worked_for_this_company_before = forms.CharField(label=_('Have you worked for this company before?. If the answer is yes, indicate the start date and end date'))
-    has_been_convicted_of_a_felony = forms.CharField(label=_('Have you ever been convicted of a felony?. If the answer is yes, explain'))
-    #test_controlled_substances = forms.BooleanField(label=_('If Hired, Are You Willing To Test For Controlled Substances?'))
-    test_controlled_substances = forms.TypedChoiceField(label=_('If Hired, Are You Willing To Test For Controlled Substances?'),coerce=lambda x: x =='True', choices=((True, _('Yes')), (False, _('No'))))
-    desired_job = forms.ChoiceField(choices=DESIRED_JOB_CHOICES, label=_("Desired job"))
-    desired_payment = forms.CharField(label=_("Desired payment"))
+    #worked_for_this_company_before = forms.CharField(label=_('Have you worked for this company before?. If the answer is yes, indicate the start date and end date'))
+    #has_been_convicted_of_a_felony = forms.CharField(label=_('Have you ever been convicted of a felony?. If the answer is yes, explain'))
+    # test_controlled_substances = forms.TypedChoiceField(label=_('If Hired, Are You Willing To Test For Controlled Substances?'),coerce=lambda x: x =='True', choices=((True, _('Yes')), (False, _('No'))))
+    #desired_job = forms.ChoiceField(choices=DESIRED_JOB_CHOICES, label=_("Desired job"))
+    #desired_payment = forms.CharField(label=_("Desired payment"))
 
     def clean(self):
         cleaned_data = super().clean()
@@ -201,9 +215,13 @@ class ApplicationForm(forms.ModelForm):
             except:
                 pass
             if isinstance(cleaned_data[field], str):
-                only_letters(cleaned_data[field])
-                cleaned_data[field] = cleaned_data[field].title()
+                if field == "worked_for_this_company_before" or field == "has_been_convicted_of_a_felony" or field == "specialty_of_studies" or field == "service_branch" or field == "duties_training_service":
                     
+                    cleaned_data[field] = cleaned_data[field].title()
+                    
+                if field == "has_been_convicted_of_a_felony" or field == "specialty_of_studies" or field == "service_branch" or field == "duties_training_service":    
+                    only_letters(cleaned_data[field])
+
         return cleaned_data
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -248,16 +266,20 @@ class MedicalFormForm(forms.ModelForm):
 
     class Meta:
         model = MedicalForm
-        fields = ['height', 'weight', 'allergic_to', 'diseases_suffered', 'received_workers_compensation', 'received_surgery_for_fracture']
+        fields = ['height', 'weight', 'allergic_to', 'diseases_suffered', 'received_workers_compensation','workers_compensation_details', 'received_surgery_for_fracture','fracture_details','physical_disability_evaluation','physical_disability_details']
         labels = {
             'height':_('Enter your height in feet'),
             'weight':_('Enter your weight in pounds'),
             'allergic_to':_('Mention any allergies you have'),
-            'received_workers_compensation':_('Have you ever received workers compensation due to an injury at work? If the answer is yes, describe why?'),
-            'received_surgery_for_fracture':_('Have you received surgery for a fracture? If the answer is yes, describe all the details')
+            'received_workers_compensation':_('Have you ever received workers compensation due to an injury at work?'),
+            'workers_compensation_details': _('Explain why you have received workers\' compensation'),
+            'received_surgery_for_fracture':_('Have you received surgery for a fracture?'),
+            'fracture_details': _('Describe the details of your fracture'),
+            'physical_disability_evaluation':_('Have you received any type of physical disability evaluation assigned by any insurance company or state or federal agency?'),
+            'physical_disability_details': _('Describe the details of the physical disability evaluation')
         }
     
-    physical_disability_evaluation = forms.CharField(label=_('Have you received any kind of physical disability evaluation or assigned by any insurance company or state/or federal agency? If the answer is yes, describe why, when and where'))
+    # physical_disability_evaluation = forms.CharField(label=_('Have you received any kind of physical disability evaluation or assigned by any insurance company or state/or federal agency? If the answer is yes, describe why, when and where'))
     widgets = {
             'diseases_suffered': forms.CheckboxSelectMultiple
         }

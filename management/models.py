@@ -19,6 +19,7 @@ def current_time():
 
 class State(models.Model):
     name = models.CharField(max_length=100)
+    state_code = models.CharField(max_length=2)
 
     def __str__(self):
         return self.name.capitalize()
@@ -171,7 +172,10 @@ class Address(models.Model):
 
     def __str__(self):
         return f"{self.street}, {self.unit_number}, {self.city}, {self.state} {self.postal_code}"     
-
+    
+    class Meta:
+        verbose_name_plural = 'Address'
+    
 class EmployeeInterview(Employee): 
     class Meta:
         proxy = True
@@ -416,22 +420,34 @@ class Application(models.Model):
         (True, _('Yes')),
         (False, _('No'))
     )
+    DESIRED_JOB_CHOICES = [
+        ('Full Time', _('Full Time')),
+        ('Part Time', _('Part Time')),
+        ('Seasonal', _('Seasonal')),
+    ]
     days_available_to_work = models.CharField(max_length=20, choices=DAYS_AVAILABLE_TO_WORK_CHOICES)
-    # can_travel = models.BooleanField()
-    #HERE
     can_travel = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
-    #can_travel = models.TypedChoiceField(label=_('If Hired, Are You Willing To Test For Controlled Substances?'),coerce=lambda x: x =='True', choices=((False, 'No'), (True, 'Yes')))
-    # can_work_nights = models.BooleanField()
     can_work_nights = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
-    # can_background_check = models.BooleanField()
-    can_background_check = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
+    desired_job = models.CharField(choices=DESIRED_JOB_CHOICES, max_length=50)
+    desired_payment = models.IntegerField(default=0)
     position_to_apply = models.CharField(max_length=25, choices=POSITION_TO_APPLY_CHOICES)
+    worked_for_this_company_before = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
+    start_date_worked_for_this_company = models.DateField(blank=True)
+    end_date_worked_for_this_company = models.DateField(blank=True)
+    has_been_convicted_of_a_felony = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
+    felony_details = models.CharField(blank=True,max_length=50)
+    can_background_check = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
+    test_controlled_substances = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
     experience = models.CharField(max_length=500)
     english_level = models.CharField(max_length=12, choices=ENGLISH_LEVEL_CHOICES)
     studies = models.CharField(max_length=12, choices=STUDIES_LEVEL_CHOICES)
     specialty_of_studies = models.CharField(max_length=50, blank=True)
-    # military_service = models.BooleanField()
     military_service = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
+    service_branch = models.CharField(blank=True,max_length=50)
+    start_period_service = models.DateField(blank=True)
+    end_period_service = models.DateField(blank=True)
+    duties_training_service = models.CharField(blank=True,max_length=50)
+
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='application_employee')
 
     def __str__(self):
@@ -448,7 +464,6 @@ class Emergency_contact(models.Model):
 
     class Meta:
         verbose_name = "Emergency Contact"
-
 
 class Document(models.Model):
     TYPE_CHOICES = [
@@ -491,18 +506,27 @@ class Document(models.Model):
                 e.save()
         super().delete(*args, **kwargs)
 
-
 class MedicalForm(models.Model):
+    CHOICES_BOOLEAN_YES_NO = (
+        (True, _('Yes')),
+        (False, _('No'))
+    )
+
     height = models.DecimalField(max_digits=5, decimal_places=2)
     weight = models.DecimalField(max_digits=5, decimal_places=2)
     allergic_to = models.CharField(max_length=100)
-    diseases_suffered = models.CharField(max_length=100)
-    received_workers_compensation = models.CharField(max_length=100)
-    received_surgery_for_fracture = models.CharField(max_length=100)
+    diseases_suffered = models.CharField(max_length=200)
+    received_workers_compensation = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
+    workers_compensation_details = models.CharField(blank=True,max_length=50)
+    received_surgery_for_fracture = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
+    fracture_details = models.CharField(blank=True,max_length=50)
+    physical_disability_evaluation = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
+    physical_disability_details = models.CharField(blank=True, max_length=100)
+
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.employee.first_name
+        return self.employee.full_name
 
 class PaymentMethod(models.Model):
     name = models.CharField(max_length=100)

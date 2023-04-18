@@ -90,4 +90,98 @@
       </div>
     </form>
 </div>
+
+<script>
+  const worked_for_this_company_before = document.querySelector('#id_worked_for_this_company_before');
+  const start_date_worked_for_this_company = document.querySelector('#div_id_start_date_worked_for_this_company');
+  const end_date_worked_for_this_company = document.querySelector('#div_id_end_date_worked_for_this_company');
+
+  worked_for_this_company_before.addEventListener('change', () => {
+    if (worked_for_this_company_before.value === 'True') {
+      start_date_worked_for_this_company.style.display = 'block';
+      end_date_worked_for_this_company.style.display = 'block';
+    } else {
+      start_date_worked_for_this_company.style.display = 'none';
+      end_date_worked_for_this_company.style.display = 'none';
+    }
+  });
+
+  const has_been_convicted_of_a_felony = document.querySelector('#id_has_been_convicted_of_a_felony');
+  const felony_details = document.querySelector('#div_id_felony_details');
+
+  has_been_convicted_of_a_felony.addEventListener('change', () => {
+    if (has_been_convicted_of_a_felony.value === 'True') {
+      felony_details.style.display = 'block';
+    } else {
+      felony_details.style.display = 'none';
+    }
+  });
+
+  const military_service = document.querySelector('#id_military_service');
+  const service_branch = document.querySelector('#div_id_service_branch');
+  const start_period_service = document.querySelector('#div_id_start_period_service');
+  const end_period_service = document.querySelector('#div_id_end_period_service');
+  const duties_training_service = document.querySelector('#div_id_duties_training_service');
+
+  military_service.addEventListener('change', () => {
+    if (military_service.value === 'True') {
+      service_branch.style.display = 'block';
+      start_period_service.style.display = 'block';
+      end_period_service.style.display = 'block';
+      duties_training_service.style.display = 'block';
+    } else {
+      service_branch.style.display = 'none';
+      start_period_service.style.display = 'none';
+      end_period_service.style.display = 'none';
+      duties_training_service.style.display = 'none';
+    }
+  });
+
+  const received_workers_compensation = document.querySelector('#id_received_workers_compensation');
+  const workers_compensation_details = document.querySelector('#div_id_workers_compensation_details');
+
+  received_workers_compensation.addEventListener('change', () => {
+    if (received_workers_compensation.value === 'True') {
+      workers_compensation_details.style.display = 'block';
+    } else {
+      workers_compensation_details.style.display = 'none';
+    }
+  });
+
+  const received_surgery_for_fracture = document.querySelector('#id_received_surgery_for_fracture');
+  const fracture_details = document.querySelector('#div_id_fracture_details');
+
+  received_surgery_for_fracture.addEventListener('change', () => {
+    if (received_surgery_for_fracture.value === 'True') {
+      fracture_details.style.display = 'block';
+    } else {
+      fracture_details.style.display = 'none';
+    }
+  });
+
+  const physical_disability_evaluation = document.querySelector('#id_physical_disability_evaluation');
+  const physical_disability_details = document.querySelector('#div_id_physical_disability_details');
+
+  physical_disability_evaluation.addEventListener('change', () => {
+    if (physical_disability_evaluation.value === 'True') {
+      physical_disability_details.style.display = 'block';
+    } else {
+      physical_disability_details.style.display = 'none';
+    }
+  });
+
+  const hiddenExtraFields = () => {
+    start_date_worked_for_this_company.style.display = 'none';
+    end_date_worked_for_this_company.style.display = 'none';
+    felony_details.style.display = 'none';
+    service_branch.style.display = 'none';
+    start_period_service.style.display = 'none';
+    end_period_service.style.display = 'none';
+    duties_training_service.style.display = 'none';
+    workers_compensation_details.style.display = 'none';
+    fracture_details.style.display = 'none';
+    physical_disability_details.style.display = 'none';
+  };
+  hiddenExtraFields();
+</script>
 {% endblock %}

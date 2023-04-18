@@ -197,31 +197,31 @@ msgid "Have you ever been a member of the united states armed services?"
 msgstr "Èske w te janm manm sèvis ame Etazini yo?"
 
 #: .\management\forms.py:111
-msgid "Enter the branch in which you performed your military service (if apply)"
-msgstr "Antre branch kote ou te fè sèvis militè ou a (si aplike)"
-
-#: .\management\forms.py:112
-msgid "Military service start date (if apply)"
-msgstr "Dat kòmansman sèvis militè (si sa aplike)"
-
-#: .\management\forms.py:113
-msgid "Military service end date (if apply)"
-msgstr "Dat fen sèvis militè (si aplike)"
+msgid "Enter the branch in which you performed your military service"
+msgstr "Antre branch kote ou te fè sèvis militè ou a"
 
 #: .\management\forms.py:114
-msgid "Describe your duties and any special training (if apply)"
-msgstr "Dekri devwa w ak nenpòt fòmasyon espesyal (si aplike)"
+msgid "Describe your duties and any special training"
+msgstr "Dekri devwa w ak nenpòt fòmasyon espesyal"
 
 #: .\management\forms.py:116
 msgid ""
-"Have you worked for this company before?. If the answer is yes, indicate the "
-"start date and end date"
-msgstr "Èske ou te travay pou konpayi sa a anvan?. Si repons lan se wi, endike dat kòmansman ak dat fen"
+"Have you worked for this company before?"
+msgstr "Èske ou te travay pou konpayi sa a anvan?"
+
+msgid "Start date MONTH/DAY/YEAR"
+msgstr "Dat kòmanse MWA/JOU/ANE"
+
+msgid "End date MONTH/DAY/YEAR"
+msgstr "Dat fen MWA/JOU/ANE"
 
 #: .\management\forms.py:117
 msgid ""
-"Have you ever been convicted of a felony?. If the answer is yes, explain"
-msgstr "Èske w te janm kondane pou yon krim?. Si repons lan se wi, eksplike"
+"Have you ever been convicted of a felony?"
+msgstr "Èske w te janm kondane pou yon krim?"
+
+msgid "Describe the details of the crime for which you were convicted"
+msgstr "Dekri detay krim yo te kondane w la"
 
 #: .\management\forms.py:118
 msgid "If Hired, Are You Willing To Test For Controlled Substances?"
@@ -232,8 +232,8 @@ msgid "Desired job"
 msgstr "Travay ou vle"
 
 #: .\management\forms.py:120
-msgid "Desired payment"
-msgstr "Peman ou vle"
+msgid "Desired pay per hour"
+msgstr "Peye vle pou chak èdtan"
 
 #: .\management\forms.py:138
 msgid "Epilepsy"
@@ -337,22 +337,29 @@ msgstr "Mansyone nenpòt alèji ou genyen"
 
 #: .\management\forms.py:170
 msgid ""
-"Have you ever received workers compensation due to an injury at work? If the "
-"answer is yes, describe why?"
-msgstr "Èske w te janm resevwa konpansasyon travayè akòz yon aksidan nan travay la? Si repons lan se wi, dekri poukisa?"
+"Have you ever received workers compensation due to an injury at work?"
+msgstr "Èske w te janm resevwa konpansasyon travayè akòz yon aksidan nan travay la?"
+
+msgid "Explain why you have received workers' compensation"
+msgstr "Eksplike poukisa ou te resevwa konpansasyon travayè yo"
 
 #: .\management\forms.py:171
 msgid ""
-"Have you received surgery for a fracture? If the answer is yes, describe all "
-"the details"
-msgstr "Èske w te fè operasyon pou yon ka zo kase? Si repons lan se wi, dekri tout detay yo"
+"Have you received surgery for a fracture?"
+msgstr "Èske w te fè operasyon pou yon ka zo kase?"
+
+msgid ""
+"Describe the details of your fracture"
+msgstr "Dekri detay yo nan ka zo kase ou"
 
 #: .\management\forms.py:174
+msgid "Have you received any type of physical disability evaluation assigned by any insurance company or state or federal agency?"
+msgstr "Èske w te resevwa nenpòt kalite evalyasyon andikap fizik ke nenpòt konpayi asirans oswa ajans leta oswa federal te bay?"
+
 msgid ""
-"Have you received any kind of physical disability evaluation or assigned by "
-"any insurance company or state/or federal agency? If the answer is yes, "
-"describe why, when and where"
-msgstr "Èske w te resevwa nenpòt kalite evalyasyon andikap fizik oswa nenpòt konpayi asirans oswa ajans leta/oswa federal te bay? Si repons lan se wi, dekri poukisa, ki lè ak ki kote"
+"Describe the details of the physical disability evaluation"
+msgstr "Dekri detay evalyasyon andikap fizik la"
+
 
 #: .\management\forms.py:184
 msgid "Submit"

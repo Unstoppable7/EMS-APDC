@@ -24,15 +24,14 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
 
     name_label_text = "Names"
     last_name_label_text = "Surnames"
-    street_street_address_label_text = "Street Address"
-    unit_number_label_text = "Apartment, unit, suite, or floor #"
+    street_street_address_label_text = "Address Line 1"
+    unit_number_label = "Address Line 2"
     city_label_text = "City"
     state_label_text = "State"
     zipcode_label_text = "Zip code"
     email_label_text = "Email"
     phone_label_text = "Phone number"
     date_birth_label_text = "Date of birth"
-
 
     days_available_label_text = "Days available to work"
     can_travel_label_text = "If the job requires it, can you travel?"
@@ -136,7 +135,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     unit_number_label = Paragraph(unit_number_label, label_style)
     unit_number_field = Paragraph(addressForm.cleaned_data['unit_number'], field_style)
     data2rows1 = [[street_address_label,street_address_field, unit_number_label,unit_number_field]]
-    table2rows1 = Table(data2rows1, colWidths=[75,180,75,None])
+    table2rows1 = Table(data2rows1, colWidths=[100,140,100,None])
     table2rows1.setStyle(TableStyle([
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
 ]))
@@ -148,7 +147,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     state_field = Paragraph(str(addressForm.cleaned_data['state_name']), field_style)
 
     zipcode_label = Paragraph(zipcode_label_text, label_style)
-    zipcode_field = Paragraph(addressForm.cleaned_data['zip_code'], field_style)
+    zipcode_field = Paragraph(addressForm.cleaned_data['postal_code'], field_style)
     data3rows1 = [[city_label, city_field, state_label,state_field,zipcode_label,zipcode_field]]
     table3rows1 = Table(data3rows1, colWidths=[45,None,55,None,80,None])
     table3rows1.setStyle(TableStyle([
@@ -160,7 +159,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     email_field = Paragraph(employeeForm.cleaned_data['email'], field_style)
     # phone_label = Paragraph(employeeForm['phone_number'].label, label_style)
     phone_label = Paragraph(phone_label_text, label_style)
-    phone_field = Paragraph(employeeForm.cleaned_data['phone_number'], field_style)
+    phone_field = Paragraph(str(employeeForm.cleaned_data['phone_number']), field_style)
     data4rows1 = [[email_label, email_field, phone_label,phone_field]]
     table4rows1 = Table(data4rows1, colWidths=[55,None,120,None])
     table4rows1.setStyle(TableStyle([
@@ -179,7 +178,6 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
 
     section_employment_eligibility = Paragraph("EMPLOYMENT ELIGIBILITY", section_style)
 
-    # days_available_label = Paragraph(applicationForm['days_available_to_work'].label, label_style)
     days_available_label = Paragraph(days_available_label_text, label_style)
     days_available_field = Paragraph(applicationForm.cleaned_data['days_available_to_work'], field_style)
     data6rows1 = [[days_available_label, days_available_field]]
@@ -385,7 +383,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     emergency_contact_name_field = Paragraph(emergency_contactForm.cleaned_data['name'], field_style)
     # emergency_contact_phone_number_label = Paragraph(emergency_contactForm['phone_number'].label, label_style)
     emergency_contact_phone_number_label = Paragraph(emergency_contact_phone_number_label_text, label_style)
-    emergency_contact_phone_number_field = Paragraph(emergency_contactForm.cleaned_data['phone_number'], field_style)
+    emergency_contact_phone_number_field = Paragraph(str(emergency_contactForm.cleaned_data['phone_number']), field_style)
     data22rows1 = [[emergency_contact_name_label, emergency_contact_name_field,emergency_contact_phone_number_label,emergency_contact_phone_number_field]]
     table22rows1 = Table(data22rows1, colWidths=[50,None,100,None])
     table22rows1.setStyle(TableStyle([
@@ -422,7 +420,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     weight_label = Paragraph(weight_label_text, label_style)
     weight_field = Paragraph(str(medicalForm.cleaned_data['weight']), field_style)
     data25rows1 = [[height_label, height_field,weight_label,weight_field]]
-    table25rows1 = Table(data25rows1, colWidths=[150,None,185,None])
+    table25rows1 = Table(data25rows1, colWidths=[50,None,55,None])
     table25rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),

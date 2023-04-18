@@ -1,13 +1,18 @@
 from django.contrib import admin
-from .models import Location,Department,Employee,EmployeeInterview, Application, Emergency_contact, Document, MedicalForm, MyEmployeeSection, Employee_head, Employee_job, Job,Recruiting,EmployeeManagement, AccountingStatus,City,State
+from .models import Location,Department,Employee,EmployeeInterview, Application, Emergency_contact, Document, MedicalForm, MyEmployeeSection, Employee_head, Employee_job, Job,Recruiting,EmployeeManagement,AccountingStatus,City,State,Address
 from django.contrib import messages
 from django.utils.translation import ngettext
 from django.db.models import Q
 
 # Eliminar la acción de eliminación para todos los modelos
-admin.site.disable_action('delete_selected')
+#admin.site.disable_action('delete_selected')
 
 #Tabular inline models
+
+class AddressInline(admin.StackedInline): 
+   model= Address 
+   fields = ['street', 'unit_number', 'city', 'state', 'postal_code',]
+   extra = 0
 
 class ApplicationInline(admin.StackedInline): 
    model= Application 
@@ -216,8 +221,8 @@ class LocationListFilter(admin.SimpleListFilter):
 
 @admin.register(Employee) 
 class EmployeeAdmin(admin.ModelAdmin): 
-    fields=('type', 'status', 'application_status','quickbooks_status','first_name', 'last_name', 'phone_number', 'email', 'date_of_birth','address','city','zip_code') 
-    inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
+    fields=('type', 'status', 'application_status','quickbooks_status','first_name', 'last_name', 'phone_number', 'email', 'date_of_birth') 
+    inlines=[AddressInline,ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
     list_display = ['id','status', 'application_status', 'quickbooks_status','type', 'full_name', 'phone_number', 'date_of_birth',
     'get_job_name','get_locations','get_head','date_created', 'updated_at']
@@ -886,3 +891,4 @@ class Job(admin.ModelAdmin):
 admin.site.register(Location)
 admin.site.register(City)
 admin.site.register(State)
+admin.site.register(Address)

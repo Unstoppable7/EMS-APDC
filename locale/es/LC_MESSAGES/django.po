@@ -465,7 +465,7 @@ msgstr "Ingrese un correo electrónico válido."
 #: .\venv\Lib\site-packages\django\core\validators.py:256
 msgid ""
 "Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
-msgstr "Introduzca un \"slug\" válido que consista en letras, números, guiones bajos o guiones."
+msgstr "Ingrese un \"slug\" válido que consista en letras, números, guiones bajos o guiones."
 
 #: .\venv\Lib\site-packages\django\core\validators.py:264
 msgid ""
@@ -874,25 +874,25 @@ msgstr ""
 
 #: .\venv\Lib\site-packages\django\forms\fields.py:298
 msgid "Enter a whole number."
-msgstr "Introduzca un número entero."
+msgstr "Ingrese un número entero."
 
 #: .\venv\Lib\site-packages\django\forms\fields.py:467
 #: .\venv\Lib\site-packages\django\forms\fields.py:1240
 msgid "Enter a valid date."
-msgstr "Introduzca una fecha válida."
+msgstr "Ingrese una fecha válida."
 
 #: .\venv\Lib\site-packages\django\forms\fields.py:490
 #: .\venv\Lib\site-packages\django\forms\fields.py:1241
 msgid "Enter a valid time."
-msgstr "Introduzca una hora válida."
+msgstr "Ingrese una hora válida."
 
 #: .\venv\Lib\site-packages\django\forms\fields.py:517
 msgid "Enter a valid date/time."
-msgstr "Introduzca una fecha/hora válida."
+msgstr "Ingrese una fecha/hora válida."
 
 #: .\venv\Lib\site-packages\django\forms\fields.py:551
 msgid "Enter a valid duration."
-msgstr "Introduzca una duración válida."
+msgstr "Ingrese una duración válida."
 
 #: .\venv\Lib\site-packages\django\forms\fields.py:552
 #, python-brace-format
@@ -940,11 +940,11 @@ msgstr "Seleccione una opción válida. %(value)s no es una de las opciones disp
 #: .\venv\Lib\site-packages\django\forms\fields.py:1069
 #: .\venv\Lib\site-packages\django\forms\models.py:1570
 msgid "Enter a list of values."
-msgstr "Introduzca una lista de valores."
+msgstr "Ingrese una lista de valores."
 
 #: .\venv\Lib\site-packages\django\forms\fields.py:1070
 msgid "Enter a complete value."
-msgstr "Introduzca un valor completo."
+msgstr "Ingrese un valor completo."
 
 #: .\venv\Lib\site-packages\django\forms\fields.py:1309
 msgid "Enter a valid UUID."
@@ -2496,7 +2496,7 @@ msgid "There is already a person registered with %(field_labels)s"
 msgstr "Ya hay una persona registrada con %(field_labels)s"
 
 msgid "Please enter a valid city."
-msgstr "Por favor introduzca una ciudad válida."
+msgstr "Por favor Ingrese una ciudad válida."
 
 msgid "Days available to work"
 msgstr "Días disponibles para trabajar"
@@ -2546,17 +2546,26 @@ msgstr "Medio tiempo"
 msgid "Seasonal"
 msgstr "Temporal"
 
-msgid "Desired payment"
-msgstr "Pago deseado"
+msgid "Desired pay per hour"
+msgstr "Pago deseado por hora"
 
 msgid "Position to which applies"
 msgstr "Posición a la que aplica"
 
-msgid "Have you worked for this company before?. If the answer is yes, indicate the start date and end date"
-msgstr "¿Ha trabajado para esta empresa antes?. Si la respuesta es sí, indique la fecha de inicio y la fecha de finalización"
+msgid "Have you worked for this company before?"
+msgstr "¿Ha trabajado para esta empresa antes?"
 
-msgid "Have you ever been convicted of a felony?. If the answer is yes, explain"
-msgstr "¿Alguna vez has sido condenado por un delito grave?. Si la respuesta es sí, explique"
+msgid "Start date MONTH/DAY/YEAR"
+msgstr "Fecha de inicio MES/DIA/AÑO"
+
+msgid "End date MONTH/DAY/YEAR"
+msgstr "Fecha de fin MES/DIA/AÑO"
+
+msgid "Have you ever been convicted of a felony?"
+msgstr "¿Alguna vez has sido condenado por un delito grave?"
+
+msgid "Describe the details of the crime for which you were convicted"
+msgstr "Describa los detalles del delito por el que fue condenado"
 
 msgid "If Hired, Are You Willing To Test For Controlled Substances?"
 msgstr "Si es contratado, ¿está dispuesto a realizar pruebas de sustancias controladas?"
@@ -2579,17 +2588,11 @@ msgstr "Especialidad de tus estudios"
 msgid "Have you ever been a member of the united states armed services?"
 msgstr "¿Alguna vez ha sido miembro de las fuerzas armadas de los Estados Unidos?"
 
-msgid "Enter the branch in which you performed your military service (if apply)"
-msgstr "Ingrese la rama en la que realizó su servicio militar (si aplica)"
+msgid "Enter the branch in which you performed your military service"
+msgstr "Ingrese la rama en la que realizó su servicio militar"
 
-msgid "Military service start date (if apply)"
-msgstr "Fecha de inicio del servicio militar (si aplica)"
-
-msgid "Military service end date (if apply)"
-msgstr "Fecha de finalización del servicio militar (si aplica)"
-
-msgid "Describe your duties and any special training (if apply)"
-msgstr "Describa sus deberes y cualquier capacitación especial (si aplica)"
+msgid "Describe your duties and any special training"
+msgstr "Describa sus deberes y cualquier capacitación especial"
 
 msgid "Enter your height in feet"
 msgstr "Ingrese su altura en pies"
@@ -2660,14 +2663,23 @@ msgstr "Parálisis cerebral"
 msgid "Muscular dystrophy"
 msgstr "Distrofia muscular"
 
-msgid "Have you ever received workers compensation due to an injury at work? If the answer is yes, describe why?"
-msgstr "¿Alguna vez ha recibido compensación laboral debido a una lesión en el trabajo? Si la respuesta es afirmativa, describe ¿por qué?"
+msgid "Have you ever received workers compensation due to an injury at work?"
+msgstr "¿Alguna vez ha recibido compensación laboral debido a una lesión en el trabajo?"
 
-msgid "Have you received surgery for a fracture? If the answer is yes, describe all the details"
-msgstr "¿Ha sido operado de una fractura? Si la respuesta es afirmativa, describa todos los detalles."
+msgid "Explain why you have received workers' compensation"
+msgstr "Explique por qué ha recibido compensación laboral"
 
-msgid "Have you received any kind of physical disability evaluation or assigned by any insurance company or state/or federal agency? If the answer is yes, describe why, when and where"
-msgstr "¿Ha recibido algún tipo de evaluación de discapacidad física o asignado por alguna compañía de seguros o agencia estatal o federal? Si la respuesta es sí, describe por qué, cuándo y dónde"
+msgid "Have you received surgery for a fracture?"
+msgstr "¿Ha sido operado de una fractura?"
+
+msgid "Describe the details of your fracture"
+msgstr "Describa los detalles de su fractura"
+
+msgid "Have you received any type of physical disability evaluation assigned by any insurance company or state or federal agency?"
+msgstr "¿Ha recibido algún tipo de evaluación de discapacidad física asignado por alguna compañía de seguros o agencia estatal o federal?"
+
+msgid "Describe the details of the physical disability evaluation"
+msgstr "Describir los detalles de la evaluación de discapacidad física"
 
 msgid "Relationship"
 msgstr "Relación"
