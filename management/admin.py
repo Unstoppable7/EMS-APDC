@@ -753,6 +753,7 @@ class EmployeeAdminAccountingStatus(admin.ModelAdmin):
     #inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
     list_display = ['quickbooks_status','id', 'full_name', 'phone_number','date_of_birth','type', 'get_job_name','get_locations','get_head','updated_at']
+    list_display = ['quickbooks_status','id', 'full_name', 'phone_number','date_of_birth','type', 'get_job_name','get_locations','get_head','updated_at']
     
     list_filter = ['quickbooks_status', 'employee_job_employee__job__department__location__name']
     search_fields = ['id','first_name', 'last_name','employee_job_employee__job__department__location__name']
@@ -783,7 +784,11 @@ class EmployeeAdminAccountingStatus(admin.ModelAdmin):
 
     # @admin.display(ordering='city_state__state')
     # def get_state(self, obj):
+    # @admin.display(ordering='city_state__state')
+    # def get_state(self, obj):
         
+    #     return str(obj.city.state).capitalize()
+    # get_state.short_description = 'State'
     #     return str(obj.city.state).capitalize()
     # get_state.short_description = 'State'
 

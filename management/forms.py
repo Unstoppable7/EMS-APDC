@@ -16,6 +16,7 @@ class EmployeeForm(forms.ModelForm):
     class Meta:
         model = Employee
         fields = ['first_name','last_name','phone_number','date_of_birth','email']
+        fields = ['first_name','last_name','phone_number','date_of_birth','email']
         labels = {
             'first_name': _('Names'),
             'last_name': _('Surnames'),
@@ -121,6 +122,8 @@ class AddressForm(forms.ModelForm):
 
                 cleaned_data[field] = cleaned_data[field].title()
                 if field == "city_name" or field == "state_name":
+                cleaned_data[field] = cleaned_data[field].title()
+                if field == "city_name" or field == "state_name":
                     only_letters(cleaned_data[field])
 
         return cleaned_data
@@ -131,7 +134,14 @@ class AddressForm(forms.ModelForm):
         address.city = self.cleaned_data['city_name']
         address.state = self.cleaned_data['state_name']
 
+        address = super().save(commit=False)
+        
+        address.city = self.cleaned_data['city_name']
+        address.state = self.cleaned_data['state_name']
+
         if commit:
+            address.save()
+        return address
             address.save()
         return address
 
