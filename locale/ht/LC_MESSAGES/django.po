@@ -2790,3 +2790,6 @@ msgstr "Eta"
 
 msgid "Please enter a valid state."
 msgstr "Tanpri antre nan yon eta valab."
+
+msgid "The field \"%(field_label)s\" must contain only letters"
+msgstr "Jaden an \"%(field_label)s\" dwe genyen sèlman lèt"

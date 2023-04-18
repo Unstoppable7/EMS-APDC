@@ -2728,3 +2728,6 @@ msgstr "Estado"
 
 msgid "Please enter a valid state."
 msgstr "Por favor ingrese un estado valido."
+
+msgid "The field \"%(field_label)s\" must contain only letters"
+msgstr "El campo \"%(field_label)s\" debe contener solo letras"

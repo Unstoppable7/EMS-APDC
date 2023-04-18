@@ -47,7 +47,7 @@ class EmployeeForm(forms.ModelForm):
                 if field != "email":
                     cleaned_data[field] = cleaned_data[field].title()
                 if field == "first_name" or field == "last_name":
-                    only_letters(cleaned_data[field])
+                    only_letters(cleaned_data[field], self.fields[field].label)
 
         return cleaned_data
     
@@ -122,9 +122,9 @@ class AddressForm(forms.ModelForm):
 
                 cleaned_data[field] = cleaned_data[field].title()
                 if field == "city_name" or field == "state_name":
-                cleaned_data[field] = cleaned_data[field].title()
+                    cleaned_data[field] = cleaned_data[field].title()
                 if field == "city_name" or field == "state_name":
-                    only_letters(cleaned_data[field])
+                    only_letters(cleaned_data[field], self.fields[field].label)
 
         return cleaned_data
     
@@ -140,8 +140,6 @@ class AddressForm(forms.ModelForm):
         address.state = self.cleaned_data['state_name']
 
         if commit:
-            address.save()
-        return address
             address.save()
         return address
 
@@ -202,19 +200,7 @@ class ApplicationForm(forms.ModelForm):
         widgets = {
             'experience_jobs': forms.CheckboxSelectMultiple
         }
-
-    ##Manejar en el HTML
-    #service_branch = forms.CharField(required=False, label=_('Enter the branch in which you performed your military service (if apply)'))
-    #start_period_service = forms.DateField(required=False,label=_('Military service start date (if apply)'))
-    #end_period_service = forms.DateField(required=False,label=_('Military service end date (if apply)'))
-    #duties_training_service = forms.CharField(label=_('Describe your duties and any special training (if apply)'),required=False)
-
-    #worked_for_this_company_before = forms.CharField(label=_('Have you worked for this company before?. If the answer is yes, indicate the start date and end date'))
-    #has_been_convicted_of_a_felony = forms.CharField(label=_('Have you ever been convicted of a felony?. If the answer is yes, explain'))
-    # test_controlled_substances = forms.TypedChoiceField(label=_('If Hired, Are You Willing To Test For Controlled Substances?'),coerce=lambda x: x =='True', choices=((True, _('Yes')), (False, _('No'))))
-    #desired_job = forms.ChoiceField(choices=DESIRED_JOB_CHOICES, label=_("Desired job"))
-    #desired_payment = forms.CharField(label=_("Desired payment"))
-
+    
     def clean(self):
         cleaned_data = super().clean()
         for field in cleaned_data:
@@ -224,13 +210,14 @@ class ApplicationForm(forms.ModelForm):
                 cleaned_data[field] = cleaned_data[field].strip()
             except:
                 pass
+
             if isinstance(cleaned_data[field], str):
-                if field == "worked_for_this_company_before" or field == "has_been_convicted_of_a_felony" or field == "specialty_of_studies" or field == "service_branch" or field == "duties_training_service":
+
+                if field == "felony_details" or field == "duties_training_service" or field == "specialty_of_studies" or field == "service_branch":
                     
-                    cleaned_data[field] = cleaned_data[field].title()
+                    only_letters(cleaned_data[field], self.fields[field].label)
+                    cleaned_data[field] = cleaned_data[field].capitalize()
                     
-                if field == "has_been_convicted_of_a_felony" or field == "specialty_of_studies" or field == "service_branch" or field == "duties_training_service":    
-                    only_letters(cleaned_data[field])
 
         return cleaned_data
     def save(self, commit=True):
@@ -305,8 +292,11 @@ class MedicalFormForm(forms.ModelForm):
                 pass
 
             if isinstance(cleaned_data[field], str):
-                only_letters(cleaned_data[field])
-                cleaned_data[field] = cleaned_data[field].title()
+
+                if field == "allergic_to" or field == "workers_compensation_details" or field == "fracture_details" or field == "physical_disability_details":
+                    
+                    only_letters(cleaned_data[field], self.fields[field].label)
+                    cleaned_data[field] = cleaned_data[field].capitalize()
         return cleaned_data
     
     def save(self, commit=True):

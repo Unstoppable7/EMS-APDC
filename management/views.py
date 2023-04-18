@@ -3,8 +3,6 @@ from .forms import EmployeeForm, AddressForm, ApplicationForm, MedicalFormForm,E
 from .models import Document
 from django.shortcuts import redirect
 from django.http import HttpResponse
-from django.http import FileResponse
-from django.template.loader import render_to_string
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, Spacer, TableStyle
@@ -35,12 +33,16 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
 
     days_available_label_text = "Days available to work"
     can_travel_label_text = "If the job requires it, can you travel?"
-    desired_job_label_text = "Desired job"
     can_work_nights_label_text = "Can you work nights?"
+    desired_job_label_text = "Desired job"
+    desired_payment_label_text = "Desired pay per hour"
     position_to_apply_label_text = "Position to which applies"
-    desired_payment_label_text = "Desired payment"
-    worked_for_this_company_before_label_text = "Have you worked for this company before?. If the answer is yes, indicate the start date and end date"
-    has_been_convicted_of_a_felony_label_text = "Have you ever been convicted of a felony?. If the answer is yes, explain "
+    worked_for_this_company_before_label_text = "Have you worked for this company before?"
+    start_date_worked_for_this_company_label_text = "Start date"
+    end_date_worked_for_this_company_label_text = "End date"
+    has_been_convicted_of_a_felony_label_text = "Have you ever been convicted of a felony?"
+    felony_details_label_text = "Describe the details of the crime"
+
     can_background_check_label_text = "Are you open to a background check?"
     test_controlled_substances_label_text = "If hired, are you willing to test for controlled substances? "
 
@@ -51,7 +53,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     specialty_of_studies_label_text = "Specialty of your studies"
 
 
-    military_service_label_text = "Have you ever been a member of the united states armed services? "
+    military_service_label_text = "Have you ever been a member of the united states armed services?"
     service_branch_label_text = "Service branch"
     start_period_service_label_text = "Start period"
     end_period_service_label_text = "End period"
@@ -68,9 +70,14 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     weight_label_text = "Weight"
     allergic_to_label_text = "Mention any allergies you have"
     diseases_suffered_label_text = "Mention the diseases you suffer from"
-    received_workers_compensation_label_text = "Have you ever received workers compensation due to an injury at work? If the answer is yes, describe why?"
-    received_surgery_for_fracture_label_text = "Have you received surgery for a fracture? If the answer is yes, describe all the details"
-    physical_disability_evaluation_label_text = "Have you received any kind of physical disability evaluation or assigned by any insurance company or state/or federal agency? If the answer is yes, describe why, when and where"
+    received_workers_compensation_label_text = "Have you ever received workers compensation due to an injury at work?"
+    workers_compensation_details_label_text = "Explain why you have received workers\' compensation"
+
+    received_surgery_for_fracture_label_text = "Have you received surgery for a fracture?"
+    fracture_details_label_text = "Describe the details of your fracture"
+
+    physical_disability_evaluation_label_text = "Have you received any kind of physical disability evaluation or assigned by any insurance company or state/or federal agency?"
+    physical_disability_details_label_text = "Describe the details of the physical disability evaluation"
 
     employee = employeeForm.save(commit=False)
 
@@ -221,7 +228,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     position_to_apply_field = Paragraph(applicationForm.cleaned_data['position_to_apply'], field_style)  
     # desired_payment_label = Paragraph(applicationForm['desired_payment'].label, label_style)
     desired_payment_label = Paragraph(desired_payment_label_text, label_style)
-    desired_payment_field = Paragraph(applicationForm.cleaned_data['desired_payment'], field_style)
+    desired_payment_field = Paragraph(str(applicationForm.cleaned_data['desired_payment']), field_style)
     data9rows1 = [[position_to_apply_label, position_to_apply_field,desired_payment_label,desired_payment_field]]
     table9rows1 = Table(data9rows1, colWidths=[135,None,135,None])
     table9rows1.setStyle(TableStyle([
@@ -231,9 +238,16 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
 
     # worked_for_this_company_before_label = Paragraph(applicationForm['worked_for_this_company_before'].label, label_style)
     worked_for_this_company_before_label = Paragraph(worked_for_this_company_before_label_text, label_style)
-    worked_for_this_company_before_field = Paragraph(applicationForm.cleaned_data['worked_for_this_company_before'], field_style)  
-    data10rows1 = [[worked_for_this_company_before_label, worked_for_this_company_before_field]]
-    table10rows1 = Table(data10rows1, colWidths=[None])
+    worked_for_this_company_before_field = Paragraph(str(applicationForm.cleaned_data['worked_for_this_company_before']), field_style)  
+    start_date_worked_for_this_company_label = Paragraph(start_date_worked_for_this_company_label_text, label_style)
+    start_date_worked_for_this_company_field = Paragraph(applicationForm.cleaned_data['start_date_worked_for_this_company'].strftime("%m/%d/%Y"), field_style)
+
+    end_date_worked_for_this_company_label = Paragraph(end_date_worked_for_this_company_label_text, label_style)
+    end_date_worked_for_this_company_field = Paragraph(applicationForm.cleaned_data['end_date_worked_for_this_company'].strftime("%m/%d/%Y"), field_style)
+
+    data10rows1 = [[worked_for_this_company_before_label, worked_for_this_company_before_field,start_date_worked_for_this_company_label,start_date_worked_for_this_company_field,end_date_worked_for_this_company_label,end_date_worked_for_this_company_field]]
+
+    table10rows1 = Table(data10rows1, colWidths=[150,40,100,None,100,None])
     table10rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
@@ -242,8 +256,12 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     # has_been_convicted_of_a_felony_label = Paragraph(applicationForm['has_been_convicted_of_a_felony'].label, label_style)
     has_been_convicted_of_a_felony_label = Paragraph(has_been_convicted_of_a_felony_label_text, label_style)
     has_been_convicted_of_a_felony_field = Paragraph(applicationForm.cleaned_data['has_been_convicted_of_a_felony'], field_style)  
-    data11rows1 = [[has_been_convicted_of_a_felony_label, has_been_convicted_of_a_felony_field]]
-    table11rows1 = Table(data11rows1, colWidths=[None])
+
+    felony_details_label = Paragraph(felony_details_label_text, label_style)
+    felony_details_field = Paragraph(applicationForm.cleaned_data['felony_details'], field_style)  
+
+    data11rows1 = [[has_been_convicted_of_a_felony_label, has_been_convicted_of_a_felony_field,felony_details_label,felony_details_field]]
+    table11rows1 = Table(data11rows1, colWidths=[150,40,100,None])
     table11rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
@@ -450,8 +468,12 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     # received_workers_compensation_label = Paragraph(medicalForm['received_workers_compensation'].label, label_style)
     received_workers_compensation_label = Paragraph(received_workers_compensation_label_text, label_style)
     received_workers_compensation_field = Paragraph(medicalForm.cleaned_data['received_workers_compensation'], field_style)
-    data28rows1 = [[received_workers_compensation_label, received_workers_compensation_field]]
-    table28rows1 = Table(data28rows1, colWidths=[None])
+
+    workers_compensation_details_label = Paragraph(workers_compensation_details_label_text, label_style)
+    workers_compensation_details_field = Paragraph(medicalForm.cleaned_data['workers_compensation_details'], field_style)
+
+    data28rows1 = [[received_workers_compensation_label, received_workers_compensation_field,workers_compensation_details_label,workers_compensation_details_field]]
+    table28rows1 = Table(data28rows1, colWidths=[150,40,150,None])
     table28rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
@@ -460,8 +482,12 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     # received_surgery_for_fracture_label = Paragraph(medicalForm['received_surgery_for_fracture'].label, label_style)
     received_surgery_for_fracture_label = Paragraph(received_surgery_for_fracture_label_text, label_style)
     received_surgery_for_fracture_field = Paragraph(medicalForm.cleaned_data['received_surgery_for_fracture'], field_style)
-    data29rows1 = [[received_surgery_for_fracture_label, received_surgery_for_fracture_field]]
-    table29rows1 = Table(data29rows1, colWidths=[None])
+
+    fracture_details_label = Paragraph(fracture_details_label_text, label_style)
+    fracture_details_field = Paragraph(medicalForm.cleaned_data['fracture_details'], field_style)
+
+    data29rows1 = [[received_surgery_for_fracture_label, received_surgery_for_fracture_field,fracture_details_label,fracture_details_field]]
+    table29rows1 = Table(data29rows1, colWidths=[100,40,100,None])
     table29rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
@@ -470,8 +496,12 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     # physical_disability_evaluation_label = Paragraph(medicalForm['physical_disability_evaluation'].label, label_style)
     physical_disability_evaluation_label = Paragraph(physical_disability_evaluation_label_text, label_style)
     physical_disability_evaluation_field = Paragraph(medicalForm.cleaned_data['physical_disability_evaluation'], field_style)
-    data30rows1 = [[physical_disability_evaluation_label, physical_disability_evaluation_field]]
-    table30rows1 = Table(data30rows1, colWidths=[None])
+
+    physical_disability_details_label = Paragraph(physical_disability_details_label_text, label_style)
+    physical_disability_details_field = Paragraph(medicalForm.cleaned_data['physical_disability_details'], field_style)
+
+    data30rows1 = [[physical_disability_evaluation_label, physical_disability_evaluation_field,physical_disability_details_label,physical_disability_details_field]]
+    table30rows1 = Table(data30rows1, colWidths=[150,40,100,None])
     table30rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
@@ -606,8 +636,7 @@ def create_employee_application(request):
 
             #return redirect('employee_detail', pk=employee.pk)
             return HttpResponse("Application completed successfully")
-        else:
-            print('NO VALID')
+            
     else:
         employee_form = EmployeeForm(prefix='employee')
         address_form = AddressForm()
