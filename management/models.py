@@ -11,9 +11,10 @@ import pdb
 
 from phonenumber_field.modelfields import PhoneNumberField
 #from address.models import AddressField
+import pytz
 
 def current_time():
-    return datetime.datetime.now()
+    return datetime.datetime.now(tz=pytz.utc)
 
 # Create your models here.
 
@@ -93,6 +94,7 @@ class Employee(models.Model):
         ('Update to Active', 'Update to Active'),
     ]
     
+    id = models.AutoField(primary_key=True, unique=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     phone_number = PhoneNumberField()
@@ -104,9 +106,6 @@ class Employee(models.Model):
     quickbooks_status = models.CharField(max_length=30, choices=QUICKBOOKS_STATUS_CHOICES, default="Not Hired")
     date_created = models.DateTimeField(default=current_time)
     updated_at = models.DateTimeField(auto_now=True)
-    #address = models.CharField(max_length=200)
-    #city = models.ForeignKey(City, on_delete=models.CASCADE)
-    #zip_code = models.CharField(max_length=10)
     
     def __str__(self):
         return self.first_name
@@ -122,7 +121,7 @@ class Employee(models.Model):
     class Meta:
         verbose_name = 'Company Employee'
         unique_together = (('phone_number', 'date_of_birth'),)
-        
+    
     def save(self, *args, **kwargs):
         #pdb.set_trace()
         #Empleado antes de ser guardado
@@ -432,10 +431,10 @@ class Application(models.Model):
     desired_payment = models.IntegerField(default=0)
     position_to_apply = models.CharField(max_length=25, choices=POSITION_TO_APPLY_CHOICES)
     worked_for_this_company_before = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
-    start_date_worked_for_this_company = models.DateField(blank=True)
-    end_date_worked_for_this_company = models.DateField(blank=True)
+    start_date_worked_for_this_company = models.DateField(null=True,blank=True)
+    end_date_worked_for_this_company = models.DateField(null=True,blank=True)
     has_been_convicted_of_a_felony = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
-    felony_details = models.CharField(blank=True,max_length=50)
+    felony_details = models.CharField(max_length=50, null=True,blank=True)
     can_background_check = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
     test_controlled_substances = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
     experience = models.CharField(max_length=500)
@@ -443,10 +442,10 @@ class Application(models.Model):
     studies = models.CharField(max_length=12, choices=STUDIES_LEVEL_CHOICES)
     specialty_of_studies = models.CharField(max_length=50, blank=True)
     military_service = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
-    service_branch = models.CharField(blank=True,max_length=50)
-    start_period_service = models.DateField(blank=True)
-    end_period_service = models.DateField(blank=True)
-    duties_training_service = models.CharField(blank=True,max_length=50)
+    service_branch = models.CharField(max_length=50, null=True,blank=True)
+    start_period_service = models.DateField(null=True,blank=True)
+    end_period_service = models.DateField(null=True,blank=True)
+    duties_training_service = models.CharField(max_length=50, null=True,blank=True)
 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='application_employee')
 
@@ -517,11 +516,11 @@ class MedicalForm(models.Model):
     allergic_to = models.CharField(max_length=100)
     diseases_suffered = models.CharField(max_length=200)
     received_workers_compensation = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
-    workers_compensation_details = models.CharField(blank=True,max_length=50)
+    workers_compensation_details = models.CharField(max_length=50,null=True,blank=True)
     received_surgery_for_fracture = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
-    fracture_details = models.CharField(blank=True,max_length=50)
+    fracture_details = models.CharField(null=True,max_length=50,blank=True)
     physical_disability_evaluation = models.BooleanField(choices=CHOICES_BOOLEAN_YES_NO)
-    physical_disability_details = models.CharField(blank=True, max_length=100)
+    physical_disability_details = models.CharField(null=True, max_length=100,blank=True)
 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
 

@@ -4,7 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.utils.translation import gettext_lazy as _
-from .utils import only_letters
+from .utils import only_letters, date_range
 
 class EmployeeForm(forms.ModelForm):
 
@@ -15,7 +15,6 @@ class EmployeeForm(forms.ModelForm):
 
     class Meta:
         model = Employee
-        fields = ['first_name','last_name','phone_number','date_of_birth','email']
         fields = ['first_name','last_name','phone_number','date_of_birth','email']
         labels = {
             'first_name': _('Names'),
@@ -89,7 +88,7 @@ class AddressForm(forms.ModelForm):
         city = City.objects.filter(name=city_name_formatted).first()
         if(city is None):
             
-            raise forms.ValidationError(_("Please enter a valid city."))
+            raise forms.ValidationError(_("Please enter a valid city"))
         return city
     
     def clean_state_name(self):
@@ -100,7 +99,7 @@ class AddressForm(forms.ModelForm):
         state_name = State.objects.filter(name=state_name_formatted).first()
         if(state_code is None and state_name is None):
             
-            raise forms.ValidationError(_("Please enter a valid state."))
+            raise forms.ValidationError(_("Please enter a valid state"))
         
         if(state_code is not None):
 
@@ -203,6 +202,11 @@ class ApplicationForm(forms.ModelForm):
     
     def clean(self):
         cleaned_data = super().clean()
+        if(cleaned_data["worked_for_this_company_before"]):
+            date_range(cleaned_data["start_date_worked_for_this_company"], cleaned_data["end_date_worked_for_this_company"],self.fields["start_date_worked_for_this_company"].label,self.fields["end_date_worked_for_this_company"].label)
+        if(cleaned_data["military_service"]):
+            date_range(cleaned_data["start_period_service"], cleaned_data["end_period_service"],self.fields["start_period_service"].label,self.fields["end_period_service"].label)
+
         for field in cleaned_data:
             
             try:
@@ -280,6 +284,19 @@ class MedicalFormForm(forms.ModelForm):
     widgets = {
             'diseases_suffered': forms.CheckboxSelectMultiple
         }
+    def clean_height(self):
+        height = self.cleaned_data.get('height')
+        
+        if(height < 3 or height > 9):
+            raise forms.ValidationError(_("Please enter a valid value"))
+        return height
+    
+    def clean_weight(self):
+        weight = self.cleaned_data.get('weight')
+        
+        if(weight < 115 or weight > 1400):
+            raise forms.ValidationError(_("Please enter a valid value"))
+        return weight
     
     def clean(self):
         cleaned_data = super().clean()
@@ -297,6 +314,7 @@ class MedicalFormForm(forms.ModelForm):
                     
                     only_letters(cleaned_data[field], self.fields[field].label)
                     cleaned_data[field] = cleaned_data[field].capitalize()
+
         return cleaned_data
     
     def save(self, commit=True):

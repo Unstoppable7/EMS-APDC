@@ -2770,8 +2770,8 @@ msgstr ""
 msgid "There is already a person registered with %(field_labels)s"
 msgstr "Gen yon moun deja anrejistre ak %(field_labels)s"
 
-msgid "Please enter a valid city."
-msgstr "Tanpri antre yon vil ki valab."
+msgid "Please enter a valid city"
+msgstr "Tanpri antre yon vil ki valab"
 
 msgid "Address Information"
 msgstr "Enfòmasyon sou adrès postal"
@@ -2788,8 +2788,17 @@ msgstr "Nimewo apatman, inite, suite oswa etaj"
 msgid "State"
 msgstr "Eta"
 
-msgid "Please enter a valid state."
-msgstr "Tanpri antre nan yon eta valab."
+msgid "Please enter a valid state"
+msgstr "Tanpri antre nan yon eta valab"
 
 msgid "The field \"%(field_label)s\" must contain only letters"
 msgstr "Jaden an \"%(field_label)s\" dwe genyen sèlman lèt"
+
+msgid "Please enter a valid value"
+msgstr "Tanpri antre yon valè valab"
+
+msgid "Fields \"%(field_label1)s\" and \"%(field_label2)s\" must be a valid date range"
+msgstr "Jaden \"%(field_label1)s\" ak \"%(field_label2)s\" dwe yon seri dat valab"
+
+msgid "The phone number of your emergency contact must be different from the one entered in your personal information"
+msgstr "Nimewo telefòn kontak ijans ou a dwe diferan ak nimewo telefòn ou te antre nan enfòmasyon pèsonèl ou"

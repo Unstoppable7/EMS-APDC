@@ -2495,8 +2495,8 @@ msgstr "Código postal"
 msgid "There is already a person registered with %(field_labels)s"
 msgstr "Ya hay una persona registrada con %(field_labels)s"
 
-msgid "Please enter a valid city."
-msgstr "Por favor Ingrese una ciudad válida."
+msgid "Please enter a valid city"
+msgstr "Por favor Ingrese una ciudad válida"
 
 msgid "Days available to work"
 msgstr "Días disponibles para trabajar"
@@ -2726,8 +2726,18 @@ msgstr "Numero de apartamento, unidad, suite o piso"
 msgid "State"
 msgstr "Estado"
 
-msgid "Please enter a valid state."
-msgstr "Por favor ingrese un estado valido."
+msgid "Please enter a valid state"
+msgstr "Por favor ingrese un estado valido"
 
 msgid "The field \"%(field_label)s\" must contain only letters"
 msgstr "El campo \"%(field_label)s\" debe contener solo letras"
+
+msgid "Please enter a valid value"
+msgstr "Por favor ingrese un valor valido"
+
+msgid "Fields \"%(field_label1)s\" and \"%(field_label2)s\" must be a valid date range"
+msgstr "Los campos \"%(field_label1)s\" y \"%(field_label2)s\" deben ser un rango de fechas valido"
+
+msgid "The phone number of your emergency contact must be different from the one entered in your personal information"
+msgstr "El número de teléfono de su contacto de emergencia debe ser diferente al ingresado en su información personal"
+

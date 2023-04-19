@@ -17,6 +17,7 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 
 from django.conf import settings    
+from django.utils.translation import gettext_lazy as _
 
 def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergency_contactForm):
 
@@ -41,7 +42,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     start_date_worked_for_this_company_label_text = "Start date"
     end_date_worked_for_this_company_label_text = "End date"
     has_been_convicted_of_a_felony_label_text = "Have you ever been convicted of a felony?"
-    felony_details_label_text = "Describe the details of the crime"
+    felony_details_label_text = "Describe the details"
 
     can_background_check_label_text = "Are you open to a background check?"
     test_controlled_substances_label_text = "If hired, are you willing to test for controlled substances? "
@@ -135,7 +136,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table1rows1 = Table(data1rows1, colWidths=[90,150,90,None])
     table1rows1.setStyle(TableStyle([
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     street_address_label = Paragraph(street_street_address_label_text, label_style)
     street_address_field = Paragraph(addressForm.cleaned_data['street'], field_style)
@@ -145,7 +146,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table2rows1 = Table(data2rows1, colWidths=[100,140,100,None])
     table2rows1.setStyle(TableStyle([
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     city_label = Paragraph(city_label_text, label_style)
     city_field = Paragraph(str(addressForm.cleaned_data['city_name']).capitalize(), field_style)
@@ -159,7 +160,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table3rows1 = Table(data3rows1, colWidths=[45,None,55,None,80,None])
     table3rows1.setStyle(TableStyle([
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     # email_label = Paragraph(employeeForm['email'].label, label_style)
     email_label = Paragraph(email_label_text, label_style)
@@ -171,7 +172,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table4rows1 = Table(data4rows1, colWidths=[55,None,120,None])
     table4rows1.setStyle(TableStyle([
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     # date_birth_label = Paragraph(employeeForm['date_of_birth'].label, label_style)
     date_birth_label = Paragraph(date_birth_label_text, label_style)
@@ -181,7 +182,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table5rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     section_employment_eligibility = Paragraph("EMPLOYMENT ELIGIBILITY", section_style)
 
@@ -192,7 +193,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table6rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))  
+    ]))  
 
     # can_travel_label = Paragraph(applicationForm.['can_travel'].label, label_style)
     can_travel_label = Paragraph(can_travel_label_text, label_style)
@@ -201,11 +202,11 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     else:
         can_travel_field = Paragraph('No', field_style)
     data7rows1 = [[can_travel_label, can_travel_field]]
-    table7rows1 = Table(data7rows1, colWidths=[260,None])
+    table7rows1 = Table(data7rows1, colWidths=[250,None])
     table7rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     # desired_job_label = Paragraph(applicationForm['desired_job'].label, label_style)
     desired_job_label = Paragraph(desired_job_label_text, label_style)
@@ -221,7 +222,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table8rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     # position_to_apply_label = Paragraph(applicationForm['position_to_apply'].label, label_style)
     position_to_apply_label = Paragraph(position_to_apply_label_text, label_style)
@@ -234,38 +235,54 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table9rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-])) 
+    ])) 
 
     # worked_for_this_company_before_label = Paragraph(applicationForm['worked_for_this_company_before'].label, label_style)
     worked_for_this_company_before_label = Paragraph(worked_for_this_company_before_label_text, label_style)
-    worked_for_this_company_before_field = Paragraph(str(applicationForm.cleaned_data['worked_for_this_company_before']), field_style)  
+
+    start_date_worked_for_this_company_field = Paragraph("", field_style)
+    end_date_worked_for_this_company_field = Paragraph("", field_style)
+
+
+    if applicationForm.cleaned_data['worked_for_this_company_before'] is True:
+        worked_for_this_company_before_field = Paragraph('Yes', field_style)
+
+        start_date_worked_for_this_company_field = Paragraph(applicationForm.cleaned_data['start_date_worked_for_this_company'].strftime("%m/%d/%Y"), field_style)
+
+        end_date_worked_for_this_company_field = Paragraph(applicationForm.cleaned_data['end_date_worked_for_this_company'].strftime("%m/%d/%Y"), field_style)
+    else:
+        worked_for_this_company_before_field = Paragraph('No', field_style)
+
     start_date_worked_for_this_company_label = Paragraph(start_date_worked_for_this_company_label_text, label_style)
-    start_date_worked_for_this_company_field = Paragraph(applicationForm.cleaned_data['start_date_worked_for_this_company'].strftime("%m/%d/%Y"), field_style)
 
     end_date_worked_for_this_company_label = Paragraph(end_date_worked_for_this_company_label_text, label_style)
-    end_date_worked_for_this_company_field = Paragraph(applicationForm.cleaned_data['end_date_worked_for_this_company'].strftime("%m/%d/%Y"), field_style)
-
+    
     data10rows1 = [[worked_for_this_company_before_label, worked_for_this_company_before_field,start_date_worked_for_this_company_label,start_date_worked_for_this_company_field,end_date_worked_for_this_company_label,end_date_worked_for_this_company_field]]
 
-    table10rows1 = Table(data10rows1, colWidths=[150,40,100,None,100,None])
+    table10rows1 = Table(data10rows1, colWidths=[140,35,70,None,65,None])
     table10rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     # has_been_convicted_of_a_felony_label = Paragraph(applicationForm['has_been_convicted_of_a_felony'].label, label_style)
     has_been_convicted_of_a_felony_label = Paragraph(has_been_convicted_of_a_felony_label_text, label_style)
-    has_been_convicted_of_a_felony_field = Paragraph(applicationForm.cleaned_data['has_been_convicted_of_a_felony'], field_style)  
+    felony_details_field = Paragraph("", field_style)
+
+    if applicationForm.cleaned_data['has_been_convicted_of_a_felony'] is True:
+        has_been_convicted_of_a_felony_field = Paragraph('Yes', field_style)
+        felony_details_field = Paragraph(applicationForm.cleaned_data['felony_details'], field_style)  
+    else:
+        has_been_convicted_of_a_felony_field = Paragraph('No', field_style)
 
     felony_details_label = Paragraph(felony_details_label_text, label_style)
-    felony_details_field = Paragraph(applicationForm.cleaned_data['felony_details'], field_style)  
 
     data11rows1 = [[has_been_convicted_of_a_felony_label, has_been_convicted_of_a_felony_field,felony_details_label,felony_details_field]]
     table11rows1 = Table(data11rows1, colWidths=[150,40,100,None])
     table11rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
         
     # can_background_check_label = Paragraph(applicationForm['can_background_check'].label, label_style)
     can_background_check_label = Paragraph(can_background_check_label_text, label_style)
@@ -275,11 +292,11 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
         can_background_check_field = Paragraph('No', field_style)
       
     data12rows1 = [[can_background_check_label, can_background_check_field]]
-    table12rows1 = Table(data12rows1, colWidths=[None])
+    table12rows1 = Table(data12rows1, colWidths=[None,40])
     table12rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     # test_controlled_substances_label = Paragraph(applicationForm['test_controlled_substances'].label, label_style)
     test_controlled_substances_label = Paragraph(test_controlled_substances_label_text, label_style)
@@ -291,11 +308,11 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
         test_controlled_substances_field = Paragraph('No', field_style)
 
     data13rows1 = [[test_controlled_substances_label, test_controlled_substances_field]]
-    table13rows1 = Table(data13rows1, colWidths=[None])
+    table13rows1 = Table(data13rows1, colWidths=[None,40])
     table13rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     section_experience = Paragraph("EXPERIENCE/SKILLS", section_style)
 
@@ -307,7 +324,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table14rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     # english_level_label = Paragraph(applicationForm['english_level'].label, label_style)
     english_level_label = Paragraph(english_level_label_text, label_style)
@@ -317,7 +334,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table15rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     section_education = Paragraph("EDUCATION", section_style)
 
@@ -329,7 +346,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table16rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     # specialty_of_studies_label = Paragraph(applicationForm['specialty_of_studies'].label, label_style)
     specialty_of_studies_label = Paragraph(specialty_of_studies_label_text, label_style)
@@ -339,33 +356,39 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table17rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     section_military_service = Paragraph("MILITARY SERVICE", section_style)
 
     # military_service_label = Paragraph(applicationForm['military_service'].label, label_style)
     military_service_label = Paragraph(military_service_label_text, label_style)
+
+    service_branch_field = Paragraph("", field_style)
+    duties_training_service_field = Paragraph("", field_style)
+
+
     if applicationForm.cleaned_data['military_service'] is True:
         military_service_field = Paragraph('Yes', field_style)
+        service_branch_field = Paragraph(applicationForm.cleaned_data['service_branch'], field_style)
+        duties_training_service_field = Paragraph(applicationForm.cleaned_data['duties_training_service'], field_style)
     else:
         military_service_field = Paragraph('No', field_style)
 
     data18rows1 = [[military_service_label, military_service_field]]
-    table18rows1 = Table(data18rows1, colWidths=[250,None])
+    table18rows1 = Table(data18rows1, colWidths=[None,40])
     table18rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     # service_branch_label = Paragraph('Service Branch', label_style)
     service_branch_label = Paragraph(service_branch_label_text, label_style)
-    service_branch_field = Paragraph(applicationForm.cleaned_data['service_branch'], field_style)
     data19rows1 = [[service_branch_label, service_branch_field]]
     table19rows1 = Table(data19rows1, colWidths=[100,None])
     table19rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     # start_period_service_label = Paragraph('Start Period', label_style)
     start_period_service_label = Paragraph(start_period_service_label_text, label_style)
@@ -382,17 +405,16 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table20rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     # duties_training_service_label = Paragraph(applicationForm['duties_training_service'].label, label_style)
     duties_training_service_label = Paragraph(duties_training_service_label_text, label_style)
-    duties_training_service_field = Paragraph(applicationForm.cleaned_data['duties_training_service'], field_style)
     data21rows1 = [[duties_training_service_label, duties_training_service_field]]
-    table21rows1 = Table(data21rows1, colWidths=[None])
+    table21rows1 = Table(data21rows1, colWidths=[150,None])
     table21rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     section_emergency_contact = Paragraph("EMERGENCY CONTACT", section_style)
 
@@ -407,7 +429,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table22rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
     
     # relationship_label = Paragraph(emergency_contactForm['relationship'].label, label_style)
     relationship_label = Paragraph(relationship_label_text, label_style)
@@ -417,7 +439,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table23rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     medicalTitle = Paragraph("MEDICAL FORM", title_style)
 
@@ -425,11 +447,11 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     full_name_label = Paragraph(full_name_label_text, label_style)
     full_name_field = Paragraph(employee.full_name, field_style)
     data24rows1 = [[full_name_label, full_name_field]]
-    table24rows1 = Table(data24rows1, colWidths=[None])
+    table24rows1 = Table(data24rows1, colWidths=[100,None])
     table24rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     # height_label = Paragraph(medicalForm['height'].label, label_style)
     height_label = Paragraph(height_label_text, label_style)
@@ -442,7 +464,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table25rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     # allergic_to_label = Paragraph(medicalForm['allergic_to'].label, label_style)
     allergic_to_label = Paragraph(allergic_to_label_text, label_style)
@@ -452,7 +474,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table26rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     # diseases_suffered_label = Paragraph(medicalForm['diseases_suffered'].label, label_style)
     diseases_suffered_label = Paragraph(diseases_suffered_label_text, label_style)
@@ -463,49 +485,89 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     table27rows1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
 
     # received_workers_compensation_label = Paragraph(medicalForm['received_workers_compensation'].label, label_style)
     received_workers_compensation_label = Paragraph(received_workers_compensation_label_text, label_style)
-    received_workers_compensation_field = Paragraph(medicalForm.cleaned_data['received_workers_compensation'], field_style)
 
-    workers_compensation_details_label = Paragraph(workers_compensation_details_label_text, label_style)
-    workers_compensation_details_field = Paragraph(medicalForm.cleaned_data['workers_compensation_details'], field_style)
+    workers_compensation_details_field = Paragraph("", field_style)
 
-    data28rows1 = [[received_workers_compensation_label, received_workers_compensation_field,workers_compensation_details_label,workers_compensation_details_field]]
-    table28rows1 = Table(data28rows1, colWidths=[150,40,150,None])
-    table28rows1.setStyle(TableStyle([
+    if medicalForm.cleaned_data['received_workers_compensation'] is True:
+        received_workers_compensation_field = Paragraph('Yes', field_style)
+        workers_compensation_details_field = Paragraph(medicalForm.cleaned_data['workers_compensation_details'], field_style)
+    else:
+        received_workers_compensation_field = Paragraph('No', field_style)
+
+    data28rows1_1 = [[received_workers_compensation_label, received_workers_compensation_field]]
+    table28rows1_1 = Table(data28rows1_1, colWidths=[None,40])
+    table28rows1_1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
+
+    workers_compensation_details_label = Paragraph(workers_compensation_details_label_text, label_style)
+
+    data28rows1_2 = [[workers_compensation_details_label, workers_compensation_details_field]]
+    table28rows1_2 = Table(data28rows1_2, colWidths=[None])
+    table28rows1_2.setStyle(TableStyle([
+        ('ALIGN', (0, 0), (-1, -1),'LEFT'),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
 
     # received_surgery_for_fracture_label = Paragraph(medicalForm['received_surgery_for_fracture'].label, label_style)
     received_surgery_for_fracture_label = Paragraph(received_surgery_for_fracture_label_text, label_style)
-    received_surgery_for_fracture_field = Paragraph(medicalForm.cleaned_data['received_surgery_for_fracture'], field_style)
 
-    fracture_details_label = Paragraph(fracture_details_label_text, label_style)
-    fracture_details_field = Paragraph(medicalForm.cleaned_data['fracture_details'], field_style)
+    fracture_details_field = Paragraph("", field_style)
 
-    data29rows1 = [[received_surgery_for_fracture_label, received_surgery_for_fracture_field,fracture_details_label,fracture_details_field]]
-    table29rows1 = Table(data29rows1, colWidths=[100,40,100,None])
-    table29rows1.setStyle(TableStyle([
+    if medicalForm.cleaned_data['received_surgery_for_fracture'] is True:
+        received_surgery_for_fracture_field = Paragraph('Yes', field_style)
+        fracture_details_field = Paragraph(medicalForm.cleaned_data['fracture_details'], field_style)
+    else:
+        received_surgery_for_fracture_field = Paragraph('No', field_style)
+
+    data29rows1_1 = [[received_surgery_for_fracture_label, received_surgery_for_fracture_field]]
+    table29rows1_1 = Table(data29rows1_1, colWidths=[None,40])
+    table29rows1_1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
+
+    fracture_details_label = Paragraph(fracture_details_label_text, label_style)
+
+    data29rows1_2 = [[fracture_details_label, fracture_details_field]]
+    table29rows1_2 = Table(data29rows1_2, colWidths=[None])
+    table29rows1_2.setStyle(TableStyle([
+        ('ALIGN', (0, 0), (-1, -1),'LEFT'),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
 
     # physical_disability_evaluation_label = Paragraph(medicalForm['physical_disability_evaluation'].label, label_style)
     physical_disability_evaluation_label = Paragraph(physical_disability_evaluation_label_text, label_style)
-    physical_disability_evaluation_field = Paragraph(medicalForm.cleaned_data['physical_disability_evaluation'], field_style)
 
-    physical_disability_details_label = Paragraph(physical_disability_details_label_text, label_style)
-    physical_disability_details_field = Paragraph(medicalForm.cleaned_data['physical_disability_details'], field_style)
+    physical_disability_details_field = Paragraph("", field_style)
 
-    data30rows1 = [[physical_disability_evaluation_label, physical_disability_evaluation_field,physical_disability_details_label,physical_disability_details_field]]
-    table30rows1 = Table(data30rows1, colWidths=[150,40,100,None])
-    table30rows1.setStyle(TableStyle([
+    if medicalForm.cleaned_data['physical_disability_evaluation'] is True:
+        physical_disability_evaluation_field = Paragraph('Yes', field_style)
+        physical_disability_details_field = Paragraph(medicalForm.cleaned_data['physical_disability_details'], field_style)
+    else:
+        physical_disability_evaluation_field = Paragraph('No', field_style)
+
+    data30rows1_1 = [[physical_disability_evaluation_label, physical_disability_evaluation_field]]
+    table30rows1_1 = Table(data30rows1_1, colWidths=[None,40])
+    table30rows1_1.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1),'LEFT'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+    ]))
+    
+    physical_disability_details_label = Paragraph(physical_disability_details_label_text, label_style)
+
+    data30rows1_2 = [[physical_disability_details_label, physical_disability_details_field]]
+    table30rows1_2 = Table(data30rows1_2, colWidths=[None])
+    table30rows1_2.setStyle(TableStyle([
+        ('ALIGN', (0, 0), (-1, -1),'LEFT'),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
+
     #-----append elements-----
     elements.append(applicationTitle)
     elements.append(Spacer(1, 20))
@@ -577,11 +639,17 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
     elements.append(Spacer(1, 5))
     elements.append(table27rows1)
     elements.append(Spacer(1, 5))
-    elements.append(table28rows1)
+    elements.append(table28rows1_1)
     elements.append(Spacer(1, 5))
-    elements.append(table29rows1)
+    elements.append(table28rows1_2)
     elements.append(Spacer(1, 5))
-    elements.append(table30rows1)
+    elements.append(table29rows1_1)
+    elements.append(Spacer(1, 5))
+    elements.append(table29rows1_2)
+    elements.append(Spacer(1, 5))
+    elements.append(table30rows1_1)
+    elements.append(Spacer(1, 5))
+    elements.append(table30rows1_2)
 
     pdf_file.title = employee.full_name 
     pdf_file.build(elements) 
@@ -601,9 +669,15 @@ def create_employee_application(request):
         application_form = ApplicationForm(request.POST)
         medicalForm_form = MedicalFormForm(request.POST)
         emergency_contact_form = EmergencyContactForm(request.POST)
+        
 
         if employee_form.is_valid() and address_form.is_valid() and application_form.is_valid() and medicalForm_form.is_valid() and emergency_contact_form.is_valid():
             
+            if employee_form.cleaned_data['phone_number'] == emergency_contact_form.cleaned_data['phone_number']:
+                emergency_contact_form.add_error('phone_number', _('The phone number of your emergency contact must be different from the one entered in your personal information'))
+                return render(request, 'employee_form.html', {'employee_form': employee_form, 'address_form': address_form, 'application_form': application_form, 'emergency_contact_form': emergency_contact_form, 'medicalForm_form': medicalForm_form,'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY})
+            
+
             pdfFile = form_to_pdf(employee_form, address_form,application_form,medicalForm_form, emergency_contact_form)            
             
             employee = employee_form.save(commit=False)
@@ -636,7 +710,11 @@ def create_employee_application(request):
 
             #return redirect('employee_detail', pk=employee.pk)
             return HttpResponse("Application completed successfully")
-            
+        # else:
+        #     errors = application_form.errors.as_data()
+        #     for campo, mensajes in errors.items():
+        #         for mensaje in mensajes:
+        #             print(f"\n\nError en {campo}: {str(mensaje)}\n\n")
     else:
         employee_form = EmployeeForm(prefix='employee')
         address_form = AddressForm()
