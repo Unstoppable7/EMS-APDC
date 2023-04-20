@@ -16,7 +16,6 @@ import os
 from django.utils.translation import gettext_lazy as _
 from django.conf.locale import LANG_INFO
 from django.conf import global_settings
-
 gettext_noop = lambda s: s
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -156,6 +155,10 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = False
 USE_TZ = True
+DATE_INPUT_FORMATS = [
+    "%m/%d/%Y",  # '10/25/2006'
+    "%m/%d/%y",  # '10/25/06'
+    ]
 
 # URL de cambio de idioma
 LANGUAGE_COOKIE_NAME = 'django_language'

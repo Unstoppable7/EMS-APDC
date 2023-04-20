@@ -16,13 +16,12 @@ class AddressInline(admin.StackedInline):
 
 class ApplicationInline(admin.StackedInline): 
    model= Application 
-   fields = ['days_available_to_work', 'can_travel', 'can_work_nights', 'can_background_check', 'position_to_apply', 'experience', 'english_level', 'studies', 'military_service']
+   fields = ['days_available_to_work', 'can_travel', 'can_work_nights', 'desired_job','desired_payment','position_to_apply','worked_for_this_company_before','start_date_worked_for_this_company','end_date_worked_for_this_company','has_been_convicted_of_a_felony','felony_details', 'can_background_check','test_controlled_substances', 'experience', 'english_level', 'studies','specialty_of_studies', 'military_service','service_branch','start_period_service','end_period_service','duties_training_service',]
    extra = 0
 
 class MedicalFormInline(admin.StackedInline): 
    model= MedicalForm 
-   fields = ['height', 'weight', 'allergic_to', 'diseases_suffered', 'received_workers_compensation',
-   'received_surgery_for_fracture']
+   fields = ['height', 'weight', 'allergic_to', 'diseases_suffered', 'received_workers_compensation','workers_compensation_details','received_surgery_for_fracture','fracture_details','physical_disability_evaluation','physical_disability_details',]
    extra = 0
 
 class Emergency_contactInline(admin.StackedInline): 
@@ -322,15 +321,12 @@ class EmployeeAdmin(admin.ModelAdmin):
         return ','.join(heads)
     get_head.short_description = 'manager'
 
-    
-
 @admin.register(EmployeeInterview) 
 class EmployeeAdminInterview(admin.ModelAdmin): 
-    fields=('first_name', 'last_name', 'phone_number', 'email', 'date_of_birth', 
-    'address','city','zip_code') 
-    inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
+    fields=('first_name', 'last_name', 'phone_number', 'email', 'date_of_birth') 
+    inlines=[AddressInline,ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['full_name', 'date_of_birth','get_application_experience',
+    list_display = ['full_name','phone_number','get_address', 'date_of_birth','get_application_experience',
     'get_application_english_level','get_application_can_travel','get_application_can_work_nights',]
     list_filter = [ExperienceListFilter,EnglishLevelListFilter,CanTravelListFilter,CanWorkNightListFilter]
     search_fields = ['first_name', 'last_name']
@@ -350,6 +346,14 @@ class EmployeeAdminInterview(admin.ModelAdmin):
     #         '%d employees were successfully marked as active.',
     #         updated,
     #     ) % updated, messages.SUCCESS)
+
+    @admin.display(ordering='employee_address_employee')
+    def get_address(self, obj):
+        if obj.employee_address_employee.first() is not None:
+        
+            return str(obj.employee_address_employee.first())
+        else: return "-"
+    get_address.short_description = 'Address'
 
     @admin.action(description='Mark as open')
     def make_open(self, request, queryset):
@@ -429,12 +433,11 @@ class EmployeeAdminInterview(admin.ModelAdmin):
 
 @admin.register(Recruiting) 
 class RecruitingAdmin(admin.ModelAdmin): 
-    fields=('first_name', 'last_name', 'phone_number', 'email', 'date_of_birth', 
-    'address','city','zip_code') 
-    inlines=[ApplicationInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
+    fields=('first_name', 'last_name', 'phone_number', 'email','date_of_birth') 
+    inlines=[AddressInline,ApplicationInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['full_name', 'application_status','phone_number','date_of_birth','get_application_experience',
-    'get_application_english_level','get_application_can_travel','get_application_can_work_nights',
+    list_display = ['full_name','get_address','phone_number','date_of_birth','get_application_experience',
+    'get_application_english_level','get_application_can_travel','get_application_can_work_nights', 'application_status',
     ]
     list_filter = [ExperienceListFilter,EnglishLevelListFilter,CanTravelListFilter,CanWorkNightListFilter]
     search_fields = ['first_name', 'last_name']
@@ -445,6 +448,22 @@ class RecruitingAdmin(admin.ModelAdmin):
     list_per_page = 20
 
     actions = ['make_stand_by','make_do_not_hire']
+
+    @admin.display(ordering='employee_address_employee')
+    def get_address(self, obj):
+        if obj.employee_address_employee.first() is not None:
+        
+            return str(obj.employee_address_employee.first())
+        else: return "-"
+    get_address.short_description = 'Address'
+
+    @admin.display(ordering='employee_address_employee')
+    def get_address(self, obj):
+        if obj.employee_address_employee.first() is not None:
+        
+            return str(obj.employee_address_employee.first())
+        else: return "-"
+    get_address.short_description = 'Address'
 
     @admin.action(description='Mark as stand by')
     def make_stand_by(self, request, queryset):
@@ -545,11 +564,10 @@ class RecruitingAdmin(admin.ModelAdmin):
 @admin.register(MyEmployeeSection) 
 class EmployeeAdminByCoordinator(admin.ModelAdmin): 
 
-    fields=('first_name', 'last_name', 'phone_number', 'email', 'date_of_birth', 
-    'address','city','zip_code') 
-    inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
+    fields=('first_name', 'last_name', 'phone_number', 'email', 'date_of_birth') 
+    inlines=[AddressInline,ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['id', 'full_name','status', 'application_status', 'phone_number','get_job_name', 'get_locations']
+    list_display = ['id', 'full_name','status', 'application_status','phone_number', 'get_address','get_job_name', 'get_locations']
     list_filter = ['type', 'status', 'employee_job_employee__job__department__location__name', 'date_created', 'updated_at']
     search_fields = ['first_name', 'last_name', 'status','employee_job_employee__job__department__location__name']
 
@@ -561,6 +579,14 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
     list_per_page = 20
 
     actions = ['make_open','make_inactive','make_do_not_hire']
+
+    @admin.display(ordering='employee_address_employee')
+    def get_address(self, obj):
+        if obj.employee_address_employee.first() is not None:
+        
+            return str(obj.employee_address_employee.first())
+        else: return "-"
+    get_address.short_description = 'Address'
 
     @admin.action(description='Mark as open')
     def make_open(self, request, queryset):
@@ -636,11 +662,10 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
         return ','.join(jobs)
     get_job_name.short_description = 'Jobs'
 
-
 @admin.register(EmployeeManagement)
 class EmployeeAdminManagement(admin.ModelAdmin):
-    fields=('type', 'status', 'application_status', 'first_name', 'last_name', 'phone_number', 'email', 'date_of_birth', 'address','city','zip_code') 
-    inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
+    fields=('type', 'status', 'application_status', 'first_name', 'last_name', 'phone_number', 'email', 'date_of_birth') 
+    inlines=[AddressInline,ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
     list_display = ['id','full_name','status', 'application_status','get_job_name','get_locations','get_head', 'date_created']
     #list_editable = ('status','application_status')
     list_per_page = 10
@@ -650,11 +675,11 @@ class EmployeeAdminManagement(admin.ModelAdmin):
     actions = ['make_no_application_open','make_frontdesk','make_regular_application','make_southeast']
 
     def get_queryset(self, request):
-        my_empoyees = super().get_queryset(request)
+        queryset = super().get_queryset(request)
         
-        my_empoyees = super().get_queryset(request).filter(Q(application_status='Undefined') | Q(application_status='FrontDesk')| Q(application_status='Human Resources'))
+        queryset = super().get_queryset(request).filter(Q(application_status='Undefined') | Q(application_status='FrontDesk')| Q(application_status='Human Resources'))
         
-        return my_empoyees
+        return queryset
 
     @admin.action(description='Mark to open and change to no application')
     def make_no_application_open(self, request, queryset):
@@ -752,8 +777,7 @@ class EmployeeAdminAccountingStatus(admin.ModelAdmin):
     #'address','city','zip_code') 
     #inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['quickbooks_status','id', 'full_name', 'phone_number','date_of_birth','type', 'get_job_name','get_locations','get_head','updated_at']
-    list_display = ['quickbooks_status','id', 'full_name', 'phone_number','date_of_birth','type', 'get_job_name','get_locations','get_head','updated_at']
+    list_display = ['quickbooks_status','id', 'full_name','get_address', 'phone_number','date_of_birth','type', 'get_job_name','get_locations','get_head','updated_at']
     
     list_filter = ['quickbooks_status', 'employee_job_employee__job__department__location__name']
     search_fields = ['id','first_name', 'last_name','employee_job_employee__job__department__location__name']
@@ -767,9 +791,9 @@ class EmployeeAdminAccountingStatus(admin.ModelAdmin):
     actions = ['make_ready']
 
     def get_queryset(self, request):
-        my_employees = super().get_queryset(request)
-        
-        my_employees = super().get_queryset(request).exclude(quickbooks_status__in=['Ready', 'Not Hired'])
+        queryset = super().get_queryset(request)
+        queryset = super().get_queryset(request).exclude(quickbooks_status__in=['Ready', 'Not Hired'])
+        queryset = queryset.prefetch_related('employee_address_employee')
 
         # try:
         #     head = None
@@ -780,17 +804,20 @@ class EmployeeAdminAccountingStatus(admin.ModelAdmin):
         # except:
         #     pass
 
-        return my_employees
+        return queryset
 
     # @admin.display(ordering='city_state__state')
     # def get_state(self, obj):
-    # @admin.display(ordering='city_state__state')
-    # def get_state(self, obj):
+    #     return str(obj.city.state).capitalize()
+    # get_state.short_description = 'State'
+
+    @admin.display(ordering='employee_address_employee')
+    def get_address(self, obj):
+        if obj.employee_address_employee.first() is not None:
         
-    #     return str(obj.city.state).capitalize()
-    # get_state.short_description = 'State'
-    #     return str(obj.city.state).capitalize()
-    # get_state.short_description = 'State'
+            return str(obj.employee_address_employee.first())
+        else: return "-"
+    get_address.short_description = 'Address'
 
     @admin.display(ordering='employee_job_employee__job__department__location__name')
     def get_locations(self, obj):

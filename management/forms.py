@@ -4,7 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.utils.translation import gettext_lazy as _
-from .utils import only_letters, date_range
+from .utils import only_letters, date_range,validate_age_limit
 
 class EmployeeForm(forms.ModelForm):
 
@@ -15,13 +15,13 @@ class EmployeeForm(forms.ModelForm):
 
     class Meta:
         model = Employee
-        fields = ['first_name','last_name','phone_number','date_of_birth','email']
+        fields = ['first_name','last_name','phone_number','email','date_of_birth']
         labels = {
             'first_name': _('Names'),
             'last_name': _('Surnames'),
             'phone_number': _('Phone number'),
-            'date_of_birth': _('Date of birth MONTH/DAY/YEAR'),
             'email': _('Email'),
+            'date_of_birth': _('Date of birth MONTH/DAY/YEAR'),
         }
         error_messages = {
             NON_FIELD_ERRORS: {
@@ -30,6 +30,10 @@ class EmployeeForm(forms.ModelForm):
                 'unique_together': _("There is already a person registered with %(field_labels)s"),
             }
         }
+    def clean_date_of_birth(self):
+        date_of_birth = self.cleaned_data.get('date_of_birth')
+        validate_age_limit(date_of_birth)
+        return date_of_birth
     
     def clean(self):
         cleaned_data = super().clean()

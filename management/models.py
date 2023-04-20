@@ -94,7 +94,7 @@ class Employee(models.Model):
         ('Update to Active', 'Update to Active'),
     ]
     
-    id = models.AutoField(primary_key=True, unique=True)
+    id = models.AutoField(primary_key=True, unique=True,verbose_name="ID")
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     phone_number = PhoneNumberField()
@@ -120,7 +120,7 @@ class Employee(models.Model):
 
     class Meta:
         verbose_name = 'Company Employee'
-        unique_together = (('phone_number', 'date_of_birth'),)
+        unique_together = (('phone_number', 'date_of_birth'),('first_name', 'last_name'),)
     
     def save(self, *args, **kwargs):
         #pdb.set_trace()
@@ -156,13 +156,13 @@ class Employee(models.Model):
                     self.quickbooks_status = "Update Personal Information"
 
                 #Empleado a cambiado de direccion
-                if employee_old_object.address != self.address:
+                if employee_old_object.employee_address_employee != self.employee_address_employee:
                     self.quickbooks_status = "Update Address"
         
         super().save(*args, **kwargs)
 
 class Address(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee_address_employee')
     street = models.CharField(max_length=100)
     unit_number = models.CharField(max_length=10, blank=True)
     city = models.ForeignKey(City, on_delete=models.CASCADE)
@@ -170,7 +170,10 @@ class Address(models.Model):
     postal_code = models.CharField(max_length=10)
 
     def __str__(self):
-        return f"{self.street}, {self.unit_number}, {self.city}, {self.state} {self.postal_code}"     
+        if(self.unit_number != ""):
+            return f"{self.street}, {self.unit_number}, {self.city}, {self.state.state_code} {self.postal_code}"     
+        else: 
+            return f"{self.street}, {self.city}, {self.state.state_code} {self.postal_code}" 
     
     class Meta:
         verbose_name_plural = 'Address'
@@ -486,7 +489,7 @@ class Document(models.Model):
         super().save(*args, **kwargs)
         
         if self.type == "Application":
-            for e in Employee.objects.filter(id=self.employee):
+            for e in Employee.objects.filter(id=self.employee.id):
                 e.application_status = 'Regular Application'
                 e.save()
         elif self.type == "Southeast":    

@@ -2741,3 +2741,5 @@ msgstr "Los campos \"%(field_label1)s\" y \"%(field_label2)s\" deben ser un rang
 msgid "The phone number of your emergency contact must be different from the one entered in your personal information"
 msgstr "El número de teléfono de su contacto de emergencia debe ser diferente al ingresado en su información personal"
 
+msgid "You must be over %s to continue"
+msgstr "Debe ser mayor de %s años para continuar"

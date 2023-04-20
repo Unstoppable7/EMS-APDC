@@ -2802,3 +2802,6 @@ msgstr "Jaden \"%(field_label1)s\" ak \"%(field_label2)s\" dwe yon seri dat vala
 
 msgid "The phone number of your emergency contact must be different from the one entered in your personal information"
 msgstr "Nimewo telefòn kontak ijans ou a dwe diferan ak nimewo telefòn ou te antre nan enfòmasyon pèsonèl ou"
+
+msgid "You must be over %s to continue"
+msgstr "Dwe gen plis pase %s pou kontinye"
