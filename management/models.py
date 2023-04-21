@@ -13,6 +13,9 @@ from phonenumber_field.modelfields import PhoneNumberField
 #from address.models import AddressField
 import pytz
 
+from django.contrib.auth.models import AbstractUser
+
+
 def current_time():
     return datetime.datetime.now(tz=pytz.utc)
 
@@ -60,7 +63,7 @@ class Job(models.Model):
 
     def __str__(self):
         return ("%s - %s" % (self.name, self.department.location.name)).capitalize()
-    
+
 class Employee(models.Model): 
     TYPES_CHOICES = [
         ('Payroll', 'Payroll'),
@@ -76,11 +79,12 @@ class Employee(models.Model):
         ('Undefined', 'Undefined'),
     ]
     APPLICATION_STATUS_CHOICES = [
-        ('FrontDesk', 'FrontDesk'),
+        ('Frontdesk', 'Frontdesk'),
         ('No Application', 'No Application'),
         ('Regular Application', 'Regular Application'),
         ('Southeast', 'Southeast'),
         ('Human Resources', 'Human Resources'),
+        ('Pending', 'Pending'),
         ('Undefined', 'Undefined'),
     ]
 
@@ -161,6 +165,12 @@ class Employee(models.Model):
         
         super().save(*args, **kwargs)
 
+class User(AbstractUser):
+    employee = models.OneToOneField(Employee, on_delete=models.CASCADE, blank=True,null=True)
+
+    # def __str__(self):
+    #     return self.username
+
 class Address(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee_address_employee')
     street = models.CharField(max_length=100)
@@ -194,11 +204,11 @@ class Recruiting(Employee):
         proxy = True
         verbose_name = 'Recruiting'
 
-class EmployeeManagement(Employee): 
+class ApplicationManagement(Employee): 
     class Meta:
         proxy = True
-        verbose_name = 'Employee Management'
-        verbose_name_plural = 'Employee Management'
+        verbose_name = 'Application Management'
+        verbose_name_plural = 'Application Management'
         ordering = ['date_created']
 
 class AccountingStatus(Employee): 
@@ -207,6 +217,12 @@ class AccountingStatus(Employee):
         verbose_name = 'Accounting Status'
         verbose_name_plural = 'Accounting Status'
         ordering = ['updated_at']
+
+class Frontdesk(Employee): 
+    class Meta:
+        proxy = True
+        verbose_name = 'Frontdesk'
+        verbose_name_plural = 'Frontdesk'
 
 class Employee_head(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employeeWithHead')
@@ -244,6 +260,11 @@ class Employee_job(models.Model):
         #Metodo padre que guarda el objeto en la db
         super().save(*args, **kwargs)  # Call the "real" save() method.
         
+        newApplicacionStatus = self.employee.application_status
+        #Si al empleado se le asigna un trabajo y aun no se le ha procesado la aplicacion
+        if self.employee.application_status == "Undefined" or self.employee.application_status == "No Application":
+            newApplicacionStatus = "Pending"
+
         # self.employee.status = "Active"
         # self.employee.save(update_fields=['status'])
         newQuickbooksStatus = self.employee.quickbooks_status
@@ -256,7 +277,7 @@ class Employee_job(models.Model):
 
         #Cambio el status del empleado a Active
         ###De esta manera solo se me ejecuta una vez el metodo Save()
-        Employee.objects.filter(id=self.employee.id).update(status="Active",quickbooks_status=newQuickbooksStatus)
+        Employee.objects.filter(id=self.employee.id).update(status="Active",quickbooks_status=newQuickbooksStatus, application_status=newApplicacionStatus)
         
         #pdb.set_trace()
         #Si el cambio del objeto fue que su trabajo ahora sea coordinator o si venia de ser coordinator y ahora no lo es
@@ -489,23 +510,21 @@ class Document(models.Model):
         super().save(*args, **kwargs)
         
         if self.type == "Application":
-            for e in Employee.objects.filter(id=self.employee.id):
-                e.application_status = 'Regular Application'
-                e.save()
-        elif self.type == "Southeast":    
-            for e in Employee.objects.filter(id=self.employee.id):
-                e.application_status = 'Southeast'
-                e.save()
+            
+            Employee.objects.filter(id=self.employee.id).update(application_status='Regular Application')
+            
+        elif self.type == "Southeast":   
+            Employee.objects.filter(id=self.employee.id).update(application_status='Southeast')
 
     def delete(self, *args, **kwargs):
         if self.type == "Application":
-            for e in Employee.objects.filter(id=self.employee.id):
-                e.application_status = 'Undefined'
-                e.save()
+
+            Employee.objects.filter(id=self.employee.id).update(application_status='Pending')
+
         elif self.type == "Southeast":    
-            for e in Employee.objects.filter(id=self.employee.id):
-                e.application_status = 'Undefined'
-                e.save()
+
+            Employee.objects.filter(id=self.employee.id).update(application_status='Pending')
+
         super().delete(*args, **kwargs)
 
 class MedicalForm(models.Model):

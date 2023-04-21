@@ -1,8 +1,9 @@
 from django.contrib import admin
-from .models import Location,Department,Employee,EmployeeInterview, Application, Emergency_contact, Document, MedicalForm, MyEmployeeSection, Employee_head, Employee_job, Job,Recruiting,EmployeeManagement,AccountingStatus,City,State,Address
+from .models import Location,Department,Employee,EmployeeInterview, Application, Emergency_contact, Document, MedicalForm, MyEmployeeSection, Employee_head, Employee_job, Job,Recruiting,ApplicationManagement,AccountingStatus,City,State,Address,Frontdesk,User
 from django.contrib import messages
 from django.utils.translation import ngettext
 from django.db.models import Q
+from django.contrib.auth.admin import UserAdmin
 
 # Eliminar la acción de eliminación para todos los modelos
 #admin.site.disable_action('delete_selected')
@@ -223,18 +224,17 @@ class EmployeeAdmin(admin.ModelAdmin):
     fields=('type', 'status', 'application_status','quickbooks_status','first_name', 'last_name', 'phone_number', 'email', 'date_of_birth') 
     inlines=[AddressInline,ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
-    list_display = ['id','status', 'application_status', 'quickbooks_status','type', 'full_name', 'phone_number', 'date_of_birth',
-    'get_job_name','get_locations','get_head','date_created', 'updated_at']
+    list_display = ['id','status', 'application_status', 'quickbooks_status','type', 'full_name', 'phone_number', 'date_of_birth','get_job_name','get_locations','get_head','date_created', 'updated_at']
     list_filter = ['type', 'status','employee_job_employee__job__department__location__name', 'date_created', 'updated_at',]
     search_fields = ['first_name', 'last_name', 'status', 'employee_job_employee__job__department__location__name']
 
     list_per_page = 20
 
     #Propiedad que me dice que campos tendran el link que lleva a editar
-    list_display_links = ('full_name',)
+    #list_display_links = ('full_name',)
     #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
     #list_editable = ('status',)
-    actions = ['make_active','make_open','make_inactive', 'make_do_not_hire']
+    #actions = ['make_active','make_open','make_inactive', 'make_do_not_hire']
 
     @admin.action(description='Mark as active')
     def make_active(self, request, queryset):
@@ -336,7 +336,7 @@ class EmployeeAdminInterview(admin.ModelAdmin):
 
     #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
     #list_editable = ('status',)
-    actions = ['make_open','make_do_not_hire']
+    actions = ['make_no_application_open','make_do_not_hire']
 
     # @admin.action(description='Mark as active')
     # def make_active(self, request, queryset):
@@ -355,16 +355,17 @@ class EmployeeAdminInterview(admin.ModelAdmin):
         else: return "-"
     get_address.short_description = 'Address'
 
-    @admin.action(description='Mark as open')
-    def make_open(self, request, queryset):
+    @admin.action(description='Mark to open and change to no application')
+    def make_no_application_open(self, request, queryset):
             
         for e in queryset:
+            e.application_status = 'No Application'
             e.status = 'Open'
             e.save()
 
         self.message_user(request, ngettext(
-            '%d employee was successfully marked as open.',
-            '%d employees were successfully marked as open.',
+            '%d employee was successfully mark to Open and application status changed to No Application.',
+            '%d employees were successfully mark to Open and application status changed to No Application.',
             queryset.count(),
         ) % queryset.count(), messages.SUCCESS)
 
@@ -457,18 +458,12 @@ class RecruitingAdmin(admin.ModelAdmin):
         else: return "-"
     get_address.short_description = 'Address'
 
-    @admin.display(ordering='employee_address_employee')
-    def get_address(self, obj):
-        if obj.employee_address_employee.first() is not None:
-        
-            return str(obj.employee_address_employee.first())
-        else: return "-"
-    get_address.short_description = 'Address'
-
     @admin.action(description='Mark as stand by')
     def make_stand_by(self, request, queryset):
         
-        coordinator = Employee.objects.filter(Q(email=request.user.email) & Q(employee_job_employee__job__name='Coordinator')).first()
+        #coordinator = Employee.objects.filter(Q(email=request.user.email) & Q(employee_job_employee__job__name='Coordinator')).first()
+
+        coordinator = request.user.employee
 
         if coordinator is not None:
             for e in queryset:
@@ -484,8 +479,8 @@ class RecruitingAdmin(admin.ModelAdmin):
             ) % queryset.count(), messages.SUCCESS)
         else:
             self.message_user(request, ngettext(
-                '%d employee could not be marked as "stand by" and was not added to the "my employees" section. \nThere is a problem with the registered email.',
-                '%d employees could not be marked as "stand by" and were not added to the "my employees" section. \nThere is a problem with the registered email.',
+                "%d employee could not be marked as \"stand by\" and was not added to the \"my employees\" section. \nThere is a problem with your user",
+                '%d employees could not be marked as "stand by" and were not added to the "my employees" section. \nThere is a problem with your user',
                 queryset.count(),
             ) % queryset.count(), messages.ERROR)
             
@@ -630,10 +625,11 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
         
         try:
             head = None
-            head = Employee.objects.filter(email=request.user.email).first()
-
+            #head = Employee.objects.filter(email=request.user.email).first()
+            head = request.user.employee
+            if head is not None:
+                my_employees = super().get_queryset(request).filter(employeeWithHead__head=head)
             ## Relacion inversa atraves del parametro related_name del modelo Employee_head
-            my_employees = super().get_queryset(request).filter(employeeWithHead__head=head)
         except:
             pass
         return my_employees
@@ -662,22 +658,22 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
         return ','.join(jobs)
     get_job_name.short_description = 'Jobs'
 
-@admin.register(EmployeeManagement)
-class EmployeeAdminManagement(admin.ModelAdmin):
+@admin.register(ApplicationManagement)
+class ApplicationManagementAdmin(admin.ModelAdmin):
     fields=('type', 'status', 'application_status', 'first_name', 'last_name', 'phone_number', 'email', 'date_of_birth') 
     inlines=[AddressInline,ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
-    list_display = ['id','full_name','status', 'application_status','get_job_name','get_locations','get_head', 'date_created']
+    list_display = ['application_status','id','full_name','status', 'get_job_name','get_locations','get_head', 'date_created']
     #list_editable = ('status','application_status')
     list_per_page = 10
     list_filter = ['employee_job_employee__job__department__location__name']
     search_fields = ['first_name', 'last_name', 'employee_job_employee__job__department__location__name']
-    list_display_links = ('full_name',)
-    actions = ['make_no_application_open','make_frontdesk','make_regular_application','make_southeast']
+    #list_display_links = ('full_name',)
+    actions = ['make_no_application_open','make_frontdesk','make_human_resources']
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
         
-        queryset = super().get_queryset(request).filter(Q(application_status='Undefined') | Q(application_status='FrontDesk')| Q(application_status='Human Resources'))
+        queryset = super().get_queryset(request).filter(Q(application_status='Undefined') | Q(application_status='Frontdesk') | Q(application_status='Human Resources') | Q(application_status='Pending'))
         
         return queryset
 
@@ -718,6 +714,19 @@ class EmployeeAdminManagement(admin.ModelAdmin):
         self.message_user(request, ngettext(
             '%d application status was successfully changed to Southeast.',
             '%d applications status was successfully changed to Southeast.',
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
+
+    @admin.action(description='Change to human resources')
+    def make_human_resources(self, request, queryset):
+            
+        for e in queryset:
+            e.application_status = 'Human Resources'
+            e.save()
+
+        self.message_user(request, ngettext(
+            '%d application status was successfully changed to Human Resources.',
+            '%d applications status was successfully changed to Human Resources.',
             queryset.count(),
         ) % queryset.count(), messages.SUCCESS)
 
@@ -773,9 +782,9 @@ class EmployeeAdminManagement(admin.ModelAdmin):
 @admin.register(AccountingStatus) 
 class EmployeeAdminAccountingStatus(admin.ModelAdmin): 
 
-    #fields=('quickbooks_status','first_name', 'last_name', 'phone_number', 'date_of_birth', 
+    fields=('type','quickbooks_status','first_name', 'last_name', 'phone_number', 'email', 'date_of_birth') 
     #'address','city','zip_code') 
-    #inlines=[ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
+    inlines=[AddressInline]
 
     list_display = ['quickbooks_status','id', 'full_name','get_address', 'phone_number','date_of_birth','type', 'get_job_name','get_locations','get_head','updated_at']
     
@@ -905,6 +914,78 @@ class EmployeeAdminAccountingStatus(admin.ModelAdmin):
     #         queryset.count(),
     #     ) % queryset.count(), messages.SUCCESS)
 
+@admin.register(Frontdesk) 
+class FrontdeskAdmin(admin.ModelAdmin): 
+    fields=('first_name', 'last_name', 'phone_number', 'email', 'date_of_birth') 
+    inlines=[AddressInline,ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
+
+    list_display = ['id','status', 'application_status', 'full_name', 'phone_number','get_address', 'date_of_birth','date_created', 'updated_at']
+    list_filter = ['status', 'date_created', 'updated_at',]
+    search_fields = ['first_name', 'last_name', 'status',]
+
+    list_per_page = 20
+
+    #Propiedad que me dice que campos tendran el link que lleva a editar
+    #list_display_links = ('full_name',)
+    #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
+    #list_editable = ('status',)
+    actions = ['make_no_application_open']
+
+    def get_queryset(self, request):
+        
+        qs = super().get_queryset(request)
+        return qs.filter(Q(application_status='Undefined') | Q(application_status='Frontdesk') | Q(status='Undefined'))
+
+    @admin.display(ordering='employee_address_employee')
+    def get_address(self, obj):
+        if obj.employee_address_employee.first() is not None:
+        
+            return str(obj.employee_address_employee.first())
+        else: return "-"
+    get_address.short_description = 'Address'
+
+    @admin.action(description='Mark to open and change to no application')
+    def make_no_application_open(self, request, queryset):
+            
+        for e in queryset:
+            e.application_status = 'No Application'
+            e.status = 'Open'
+            e.save()
+
+        self.message_user(request, ngettext(
+            '%d employee was successfully mark to Open and application status changed to No Application.',
+            '%d employees were successfully mark to Open and application status changed to No Application.',
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
+
+    @admin.action(description='Mark as do not hire')
+    def make_do_not_hire(self, request, queryset):
+        for e in queryset:
+            e.status = 'Do Not Hire'
+            e.save()
+
+        self.message_user(request, ngettext(
+            '%d employee was successfully marked as do not hire.',
+            '%d employees were successfully marked as do not hire.',
+            queryset.count(),
+        ) % queryset.count(), messages.SUCCESS)
+
+@admin.register(User)   
+class CustomUserAdmin(UserAdmin):
+    model = User
+    list_display = ('username', 'employee', 'is_staff', 'is_superuser')
+    fieldsets = (
+        (None, {'fields': ('username', 'password','employee')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'email',)}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username','password1', 'password2', 'is_staff','employee'),
+        }),
+    )
 @admin.register(Department)
 class Department(admin.ModelAdmin):
     list_display = ('id','name','location')
@@ -919,8 +1000,8 @@ class Job(admin.ModelAdmin):
     def get_location(self,obj):
         return obj.department.location
     get_location.short_description = 'Location'
-        
-admin.site.register(Location)
+
+
 admin.site.register(City)
 admin.site.register(State)
-admin.site.register(Address)
+admin.site.register(Location)

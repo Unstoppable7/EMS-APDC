@@ -2743,3 +2743,9 @@ msgstr "El número de teléfono de su contacto de emergencia debe ser diferente 
 
 msgid "You must be over %s to continue"
 msgstr "Debe ser mayor de %s años para continuar"
+
+msgid "%d employees could not be marked as \"stand by\" and were not added to the \"my employees\" section. \nThere is a problem with your user"
+msgstr "%d empleados no se pudieron marcar como \"en espera\" y no se agregaron a la sección \"mis empleados\". \nHay un problema con su usuario"
+
+msgid "%d employee could not be marked as \"stand by\" and was not added to the \"my employees\" section. \nThere is a problem with your user"
+msgstr "%d empleado no se pudo marcar como \"en espera\" y no se agregó a la sección \"mis empleados\". \nHay un problema con su usuario"

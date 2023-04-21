@@ -252,8 +252,9 @@ JAZZMIN_SETTINGS = {
         "management.MyEmployeeSection": "fas fa-address-book",
         "management.recruiting": "fas fa-phone-volume",
         "management.EmployeeInterview": "far fa-clipboard",
-        "management.EmployeeManagement": "fas fa-user-cog",
-        "management.AccountingStatus": "fas fa-money-check-alt"
+        "management.ApplicationManagement": "fas fa-user-cog",
+        "management.AccountingStatus": "fas fa-money-check-alt",
+        "management.Frontdesk": "fas fa-user-friends",
         #"management.AccountingStatus": "fas fa-file-invoice"
 
     },
@@ -277,3 +278,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'EMS')
 MEDIA_URL = '/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+AUTH_USER_MODEL = 'management.User'
