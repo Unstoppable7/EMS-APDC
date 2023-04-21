@@ -18,6 +18,8 @@ from django.conf import settings
 
 from django.conf import settings    
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.decorators import login_required
+
 
 def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergency_contactForm):
 
@@ -661,7 +663,7 @@ def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergen
 
     return pdf_content
 
-# Create your views here.
+@login_required
 def create_employee_application(request):
     if request.method == 'POST':
         employee_form = EmployeeForm(request.POST, prefix='employee')

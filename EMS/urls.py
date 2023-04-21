@@ -19,16 +19,16 @@ from management.views import create_employee_application
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
-
 ]
 
 urlpatterns += i18n_patterns(
-    path('',create_employee_application,name='create_employee_application'),
+    path('', login_required(create_employee_application),name='create_employee_application'),
 )
 
 urlpatterns += static(settings.STATIC_URL,document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

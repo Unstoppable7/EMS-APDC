@@ -279,3 +279,4 @@ MEDIA_URL = '/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'management.User'
+LOGIN_URL = 'admin:login'
