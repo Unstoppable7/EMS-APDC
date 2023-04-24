@@ -2749,3 +2749,7 @@ msgstr "%d empleados no se pudieron marcar como \"en espera\" y no se agregaron 
 
 msgid "%d employee could not be marked as \"stand by\" and was not added to the \"my employees\" section. \nThere is a problem with your user"
 msgstr "%d empleado no se pudo marcar como \"en espera\" y no se agregó a la sección \"mis empleados\". \nHay un problema con su usuario"
+
+msgid "The administrator user of this session does not have an employee assigned to continue with the application process"
+msgstr "El usuario administrador de esta sesion no tiene un empleado asignado para poder continuar con el proceso de aplicacion"
+

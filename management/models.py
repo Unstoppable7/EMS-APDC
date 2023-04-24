@@ -14,7 +14,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 import pytz
 
 from django.contrib.auth.models import AbstractUser
-
+from django.utils.text import capfirst
+import re
 
 def current_time():
     return datetime.datetime.now(tz=pytz.utc)
@@ -64,6 +65,11 @@ class Job(models.Model):
     def __str__(self):
         return ("%s - %s" % (self.name, self.department.location.name)).capitalize()
 
+class OfficeLocation(models.Model):
+    name = models.CharField(max_length=30)
+    def __str__(self):
+        return ("%s" % (self.name)).capitalize()
+
 class Employee(models.Model): 
     TYPES_CHOICES = [
         ('Payroll', 'Payroll'),
@@ -87,7 +93,6 @@ class Employee(models.Model):
         ('Pending', 'Pending'),
         ('Undefined', 'Undefined'),
     ]
-
     QUICKBOOKS_STATUS_CHOICES = [
         ('Ready', 'Ready'),
         ('Not Hired', 'Not Hired'), #status default
@@ -98,7 +103,7 @@ class Employee(models.Model):
         ('Update to Active', 'Update to Active'),
     ]
     
-    id = models.AutoField(primary_key=True, unique=True,verbose_name="ID")
+    digital_identity = models.CharField(max_length=100,blank=True, unique=True,verbose_name="ID")
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     phone_number = PhoneNumberField()
@@ -110,9 +115,10 @@ class Employee(models.Model):
     quickbooks_status = models.CharField(max_length=30, choices=QUICKBOOKS_STATUS_CHOICES, default="Not Hired")
     date_created = models.DateTimeField(default=current_time)
     updated_at = models.DateTimeField(auto_now=True)
+    office_location = models.ForeignKey(OfficeLocation, on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.first_name
+        return self.full_name
 
     @property
     @admin.display(
@@ -127,6 +133,18 @@ class Employee(models.Model):
         unique_together = (('phone_number', 'date_of_birth'),('first_name', 'last_name'),)
     
     def save(self, *args, **kwargs):
+
+        #Creamos la digital_identity
+        if not self.digital_identity:
+            # Genera la cadena personalizada utilizando la primera letra en mayúscula
+            # de cada campo y el campo phone_number.
+            custom_value = "{}{}{}".format(
+                capfirst(self.first_name)[:1],
+                capfirst(self.last_name)[:1],
+                re.sub('[^0-9]', '', str(self.phone_number)),
+            )
+            self.digital_identity = custom_value
+
         #pdb.set_trace()
         #Empleado antes de ser guardado
         employee_old = Employee.objects.filter(pk=self.pk)
@@ -167,6 +185,7 @@ class Employee(models.Model):
 
 class User(AbstractUser):
     employee = models.OneToOneField(Employee, on_delete=models.CASCADE, blank=True,null=True)
+    office_location = models.ForeignKey(OfficeLocation, on_delete=models.CASCADE, blank=True,null=True)
 
     # def __str__(self):
     #     return self.username

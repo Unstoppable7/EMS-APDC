@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .forms import EmployeeForm, AddressForm, ApplicationForm, MedicalFormForm,EmergencyContactForm
-from .models import Document
+from .models import Document,Employee_head
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from reportlab.lib.pagesizes import letter
@@ -19,6 +19,7 @@ from django.conf import settings
 from django.conf import settings    
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.decorators import login_required
+import pdb
 
 
 def form_to_pdf(employeeForm, addressForm, applicationForm, medicalForm, emergency_contactForm):
@@ -672,7 +673,6 @@ def create_employee_application(request):
         medicalForm_form = MedicalFormForm(request.POST)
         emergency_contact_form = EmergencyContactForm(request.POST)
         
-
         if employee_form.is_valid() and address_form.is_valid() and application_form.is_valid() and medicalForm_form.is_valid() and emergency_contact_form.is_valid():
             
             if employee_form.cleaned_data['phone_number'] == emergency_contact_form.cleaned_data['phone_number']:
@@ -683,7 +683,25 @@ def create_employee_application(request):
             pdfFile = form_to_pdf(employee_form, address_form,application_form,medicalForm_form, emergency_contact_form)            
             
             employee = employee_form.save(commit=False)
-            employee.save()
+            
+            #Agregamos la localizacion al empleado segun la localizacion el user del cual esta logeado
+            employee.office_location = request.user.office_location
+            
+            #Situacion de si el user logeado pertenece al grupo de permisos de coordinator, lo que significa que es una coordinadora
+            if request.user.groups.filter(name='Coordinators').exists():
+                employee.status = "Stand By"
+                employee.application_status = "No Application"
+                
+                coordinator = request.user.employee
+                if coordinator is not None:
+                    employee.save()
+                    Employee_head.objects.create(employee=employee, head=coordinator)
+                else:
+                    employee_form.add_error(None, _('The administrator user of this session does not have an employee assigned to continue with the application process'))
+                    
+                    return render(request, 'employee_form.html', {'employee_form': employee_form, 'address_form': address_form, 'application_form': application_form, 'emergency_contact_form': emergency_contact_form, 'medicalForm_form': medicalForm_form,'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY})
+            else:
+                employee.save()
 
             address = address_form.save(commit=False)
             address.employee = employee
