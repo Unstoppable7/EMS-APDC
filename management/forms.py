@@ -27,7 +27,7 @@ class EmployeeForm(forms.ModelForm):
             NON_FIELD_ERRORS: {
             
                 #'unique_together': "%(model_name)s's %(field_labels)s are not unique.",
-                'unique_together': _("There is already a person registered with %(field_labels)s"),
+                'unique_together': _('There is already a person registered with %(field_labels)s'),
             }
         }
     def clean_date_of_birth(self):
@@ -340,7 +340,7 @@ class EmergencyContactForm(forms.ModelForm):
         model = Emergency_contact
         fields = ['name', 'phone_number', 'relationship']
         labels = {'name': _('Name'),
-                  'phone_number':_('Phone number'),
+                  'phone_number':('Phone number'),
                   'relationship':_('Relationship')
                   }
         

@@ -280,3 +280,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'management.User'
 LOGIN_URL = 'admin:login'
+#Me permite usar el popup de add en el panel de administrador
+X_FRAME_OPTIONS = 'SAMEORIGIN'

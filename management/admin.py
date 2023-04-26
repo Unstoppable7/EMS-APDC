@@ -8,7 +8,7 @@ import pdb
 
 
 # Eliminar la acción de eliminación para todos los modelos
-#admin.site.disable_action('delete_selected')
+admin.site.disable_action('delete_selected')
 
 #Tabular inline models
 
@@ -45,10 +45,32 @@ class DocumentInline(admin.StackedInline):
         return queryset
 
 class Employee_jobInline(admin.StackedInline): 
-   model= Employee_job 
-   fields = ['employee', 'job']
-   extra = 1
-   verbose_name = 'Job'
+    model= Employee_job 
+    fields = ['employee', 'job']
+    extra = 1
+    verbose_name = 'Job'
+
+    # Filtramos el campo foreignkey
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "job":
+
+            if(request.user.groups.filter(name='Coordination').exists()):
+                
+                employee_jobs = Employee_job.objects.filter(employee=request.user.employee, job__name="Coordinator")
+
+                queryset = Q() # Crea un objeto Q vacío
+
+                for employee_job in employee_jobs:
+                    #Creamos la consulta que sea de la locacion y que el trabajo no sea coordinator
+                    queryset |= Q(department__location=employee_job.job.department.location) & ~Q(name="Coordinator")
+
+                kwargs["queryset"] = Job.objects.filter(queryset).distinct()
+            elif request.user.groups.filter(name='Employees management').exists():
+
+                kwargs["queryset"] = Job.objects.filter(department__location__office_location=request.user.office_location)
+
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
 #END tabular inline models
 
 #CustomFilters
@@ -79,7 +101,7 @@ class ExperienceListFilter(admin.SimpleListFilter):
         ('Precook', 'Precook'),
         ('Bartender', 'Bartender'),
         ('Steward', 'Steward'),
-        ('Front desk', 'Front desk'),
+        ('Frontdesk', 'Frontdesk'),
         ('Guess services', 'Guess services'),
         ('Maintenance', 'Maintenance'),
         ('Other', 'Other'),]
@@ -243,8 +265,8 @@ class EmployeeAdmin(admin.ModelAdmin):
     inlines=[AddressInline,ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
     #list_display = ['digital_identity','status', 'application_status', 'quickbooks_status','type', 'full_name', 'phone_number', 'date_of_birth','get_job_name','get_locations','get_head','date_created', 'updated_at']
-    #list_filter = ['type', 'status','employee_job_employee__job__department__location__name', 'date_created', 'updated_at',]
-    search_fields = ['first_name', 'last_name', 'status', 'employee_job_employee__job__department__location__name']
+    list_filter = ['employee_job_employee__job__department__location__name']
+    search_fields = ['digital_identity','first_name', 'last_name', 'status']
 
     list_per_page = 20
 
@@ -388,9 +410,9 @@ class EmployeeAdminInterview(admin.ModelAdmin):
 
     def get_list_filter(self, request):
         if request.user.is_superuser or request.user.groups.filter(name='Human resources').exists():
-            return ['office_location']
+            return ['office_location',ExperienceListFilter,EnglishLevelListFilter,CanTravelListFilter,CanWorkNightListFilter]
         else:
-            return []
+            return [ExperienceListFilter,EnglishLevelListFilter,CanTravelListFilter,CanWorkNightListFilter]
 
     def get_queryset(self, request):
         
@@ -400,18 +422,9 @@ class EmployeeAdminInterview(admin.ModelAdmin):
         
         #Si es super usuario o el usuario pertenece al grupo de permisos de Human resources, mostramos todos los empleados
         if request.user.is_superuser or request.user.groups.filter(name='Human resources').exists():
-            return qs
+            return qs.order_by('office_location')
 
         return qs_filtered
-
-    # @admin.action(description='Mark as active')
-    # def make_active(self, request, queryset):
-    #     updated = queryset.update(status='Active')
-    #     self.message_user(request, ngettext(
-    #         '%d employee was successfully marked as active.',
-    #         '%d employees were successfully marked as active.',
-    #         updated,
-    #     ) % updated, messages.SUCCESS)
 
     @admin.display(ordering='employee_address_employee')
     def get_address(self, obj):
@@ -447,7 +460,7 @@ class EmployeeAdminInterview(admin.ModelAdmin):
             queryset.count(),
         ) % queryset.count(), messages.SUCCESS)
 
-
+    @admin.display(ordering='application_employee__english_level')
     def get_application_english_level(self, obj):
         
         application = Application.objects.filter(employee=obj.id).first()
@@ -456,8 +469,9 @@ class EmployeeAdminInterview(admin.ModelAdmin):
             return '-'
         
         return application.english_level
-    get_application_english_level.short_description = 'english_level'
+    get_application_english_level.short_description = 'English level'
 
+    @admin.display(ordering='application_employee__can_travel')
     def get_application_can_travel(self, obj):
         
         application = Application.objects.filter(employee=obj.id).first()
@@ -469,8 +483,9 @@ class EmployeeAdminInterview(admin.ModelAdmin):
             return 'Yes'
         else:
             return 'No'
-    get_application_can_travel.short_description = 'can travel'
+    get_application_can_travel.short_description = 'Can travel'
 
+    @admin.display(ordering='application_employee__experience')
     def get_application_experience(self, obj):
         
         application = Application.objects.filter(employee=obj.id).first()
@@ -479,8 +494,9 @@ class EmployeeAdminInterview(admin.ModelAdmin):
             return '-'
         
         return application.experience
-    get_application_experience.short_description = 'experience'
+    get_application_experience.short_description = 'Experience'
 
+    @admin.display(ordering='application_employee__can_work_nights')
     def get_application_can_work_nights(self, obj):
         
         application = Application.objects.filter(employee=obj.id).first()
@@ -492,7 +508,7 @@ class EmployeeAdminInterview(admin.ModelAdmin):
             return 'Yes'
         else:
             return 'No'
-    get_application_can_work_nights.short_description = 'can work nights'
+    get_application_can_work_nights.short_description = 'Can work nights'
 
 @admin.register(Recruiting) 
 class RecruitingAdmin(admin.ModelAdmin): 
@@ -533,7 +549,7 @@ class RecruitingAdmin(admin.ModelAdmin):
         
         #Si es super usuario o el usuario pertenece al grupo de permisos de Human resources, mostramos todos los empleados
         if request.user.is_superuser or request.user.groups.filter(name='Human resources').exists():
-            return qs
+            return qs.order_by('office_location')
 
         return qs_filtered
     
@@ -592,8 +608,7 @@ class RecruitingAdmin(admin.ModelAdmin):
             queryset.count(),
         ) % queryset.count(), messages.SUCCESS)
 
-    
-
+    @admin.display(ordering='application_employee__english_level')
     def get_application_english_level(self, obj):
         
         application = Application.objects.filter(employee=obj.id).first()
@@ -602,8 +617,9 @@ class RecruitingAdmin(admin.ModelAdmin):
             return '-'
         
         return application.english_level
-    get_application_english_level.short_description = 'english_level'
+    get_application_english_level.short_description = 'English level'
 
+    @admin.display(ordering='application_employee__can_travel')
     def get_application_can_travel(self, obj):
         
         application = Application.objects.filter(employee=obj.id).first()
@@ -615,8 +631,9 @@ class RecruitingAdmin(admin.ModelAdmin):
             return 'Yes'
         else:
             return 'No'
-    get_application_can_travel.short_description = 'can travel'
+    get_application_can_travel.short_description = 'Can travel'
 
+    @admin.display(ordering='application_employee__experience')
     def get_application_experience(self, obj):
         
         application = Application.objects.filter(employee=obj.id).first()
@@ -625,8 +642,9 @@ class RecruitingAdmin(admin.ModelAdmin):
             return '-'
         
         return application.experience
-    get_application_experience.short_description = 'experience'
+    get_application_experience.short_description = 'Experience'
 
+    @admin.display(ordering='application_employee__can_work_nights')
     def get_application_can_work_nights(self, obj):
         
         application = Application.objects.filter(employee=obj.id).first()
@@ -638,7 +656,7 @@ class RecruitingAdmin(admin.ModelAdmin):
             return 'Yes'
         else:
             return 'No'
-    get_application_can_work_nights.short_description = 'can work nights'
+    get_application_can_work_nights.short_description = 'Can work nights'
 
 @admin.register(MyEmployeeSection) 
 class EmployeeAdminByCoordinator(admin.ModelAdmin): 
@@ -647,8 +665,8 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
     inlines=[AddressInline,ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
     #list_display = ['id', 'full_name','status', 'application_status','phone_number', 'get_address','get_job_name', 'get_locations']
-    #list_filter = ['type', 'status', 'employee_job_employee__job__department__location__name', 'date_created', 'updated_at']
-    search_fields = ['first_name', 'last_name', 'status','employee_job_employee__job__department__location__name']
+    list_filter = ['employee_job_employee__job__department__location__name']
+    search_fields = ['digital_identity','first_name', 'last_name']
 
     #Propiedad que me dice que campos tendran el link que lleva a editar
     list_display_links = ('full_name',)
@@ -661,9 +679,9 @@ class EmployeeAdminByCoordinator(admin.ModelAdmin):
 
     def get_list_display(self, request):
         if request.user.is_superuser or request.user.groups.filter(name='Human resources').exists():
-            return ('id', 'full_name','status', 'application_status','phone_number', 'get_address','get_job_name', 'get_locations','get_head','office_location')
+            return ('digital_identity', 'full_name','status', 'application_status','phone_number', 'get_address','get_job_name', 'get_locations','get_head','office_location')
         else:
-            return ('id', 'full_name','status', 'application_status','phone_number', 'get_address','get_job_name', 'get_locations')
+            return ('digital_identity', 'full_name','status', 'application_status','phone_number', 'get_address','get_job_name', 'get_locations')
 
     def get_list_filter(self, request):
         if request.user.is_superuser or request.user.groups.filter(name='Human resources').exists():
@@ -776,22 +794,22 @@ class ApplicationManagementAdmin(admin.ModelAdmin):
     #list_display = ['application_status','id','full_name','status', 'get_job_name','get_locations','get_head', 'date_created']
     #list_editable = ('status','application_status')
     list_per_page = 10
-    #list_filter = ['employee_job_employee__job__department__location__name']
-    search_fields = ['first_name', 'last_name', 'employee_job_employee__job__department__location__name']
+    list_filter = ['employee_job_employee__job__department__location__name']
+    search_fields = ['digital_identity','first_name', 'last_name']
     #list_display_links = ('full_name',)
     actions = ['make_no_application_open','make_frontdesk','make_human_resources']
 
     def get_list_display(self, request):
         if request.user.is_superuser or request.user.groups.filter(name='Human resources').exists():
-            return ('application_status','id','full_name','status', 'get_job_name','get_locations','get_head', 'date_created','office_location')
+            return ('application_status','digital_identity','full_name','status', 'get_job_name','get_locations','get_head', 'updated_at','office_location')
         else:
-            return ('application_status','id','full_name','status', 'get_job_name','get_locations','get_head', 'date_created')
+            return ('application_status','digital_identity','full_name','status', 'get_job_name','get_locations','get_head', 'updated_at')
 
     def get_list_filter(self, request):
         if request.user.is_superuser or request.user.groups.filter(name='Human resources').exists():
-            return ['office_location','employee_job_employee__job__department__location']
+            return ['office_location','employee_job_employee__job__department__location__name']
         else:
-            return ['employee_job_employee__job__department__location']
+            return ['employee_job_employee__job__department__location__name']
 
     def get_queryset(self, request):
         
@@ -915,10 +933,10 @@ class EmployeeAdminAccountingStatus(admin.ModelAdmin):
     fields=('type','quickbooks_status','first_name', 'last_name', 'phone_number', 'email', 'date_of_birth') 
     inlines=[AddressInline]
 
-    list_display = ['quickbooks_status','id', 'full_name','get_address', 'phone_number','date_of_birth','type', 'get_job_name','get_locations','get_head','office_location','updated_at']
+    list_display = ['quickbooks_status','digital_identity', 'full_name','get_address', 'phone_number','date_of_birth','type', 'get_job_name','get_locations','get_head','office_location','updated_at']
     
     list_filter = ['quickbooks_status', 'employee_job_employee__job__department__location__name','office_location']
-    search_fields = ['id','first_name', 'last_name','employee_job_employee__job__department__location__name']
+    search_fields = ['digital_identity','first_name', 'last_name']
 
     #Propiedad que me dice que campos tendran el link que lleva a editar
     #list_display_links = ('full_name',)
@@ -1041,7 +1059,7 @@ class FrontdeskAdmin(admin.ModelAdmin):
 
     #list_display = ['id','status', 'application_status', 'full_name', 'phone_number','get_address', 'date_of_birth','date_created', 'updated_at']
     #list_filter = ['status', 'date_created', 'updated_at',]
-    search_fields = ['first_name', 'last_name', 'status',]
+    search_fields = ['digital_identity','first_name', 'last_name']
 
     list_per_page = 20
 
@@ -1053,9 +1071,9 @@ class FrontdeskAdmin(admin.ModelAdmin):
 
     def get_list_display(self, request):
         if request.user.is_superuser or request.user.groups.filter(name='Human resources').exists():
-            return ('id','status', 'application_status', 'full_name', 'phone_number','get_address', 'date_of_birth','date_created', 'updated_at','office_location')
+            return ('digital_identity','status', 'application_status', 'full_name', 'phone_number','get_address', 'date_of_birth','date_created', 'updated_at','office_location')
         else:
-            return ('id','status', 'application_status', 'full_name', 'phone_number','get_address', 'date_of_birth','date_created', 'updated_at')
+            return ('digital_identity','status', 'application_status', 'full_name', 'phone_number','get_address', 'date_of_birth','date_created', 'updated_at')
 
     def get_list_filter(self, request):
         if request.user.is_superuser or request.user.groups.filter(name='Human resources').exists():
@@ -1124,7 +1142,7 @@ class CustomUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username','password1', 'password2', 'is_staff','employee','office_location'),
+            'fields': ('username','password1', 'password2','employee','office_location'),
         }),
     )
     #Filtramos el campo de empleado para que aparezcan solo los empleados con un trabajo de coordinadora asignado
@@ -1134,13 +1152,17 @@ class CustomUserAdmin(UserAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
     
 @admin.register(Department)
-class Department(admin.ModelAdmin):
-    list_display = ('id','name','location')
+class DepartmentAdmin(admin.ModelAdmin):
+    list_display = ('name','location')
+    list_filter = ['location__name']
+    search_fields = ['name']
     list_per_page = 20
 
 @admin.register(Job)
-class Job(admin.ModelAdmin):
-    list_display = ('id','name','department','get_location')
+class JobAdmin(admin.ModelAdmin):
+    list_display = ('name','get_department_name','get_location')
+    list_filter = ['department__location__name']
+    search_fields = ['name']
     list_per_page = 20
 
     @admin.display(ordering='department__location')
@@ -1148,8 +1170,19 @@ class Job(admin.ModelAdmin):
         return obj.department.location
     get_location.short_description = 'Location'
 
+    @admin.display(ordering='department__name')
+    def get_department_name(self,obj):
+        return obj.department.name
+    get_department_name.short_description = 'Department'
+
+@admin.register(Location)
+class LocationAdmin(admin.ModelAdmin):
+    list_display = ('name','phone_number','address','zip_code','city','office_location')
+    list_filter = ['city','office_location']
+    search_fields = ['name']
+    list_per_page = 20
+
 
 admin.site.register(City)
 admin.site.register(State)
-admin.site.register(Location)
 admin.site.register(OfficeLocation)

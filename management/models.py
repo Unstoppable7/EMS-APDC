@@ -16,6 +16,8 @@ import pytz
 from django.contrib.auth.models import AbstractUser
 from django.utils.text import capfirst
 import re
+from .utils import validate_age_limit
+
 
 def current_time():
     return datetime.datetime.now(tz=pytz.utc)
@@ -36,39 +38,50 @@ class City(models.Model):
     def __str__(self):
         return self.name.capitalize()
 
+class OfficeLocation(models.Model):
+    name = models.CharField(max_length=30)
+    def __str__(self):
+        return ("%s" % (self.name)).capitalize()
+    
 class Location(models.Model):
     name = models.CharField(max_length=100, verbose_name='location')
     address = models.CharField(max_length=200,blank=True)
     phone_number = models.CharField(max_length=20,blank=True)
     zip_code = models.CharField(max_length=10,blank=True)
     city = models.ForeignKey(City, on_delete=models.CASCADE)
+    office_location = models.ForeignKey(OfficeLocation, on_delete=models.CASCADE,)
+
 
     def __str__(self):
         return self.name.capitalize()
 
     def save(self, *args, **kwargs):
+        exists = True
+        if not self.id:
+            exists = False
         super().save(*args, **kwargs)  # Call the "real" save() method.
-        dpt = Department.objects.create(name='Coordination',location=self)
-        Job.objects.create(name='Coordinator',department=dpt)
+        if not exists:
+            dpt = Department.objects.create(name='Coordination',location=self)
+            Job.objects.create(name='Coordinator',department=dpt)
 
 class Department(models.Model):
     name = models.CharField(max_length=100)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name.capitalize()
+        return ("%s - %s" % (self.name, self.location.name)).title()
+    
+    class Meta:
+        ordering = ['location']
+
 
 class Job(models.Model):
     name = models.CharField(max_length=100)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
 
     def __str__(self):
-        return ("%s - %s" % (self.name, self.department.location.name)).capitalize()
+        return ("%s - %s" % (self.name, self.department.location.name)).title()
 
-class OfficeLocation(models.Model):
-    name = models.CharField(max_length=30)
-    def __str__(self):
-        return ("%s" % (self.name)).capitalize()
 
 class Employee(models.Model): 
     TYPES_CHOICES = [
@@ -107,7 +120,7 @@ class Employee(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     phone_number = PhoneNumberField()
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(validators=[validate_age_limit])
     email = models.EmailField(blank=True)
     type = models.CharField(max_length=10, choices=TYPES_CHOICES, default="Regular")
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default="Undefined")
@@ -115,7 +128,7 @@ class Employee(models.Model):
     quickbooks_status = models.CharField(max_length=30, choices=QUICKBOOKS_STATUS_CHOICES, default="Not Hired")
     date_created = models.DateTimeField(default=current_time)
     updated_at = models.DateTimeField(auto_now=True)
-    office_location = models.ForeignKey(OfficeLocation, on_delete=models.CASCADE)
+    office_location = models.ForeignKey(OfficeLocation, on_delete=models.CASCADE,)
     
     def __str__(self):
         return self.full_name
@@ -129,9 +142,10 @@ class Employee(models.Model):
         return ("%s %s" % (self.first_name, self.last_name))
 
     class Meta:
-        verbose_name = 'Company Employee'
-        unique_together = (('phone_number', 'date_of_birth'),('first_name', 'last_name'),)
-    
+        verbose_name = _('Company Employee')
+        unique_together = ((_('phone_number'), _('date_of_birth')),(_('first_name'), _('last_name')),)
+        ordering = ['office_location','-updated_at']
+
     def save(self, *args, **kwargs):
 
         #Creamos la digital_identity
@@ -187,8 +201,11 @@ class User(AbstractUser):
     employee = models.OneToOneField(Employee, on_delete=models.CASCADE, blank=True,null=True)
     office_location = models.ForeignKey(OfficeLocation, on_delete=models.CASCADE, blank=True,null=True)
 
-    # def __str__(self):
-    #     return self.username
+    def save(self, *args, **kwargs):
+
+        if not self.id:
+            self.is_staff = True  # Establecer is_staff en True si se está creando un nuevo usuario
+        super().save(*args, **kwargs)
 
 class Address(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee_address_employee')
@@ -228,7 +245,7 @@ class ApplicationManagement(Employee):
         proxy = True
         verbose_name = 'Application Management'
         verbose_name_plural = 'Application Management'
-        ordering = ['date_created']
+        ordering = ['office_location','-updated_at']
 
 class AccountingStatus(Employee): 
     class Meta:
@@ -253,8 +270,8 @@ class Employee_head(models.Model):
     # class Meta:
     #     verbose_name = 'Coordinator Employee'
 
-    def __eq__(self, other):
-        return self.employee == other.employee and self.head == other.head
+    # def __eq__(self, other):
+    #     return self.employee == other.employee and self.head == other.head
 
 class Employee_job(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee_job_employee')

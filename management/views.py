@@ -684,8 +684,12 @@ def create_employee_application(request):
             
             employee = employee_form.save(commit=False)
             
-            #Agregamos la localizacion al empleado segun la localizacion el user del cual esta logeado
-            employee.office_location = request.user.office_location
+            if request.user.office_location is None:
+                employee_form.add_error(None, _('The administrator staff has to log in with an account that allows them to complete the application form'))
+                return render(request, 'employee_form.html', {'employee_form': employee_form, 'address_form': address_form, 'application_form': application_form, 'emergency_contact_form': emergency_contact_form, 'medicalForm_form': medicalForm_form,'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY})
+            else:
+                #Agregamos la localizacion al empleado segun la localizacion el user del cual esta logeado
+                employee.office_location = request.user.office_location
             
             #Situacion de si el user logeado pertenece al grupo de permisos de coordinator, lo que significa que es una coordinadora
             if request.user.groups.filter(name='Coordinators').exists():

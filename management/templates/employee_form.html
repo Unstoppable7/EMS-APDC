@@ -25,6 +25,20 @@
   <h1 class="display-3 text-center">{% trans "Application" %}</h1>
   
     <form action="{% url 'create_employee_application' %}" enctype="multipart/form-data" class="employee-form" method="POST" autocomplete="off">
+      
+      {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+          <strong>Error:</strong>
+          {% for field, error_list in form.errors.items %}
+            {% for error in error_list %}
+              <p>{{ field }}: {{ error }}</p>
+            {% endfor %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+
+
       <div class="card">
         <h5 class="card-header">
             {% trans "Personal Information" %}
