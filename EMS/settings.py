@@ -47,10 +47,12 @@ INSTALLED_APPS = [
     'management',
     'crispy_forms',
     'wkhtmltopdf',
-    "django_rename_app",
+    # "django_rename_app",
     "phonenumber_field",
     #'address',
+    'django.forms'
 ]
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 GOOGLE_MAPS_API_KEY = 'AIzaSyBoMcrb65POH2WYo0AV2ecsgwxz6sGN2iw'
 
@@ -72,7 +74,7 @@ ROOT_URLCONF = 'EMS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "templates")],
+        "DIRS": [os.path.join(BASE_DIR, 'templates/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

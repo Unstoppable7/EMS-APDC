@@ -5,7 +5,113 @@ from django.utils.translation import ngettext
 from django.db.models import Q
 from django.contrib.auth.admin import UserAdmin
 import pdb
+from django.contrib.admin.models import LogEntry, ADDITION, CHANGE, DELETION
+from django.utils.html import escape
+from django.utils.safestring import mark_safe
+import json
+from django.urls import reverse
+from django.contrib.contenttypes.models import ContentType
 
+
+class CustomLogEntry(LogEntry):
+    class Meta:
+        proxy = True
+
+    def log_change(self, request, object, message):
+        """
+        Log an entry for a change to a model instance.
+
+        Args:
+            request: The current request.
+            object: The model instance that was changed.
+            message: An optional message to include in the change log.
+        """
+        content_type = ContentType.objects.get_for_model(object)
+        user = request.user if request.user.is_authenticated else None
+        action_flag = CHANGE
+        change_message = json.dumps({
+            'changed': {
+                'fields': message['changed'],
+                'from': {field: str(getattr(object, field)) for field in message['changed']},
+                'to': {field: str(getattr(object, field)) for field in message['changed']}
+            }
+        }, indent=2)
+
+        LogEntry.objects.log_action(
+            user_id=user.id if user else None,
+            content_type_id=content_type.pk,
+            object_id=object.pk,
+            object_repr=str(object),
+            action_flag=action_flag,
+            change_message=change_message
+        )
+
+class LogEntryAdmin(admin.ModelAdmin):
+    date_hierarchy = 'action_time'
+    list_display = ('get_object_name','object_link', 'action_time', 'user_name', 'action_flag_display', 'change_message_display')
+    list_display_links = ('get_object_name',)
+    list_filter = ('content_type', 'action_flag', 'user')
+    search_fields = ('object_repr', 'change_message')
+    readonly_fields = ('content_type', 'user', 'action_flag', 'object_repr', 'change_message')
+
+    def get_object_name(self, obj):
+        return obj.id
+    get_object_name.short_description = 'Log entry'
+
+    def object_link(self, obj):
+        object_url = reverse('admin:%s_%s_change' % (obj.content_type.app_label, obj.content_type.model), args=[obj.object_id])
+        return mark_safe('<a href="%s">%s</a>' % (object_url, escape(obj.object_repr)))
+    object_link.admin_order_field = 'object_repr'
+    object_link.short_description = 'Employee'
+
+    def user_name(self, obj):
+        try:
+            user = User.objects.get(id=obj.user_id)
+            return user.get_full_name() or user.username
+        except User.DoesNotExist:
+            return None
+    user_name.short_description = 'user'
+
+    def action_flag_display(self, obj):
+        if obj.action_flag == ADDITION:
+            return 'Addition'
+        elif obj.action_flag == CHANGE:
+            return 'Change'
+        elif obj.action_flag == DELETION:
+            return 'Deletion'
+        else:
+            return obj.action_flag
+    action_flag_display.short_description = 'action flag'
+
+    def change_message_display(self, obj):
+        change_message = obj.get_change_message()
+        try:
+            change_dict = json.loads(change_message)
+            changed_fields = change_dict.get('changed', {})
+            added_fields = change_dict.get('added', {})
+            deleted_fields = change_dict.get('deleted', {})
+            changed_field_labels = []
+            for field in changed_fields:
+                changed_field_labels.append(obj.content_type.get_field(field).verbose_name)
+            added_field_labels = []
+            for field in added_fields:
+                added_field_labels.append(obj.content_type.get_field(field).verbose_name)
+            deleted_field_labels = []
+            for field in deleted_fields:
+                deleted_field_labels.append(obj.content_type.get_field(field).verbose_name)
+            message_parts = []
+            if changed_field_labels:
+                message_parts.append('Changed %s.' % ', '.join(changed_field_labels))
+            if added_field_labels:
+                message_parts.append('Added %s.' % ', '.join(added_field_labels))
+            if deleted_field_labels:
+                message_parts.append('Deleted %s.' % ', '.join(deleted_field_labels))
+            return ' '.join(message_parts)
+        except ValueError:
+            return change_message
+    change_message_display.short_description = 'change message'
+
+admin.site.register(LogEntry, LogEntryAdmin)
 
 # Eliminar la acción de eliminación para todos los modelos
 admin.site.disable_action('delete_selected')
@@ -37,10 +143,9 @@ class DocumentInline(admin.StackedInline):
     fields = ['type', 'date_of_expiration', 'file']
     extra = 1
 
-    #TODO agregar la condicion para evitar el acceso a las aplicaciones de southeast
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        if request.user.email == 'prueba@prueba.com':
+        if not request.user.groups.filter(name='Human resources').exists():
             queryset = queryset.exclude(type='Southeast')
         return queryset
 
@@ -65,7 +170,7 @@ class Employee_jobInline(admin.StackedInline):
                     queryset |= Q(department__location=employee_job.job.department.location) & ~Q(name="Coordinator")
 
                 kwargs["queryset"] = Job.objects.filter(queryset).distinct()
-            elif request.user.groups.filter(name='Employees management').exists():
+            elif not request.user.is_superuser and not request.user.groups.filter(name='Human resources').exists():
 
                 kwargs["queryset"] = Job.objects.filter(department__location__office_location=request.user.office_location)
 
@@ -280,7 +385,7 @@ class EmployeeAdmin(admin.ModelAdmin):
         if request.user.is_superuser or request.user.groups.filter(name='Human resources').exists():
             return ('digital_identity','status', 'application_status', 'quickbooks_status','type', 'full_name','get_job_name','get_locations','get_head','office_location','date_created', 'updated_at')
         else:
-            return ('digital_identity','status', 'application_status', 'quickbooks_status','type', 'full_name','get_job_name','get_locations','get_head','date_created', 'updated_at')
+            return ('digital_identity','status', 'application_status','type', 'full_name','get_job_name','get_locations','get_head','date_created', 'updated_at')
 
     def get_list_filter(self, request):
         if request.user.is_superuser or request.user.groups.filter(name='Human resources').exists():
@@ -1054,7 +1159,7 @@ class EmployeeAdminAccountingStatus(admin.ModelAdmin):
 
 @admin.register(Frontdesk) 
 class FrontdeskAdmin(admin.ModelAdmin): 
-    fields=('first_name', 'last_name', 'phone_number', 'email', 'date_of_birth') 
+    fields=('digital_identity','first_name', 'last_name', 'phone_number', 'email', 'date_of_birth','office_location') 
     inlines=[AddressInline,ApplicationInline,Employee_jobInline,MedicalFormInline,Emergency_contactInline,DocumentInline]
 
     #list_display = ['id','status', 'application_status', 'full_name', 'phone_number','get_address', 'date_of_birth','date_created', 'updated_at']
@@ -1068,6 +1173,11 @@ class FrontdeskAdmin(admin.ModelAdmin):
     #Propiedad que me permite editar este campo desde la vista principal, no debe ser aparecer en list_display_links y debe aparecer en list_display
     #list_editable = ('status',)
     actions = ['make_no_application_open']
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "office_location":
+            kwargs["initial"] = request.user.office_location.pk
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def get_list_display(self, request):
         if request.user.is_superuser or request.user.groups.filter(name='Human resources').exists():

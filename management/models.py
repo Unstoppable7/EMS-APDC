@@ -139,7 +139,7 @@ class Employee(models.Model):
         description='Full name',
     )
     def full_name(self):
-        return ("%s %s" % (self.first_name, self.last_name))
+        return ("%s %s" % (self.first_name, self.last_name)).title()
 
     class Meta:
         verbose_name = _('Company Employee')
@@ -147,7 +147,8 @@ class Employee(models.Model):
         ordering = ['office_location','-updated_at']
 
     def save(self, *args, **kwargs):
-
+        self.first_name = self.first_name.title()
+        self.last_name = self.last_name.title()
         #Creamos la digital_identity
         if not self.digital_identity:
             # Genera la cadena personalizada utilizando la primera letra en mayúscula
@@ -223,6 +224,10 @@ class Address(models.Model):
     
     class Meta:
         verbose_name_plural = 'Address'
+
+    def save(self, *args, **kwargs):
+        self.street = self.street.capitalize()
+        super().save(*args, **kwargs)
     
 class EmployeeInterview(Employee): 
     class Meta:
@@ -273,6 +278,17 @@ class Employee_head(models.Model):
     # def __eq__(self, other):
     #     return self.employee == other.employee and self.head == other.head
 
+    def __eq__(self, other):
+        if isinstance(other, Employee_head):
+            return self.employee == other.employee and self.head == other.head
+        return False
+
+    def __hash__(self):
+        return hash((self.employee, self.head))
+    
+    def __repr__(self):
+        return f"Employee_head(employee={self.employee}, head={self.head})"
+
 class Employee_job(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee_job_employee')
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='job')
@@ -320,7 +336,7 @@ class Employee_job(models.Model):
         if self.job.name == 'Coordinator' or was_coordinator:
             
             #Eliminamos todos las referencias de este objeto como coordinator
-            Employee_head.objects.filter(head=self.employee).delete()
+            Employee_head.objects.filter(head=self.employee).exclude(employee__status="Stand By").delete()
 
             #Lista donde guardaremos las nuevas referencias de este objeto como coordinator
             employee_heads_to_create = []
@@ -373,7 +389,7 @@ class Employee_job(models.Model):
         
         if self.job.name == 'Coordinator':
 
-            Employee_head.objects.filter(head=self.employee).delete()
+            Employee_head.objects.filter(head=self.employee).exclude(employee__status="Stand By").delete()
 
             employee_heads_to_create = []
             
