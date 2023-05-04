@@ -18,6 +18,9 @@ from django.utils.text import capfirst
 import re
 from .utils import validate_age_limit
 
+import os
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 
 def current_time():
     return datetime.datetime.now(tz=pytz.utc)
@@ -159,7 +162,7 @@ class Employee(models.Model):
                 re.sub('[^0-9]', '', str(self.phone_number)),
             )
             self.digital_identity = custom_value
-
+        
         #pdb.set_trace()
         #Empleado antes de ser guardado
         employee_old = Employee.objects.filter(pk=self.pk)
@@ -178,7 +181,6 @@ class Employee(models.Model):
             #Si el empleado ya ha sido subido a Quickbooks
             if(employee_old_object.quickbooks_status == "Ready"):
 
-
                 ##Cuando pasa de inactivo a activo se ejecutan estos dos if, sin embargo, funciona porque el ultimo es el que me interesa
                 #Empleado a cambiado de status a Do Not Hire o Inactive
                 if((employee_old_object.status != "Inactive" and employee_old_object.status != "Do Not Hire") and (self.status == "Do Not Hire" or self.status == "Inactive")):
@@ -188,14 +190,44 @@ class Employee(models.Model):
                 if (employee_old_object.status == "Inactive" or employee_old_object.status == "Do Not Hire") and (self.status != "Do Not Hire" and self.status != "Inactive"):
                     self.quickbooks_status = "Update to Active"
 
-                #Empleado a cambiado de nombres, apellidos o numero de telefono
+                #Empleado a cambiado de nombres, apellidos, numero de telefono o fecha de nacimiento
                 if(employee_old_object.first_name != self.first_name or employee_old_object.last_name != self.last_name or employee_old_object.phone_number != self.phone_number or employee_old_object.date_of_birth != self.date_of_birth):
                     self.quickbooks_status = "Update Personal Information"
 
                 #Empleado a cambiado de direccion
                 if employee_old_object.employee_address_employee != self.employee_address_employee:
                     self.quickbooks_status = "Update Address"
-        
+
+            #Empleado a cambiado de nombres o apellidos
+            # if(employee_old_object.first_name != self.first_name or employee_old_object.last_name != self.last_name):
+
+            #     folder_name = (f"{employee_old_object.digital_identity} - {employee_old_object.first_name.upper()} {employee_old_object.last_name.upper()}")
+            #     folder_path = os.path.join(settings.MEDIA_ROOT, "employee_documents", folder_name)
+
+            #     # definir la ruta de la nueva carpeta (con su nombre nuevo)
+            #     new_folder_name = (f"{employee_old_object.digital_identity} - {self.first_name.upper()} {self.last_name.upper()}")
+
+            #     new_folder_path = os.path.join(settings.MEDIA_ROOT, "employee_documents", new_folder_name)
+
+            #     # renombrar la carpeta
+            #     try:
+            #         os.rename(folder_path, new_folder_path)
+            #     except:
+            #         #TODO hacer algun mensaje o excepcion
+            #         pass
+
+        # else: #Si el empleado es nuevo
+
+        #     #Variables para manejar la creacion del folder de cada registro employee
+        #     folder_name = (f"{self.digital_identity} - {self.first_name.upper()} {self.last_name.upper()}")
+        #     folder_path = os.path.join(settings.MEDIA_ROOT, "employee_documents", folder_name)
+        #     #Creamos folder para almacenar proximamente todos sus Documents
+        #     try:
+        #         os.makedirs(folder_path)
+        #     except:
+        #         #TODO hacer algun tipo de mensaje o excepcion
+        #         pass
+                
         super().save(*args, **kwargs)
 
 class User(AbstractUser):
@@ -548,27 +580,66 @@ class Document(models.Model):
         ('Passport', 'Passport'),
         ('Driver license', 'Driver license'),
         ('ID card', 'ID card'),
-
     ]
+
+    def process_file(instance, filename):
+        root_path = "employee_documents"
+
+        folder_name = (f"{instance.employee.digital_identity}")
+
+        # extraer la extensión actual del archivo
+        _, ext = os.path.splitext(filename)
+
+        # cambiar el nombre del archivo
+        filename = f"{instance.type}{ext}"
+
+        return f"{root_path}/{folder_name}/{filename}"
+    
     type = models.CharField(max_length=20, choices=TYPE_CHOICES)
     date_of_expiration = models.DateField(blank=True, null=True,)
-    file = models.FileField(upload_to='employee_documents/')
+    file = models.FileField(upload_to=process_file)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.type
-
+    
     def save(self, *args, **kwargs):
+
+        # try:
+        #     # extraer la extensión actual del archivo
+        #     _, ext = os.path.splitext(self.file.name)
+
+        #     # cambiar el nombre del archivo
+        #     self.file.name = f"{self.type}{ext}"
+
+        #     # folder_name = (f"{self.employee.digital_identity} - {self.employee.first_name.upper()} {self.employee.last_name.upper()}")
+        #     # folder_path = os.path.join(settings.MEDIA_ROOT, "employee_documents", folder_name)
+        #     # self.file.storage = FileSystemStorage(location=folder_path)
+        # except:
+        #     #TODO agregar mensaje o alguna excepcion
+        #     pass
         super().save(*args, **kwargs)
-        
-        if self.type == "Application":
-            
+
+        if self.type == 'Application':
+
             Employee.objects.filter(id=self.employee.id).update(application_status='Regular Application')
-            
-        elif self.type == "Southeast":   
+
+        elif self.type == 'Southeast':
+
             Employee.objects.filter(id=self.employee.id).update(application_status='Southeast')
 
+        # elif self.type == 'Form':
+        # elif self.type == 'Passport':
+        # elif self.type == 'Driver license':
+        # elif self.type == 'ID card':
+
     def delete(self, *args, **kwargs):
+        
+        # Eliminar archivo asociado al campo fileField
+        if self.file:
+            if os.path.isfile(self.file.path):
+                os.remove(self.file.path)
+        
         if self.type == "Application":
 
             Employee.objects.filter(id=self.employee.id).update(application_status='Pending')
