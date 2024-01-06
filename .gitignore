@@ -137,3 +137,7 @@ cython_debug/
 
 # pytype static type analyzer
 .pytype/
+
+#files to applications
+applications/
+*pdf
